@@ -1,45 +1,29 @@
 import React from 'react';
 import './App.css';
 import HexBuilderListView from './app/HexBuilderListView'
-import Padding from './app/hextypes/Padding'
+import HexStringView from './app/HexStringView'
 
-//var obj = {
-//count_bytes: function(string) {
-//    var i = 0;
-//    var byte_count = 0;
-//    while (i < string.length){
-//        if (string[i] === "\\" && i + 1 < string.length && string[i+1] === "x"){
-//            i += 4;
-//        } else {
-//            i += 1;
-//        }
-//        byte_count += 1;
-//    }
-//    return byte_count;
-//}
-//}
 
 class HelloMessage extends React.Component {
     constructor() {
         super();
-        this.state = { entries: [
-                {key: 0, data: Padding.defaultValues},
-                {key: 1, data: Padding.defaultValues}
-            ], a: 0};
+        this.state = {blueprints: []}
         this.onChange = this.onChange.bind(this);
     }
 
   render() {
+    const colors = ["red", "green", "blue"]
     return (
       <div>
-        <HexBuilderListView entries={this.state.entries} onChange={this.onChange} />
+        <HexBuilderListView onChange={this.onChange} />
+        <HexStringView blueprints={this.state.blueprints} colors={colors} />
       </div>
     );
   }
 
-  onChange() {
-    console.log("App go onChange");
-    this.setState(Object.assign({}, this.state, {a: this.state.a + 1}));
+  onChange(newBlueprints) {
+    const newState = Object.assign({}, this.state, {blueprints: newBlueprints});
+    this.setState(newState);
   }
 }
 
