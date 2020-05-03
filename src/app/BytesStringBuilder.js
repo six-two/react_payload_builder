@@ -1,43 +1,6 @@
 import {REPEAT_N, REPEAT_TO} from './hextypes/Padding';
 import Padding from './hextypes/Padding';
-
-
-class ByteString {
-    constructor(str) {
-        this.str = str;
-        this.updateByteCount();
-    }
-
-    updateByteCount() {
-        var i = 0;
-        this.byteCount = 0;
-        while (i < this.str.length){
-            if (this.str[i] === "\\" && i + 1 < this.str.length && this.str[i+1] === "x"){
-                i += 4;
-            } else {
-                i += 1;
-            }
-            this.byteCount += 1;
-        }
-    }
-
-    getFirstNBytes(n) {
-        var i = 0;
-        var byteCount = 0;
-        while (i < this.str.length){
-            if (n >= byteCount){
-                return new ByteString(this.str.slice(0, i));//TODO test
-            }
-            if (this.str[i] === "\\" && i + 1 < this.str.length && this.str[i+1] === "x"){
-                i += 4;
-            } else {
-                i += 1;
-            }
-            byteCount += 1;
-        }
-        return this;
-    }
-}
+import ByteString from './HexString';
 
 class Instance {
     static getBytesStrings(blueprintList){
@@ -67,22 +30,24 @@ class Instance {
             case REPEAT_TO:
                 var offset = 0;
                 for (var i = 0; i < previousByteStrings.length; i++) {
-                    offset += previousByteStrings[i].length;
+                    offset += previousByteStrings[i].bytes.length;
                 }
                 var missing = blueprint.number - offset;
                 if (missing < 0) {
                     return new ByteString("<Padding can not satisfy condition: to many previous bytes>");
                 }
-                const patternBytes = new ByteString(blueprint.pattern);
-                const repeatCount = Math.floor(missing / patternBytes.byteCount);
+                const patternBytes = new ByteString(blueprint.pattern ? blueprint.pattern : "?");
+                const repeatCount = Math.floor(missing / patternBytes.bytes.length);
+                const incompleteSize = missing - (repeatCount * patternBytes.bytes.length)
                 var padding = patternBytes.str.repeat(repeatCount);
-                var incompletePadding = patternBytes.getFirstNBytes(missing - repeatCount);
-                return new ByteString(padding + incompletePadding.str);
+                var incompletePadding = patternBytes.bytes.slice(0, incompleteSize);
+                incompletePadding = incompletePadding.join("");
+                console.log(missing, blueprint.pattern, padding, incompletePadding);
+                return new ByteString(padding + incompletePadding);
             default:
                 return ByteString("<Unknown type>");
         }
     }
 };
 
-export {ByteString};
 export default Instance;

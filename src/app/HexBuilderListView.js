@@ -35,7 +35,7 @@ class HexBuilderListView extends React.Component{
                             </ListItemView>
                         </li>
                     )}
-                    <li>
+                    <li key={-1}>
                         <input type="button"
                             value="Add new element"
                             onClick={this.onItemAdd} />
@@ -83,7 +83,6 @@ class HexBuilderListView extends React.Component{
 }
 
 HexBuilderListView.propTypes = {
-   entries: PropTypes.array.isRequired, // list of {type: string, key: int, data: object}
    onChange: PropTypes.func.isRequired,
 }
 

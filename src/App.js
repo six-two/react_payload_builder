@@ -2,13 +2,17 @@ import React from 'react';
 import './App.css';
 import HexBuilderListView from './app/HexBuilderListView'
 import HexStringView from './app/HexStringView'
+//import ByteString from './app/HexString';
 
 
-class HelloMessage extends React.Component {
+class App extends React.Component {
     constructor() {
         super();
         this.state = {blueprints: []}
         this.onChange = this.onChange.bind(this);
+
+//        var test = new ByteString("\\x12a\\x66\\x55\\a\\x89");
+//        console.log("%d | %o", test.length, test.bytes);
     }
 
   render() {
@@ -26,8 +30,5 @@ class HelloMessage extends React.Component {
     this.setState(newState);
   }
 }
-
-
-const App = HelloMessage
 
 export default App;
