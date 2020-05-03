@@ -8,59 +8,61 @@ const REPEAT_TO = "Repeat up to index"
 class PaddingEditView extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            pattern: "A",
-            type: REPEAT_N,
-            number: 1,
-        }
         this.onPatternChange = this.onPatternChange.bind(this);
         this.onTypeChange = this.onTypeChange.bind(this);
         this.onNumberChange = this.onNumberChange.bind(this);
     }
 
-    static defaultValues() {
+    static get defaultValues() {
         return {
            pattern: "A",
-           type: REPEAT_N,
+           repeatType: REPEAT_N,
            number: 1,
+           type: PaddingEditView.type,
        };
     }
 
+    static get type() {
+        return "Padding"
+    }
+
     render() {
-        return <div>
-        <input type="text" value={this.state.pattern} onChange={this.onPatternChange} />
-        <ChooseOptionView options={[REPEAT_N, REPEAT_TO]} initialValue={REPEAT_N} onChange={this.onTypeChange} />
-         <input type="number" min="1" value={this.state.number} onChange={this.onNumberChange} />
-          </div>
+        return (
+            <div>
+                <input type="text"
+                    value={this.props.values.pattern}
+                    onChange={this.onPatternChange} />
+                <ChooseOptionView
+                    value={this.props.values.repeatType}
+                    onChange={this.onTypeChange}
+                    options={[REPEAT_N, REPEAT_TO]} />
+                <input type="number" min="1"
+                    value={this.props.values.number}
+                    onChange={this.onNumberChange} />
+            </div>);
     }
 
     onNumberChange(event) {
-        this.onChange(this.state.pattern, this.state.type, event.target.value);
+        this.onChange({number: event.target.value});
     }
 
     onPatternChange(event) {
-        this.onChange(event.target.value, this.state.type, this.state.number);
+        this.onChange({pattern: event.target.value});
     }
 
     onTypeChange(newValue) {
-        this.onChange(this.state.pattern, newValue, this.state.number);
+        this.onChange({repeatType: newValue});
     }
 
-    onChange(pattern, type, number) {
-        const newState = {
-            pattern: pattern,
-            type: type,
-            number: number,
-        };
-        this.setState(newState);
-        if (this.props.onChange) {
-            this.props.onChange(newState);
-        }
+    onChange(changedValues) {
+        this.props.onChange(Object.assign({}, this.props.values, changedValues));
     }
 }
 
 PaddingEditView.propTypes = {
-   onChange: PropTypes.func,
+    values: PropTypes.object.isRequired, //{number: int, pattern: string, repeatType: string, ?type: string}
+    onChange: PropTypes.func.isRequired,
 };
 
+export {REPEAT_N, REPEAT_TO};
 export default PaddingEditView;
