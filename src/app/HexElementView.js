@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ChooseOptionView from './ChooseOptionView'
 import Padding from './hextypes/Padding'
 
-var TYPES = ["Padding", "Test123"]
+var TYPES = [Padding.type, "Test123"]
 
 class HexElementView extends React.Component {
     constructor(props) {
@@ -59,10 +59,9 @@ class HexElementView extends React.Component {
 
 
 HexElementView.propTypes = {
-   onChange: PropTypes.func.isRequired,
-   onDelete: PropTypes.func.isRequired,
-   index: PropTypes.number.isRequired,
-   data: PropTypes.object.isRequired,
+   onChange: PropTypes.func.isRequired,//f(index)
+   index: PropTypes.number.isRequired,//wil be used to identify this object
+   data: PropTypes.object.isRequired,//{type: "Padding", pattern: string, repeatType: string, number: int}
 };
 
 export default HexElementView;
