@@ -32,17 +32,21 @@ class HexBuilderListView extends React.Component{
     }
 
     onItemChange(index, newValue) {
-        this.state.entries[index].data = newValue;
-        this.onChange();
+        var copy = this.state.entries.slice();
+        copy[index] = {key: copy[index].key, data: newValue};
+        this.nextId += 1;
+        this.onChange(copy);
     }
 
     onItemDeleted(index) {
-        this.state.entries.splice(index, 1);
-        this.onChange();
+        var copy = this.state.entries.slice();
+        copy.splice(index, 1);
+        this.onChange(copy);
     }
 
-    onChange() {
-        this.props.onChange(this.state.entries);
+    onChange(newArray) {
+        this.setState({entries: newArray});
+        this.props.onChange(newArray);
         console.log("List onChange");
     }
 }
