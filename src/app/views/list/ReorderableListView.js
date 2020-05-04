@@ -7,7 +7,7 @@ class ReorderableListView extends React.Component{
     constructor(props) {
         super(props);
         this.nextId = 0
-        this.state = {entries: []};//this.props.entries}; //entry: {key: int, data: object}
+        this.state = {entries: []}; //entry: {key: int, data: object}
         this.onItemAdd = this.onItemAdd.bind(this);
         this.onItemChange = this.onItemChange.bind(this);
         this.onItemDeleted = this.onItemDeleted.bind(this);

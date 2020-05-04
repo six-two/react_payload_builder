@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ChooseOptionView from './ChooseOptionView'
-import Padding from './hextypes/Padding'
-import Integer from './hextypes/Integer'
+import ChooseOptionView from '../ChooseOptionView'
+import Padding from './PaddingEditView'
+import Integer from './IntegerEditView'
 
-var TYPES = [Padding.type, Integer.type, "Test123"]
+var TYPES = [Padding.type, Integer.type]
 
 class HexElementView extends React.Component {
     constructor(props) {
@@ -34,7 +34,6 @@ class HexElementView extends React.Component {
 
     onChange(newType, newValues) {
          const newData = Object.assign(newValues, {type: newType});
-//          console.debug("[HexElementView] onChange: %o", newData)
          this.props.onChange(this.props.index, newData);
     }
 

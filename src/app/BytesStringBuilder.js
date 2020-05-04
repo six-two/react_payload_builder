@@ -1,6 +1,6 @@
-import {REPEAT_N, REPEAT_TO} from './hextypes/Padding';
-import Padding from './hextypes/Padding';
-import ByteString from './HexString';
+import {REPEAT_N, REPEAT_TO} from './views/hex/PaddingEditView';
+import Padding from './views/hex/PaddingEditView';
+import ByteString from './ByteString';
 
 class Instance {
     static getBytesStrings(blueprintList){

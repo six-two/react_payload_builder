@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import HexBuilderListView from './app/views/list/ReorderableListView'
-import HexStringView from './app/HexStringView'
-import HexElementView from './app/HexElementView'
-import Padding from './app/hextypes/Padding'
+import HexStringView from './app/views/hex/HexStringView'
+import HexElementView from './app/views/hex/HexElementView'
+import PaddingEditView from './app/views/hex/PaddingEditView'
 
 
 class App extends React.Component {
@@ -13,20 +13,20 @@ class App extends React.Component {
         this.onChange = this.onChange.bind(this);
     }
 
-  render() {
+    render() {
     const colors = ["red", "green", "blue"]
     return (
-      <div>
+        <div>
         <HexBuilderListView
             onChange={this.onChange}
             entryClass={HexElementView}
             newItemData={(index) => {
-                var v = Padding.defaultValues;
+                var v = PaddingEditView.defaultValues;
                 v.number = index + 1;
                 return v;
             }} />
         <HexStringView blueprints={this.state.blueprints} colors={colors} />
-      </div>
+        </div>
     );
   }
 

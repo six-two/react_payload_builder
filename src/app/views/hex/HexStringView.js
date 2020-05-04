@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BytesStringBuilder from './BytesStringBuilder';
+import BytesStringBuilder from '../../BytesStringBuilder';
 
 class HexStringView extends React.Component {
     render() {

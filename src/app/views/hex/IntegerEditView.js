@@ -1,12 +1,8 @@
-// number: string
-// if starts with 0x or ox then interpret different base
 /* global BigInt */
-
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import ChooseOptionView from '../ChooseOptionView';
-//import NumParse from './SafeNumberParser'
 
 const INT_8 = "8 bit";
 const INT_16 = "16 bit";
@@ -73,9 +69,6 @@ class HexIntegerView extends React.Component {
     }
 
     renderErrorMessages() {
-        //TODO check if the number fits the number type and check for illegal characters / formats
-        // Only negative decimal numbers are allowed
-
         var error = "";
         try {
             var num = HexIntegerView.parseNumber(this.props.values.numberString);
