@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import HexElementView from './HexElementView';
-import Padding from './hextypes/Padding';
-import ListItemView from './ListItemView';
+import ListItemView from './ReorderableListItemView';
 
 
-class HexBuilderListView extends React.Component{
+class ReorderableListView extends React.Component{
     constructor(props) {
         super(props);
         this.nextId = 0
@@ -28,10 +26,9 @@ class HexBuilderListView extends React.Component{
                                     isLast={index + 1 === this.state.entries.length}
                                     onItemDelete={this.onItemDeleted}
                                     onItemsSwap={this.onItemSwapped} >
-                                <HexElementView
-                                    index={index}
-                                    data={elem.data}
-                                    onChange={this.onItemChange} />
+                                {React.createElement(this.props.entryClass,
+                                 {index: index, data: elem.data, onChange: this.onItemChange}, [])}
+
                             </ListItemView>
                         </li>
                     )}
@@ -47,8 +44,7 @@ class HexBuilderListView extends React.Component{
 
     onItemAdd() {
         var copy = this.state.entries.slice();
-        var data = Padding.defaultValues;
-        data.number = this.nextId + 1;// makes them easier to differentiate for testing
+        var data = this.props.newItemData(copy.length);
         copy.push({key: this.nextId, data: data});
         this.nextId += 1;
         this.onChange(copy);
@@ -78,12 +74,13 @@ class HexBuilderListView extends React.Component{
         this.setState({entries: newArray});
         var onlyData = newArray.map((item) => item.data);
         this.props.onChange(onlyData);
-        console.log("List onChange");
     }
 }
 
-HexBuilderListView.propTypes = {
+ReorderableListView.propTypes = {
    onChange: PropTypes.func.isRequired,
+   entryClass: PropTypes.elementType.isRequired,
+   newItemData: PropTypes.func.isRequired,//f(index) -> object
 }
 
-export default HexBuilderListView;
+export default ReorderableListView;

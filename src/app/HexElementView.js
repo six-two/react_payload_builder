@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ChooseOptionView from './ChooseOptionView'
 import Padding from './hextypes/Padding'
+import Integer from './hextypes/Integer'
 
-var TYPES = [Padding.type, "Test123"]
+var TYPES = [Padding.type, Integer.type, "Test123"]
 
 class HexElementView extends React.Component {
     constructor(props) {
@@ -33,16 +34,18 @@ class HexElementView extends React.Component {
 
     onChange(newType, newValues) {
          const newData = Object.assign(newValues, {type: newType});
-         console.debug("[HexElementView] onChange: %o", newData)
+//          console.debug("[HexElementView] onChange: %o", newData)
          this.props.onChange(this.props.index, newData);
     }
 
     renderChild(type) {
         switch (type) {
             case Padding.type:
-                return <Padding onChange={this.onChildChange} values={this.props.data} />
+                return (<Padding onChange={this.onChildChange} values={this.props.data} />);
+            case Integer.type:
+                return (<Integer onChange={this.onChildChange} values={this.props.data} />);
             default:
-                return <span><br/>{"[Error] Unknown type: '" + type + "'"}</span>
+                return (<span><br/>{"[Error] Unknown type: '" + type + "'"}</span>);
         }
     }
 
@@ -50,6 +53,8 @@ class HexElementView extends React.Component {
         switch (type) {
             case Padding.type:
                 return Padding.defaultValues;
+            case Integer.type:
+                return Integer.defaultValues;
             default:
                 return {};
         }

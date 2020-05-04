@@ -17,7 +17,7 @@ class Instance {
             case Padding.type:
                 return Instance.paddingToBytes(blueprint, previousByteStrings);
             default:
-                return ByteString("<Unknown type>");
+                return new ByteString("<Unknown type>");
         }
     }
 
@@ -45,7 +45,7 @@ class Instance {
                 console.log(missing, blueprint.pattern, padding, incompletePadding);
                 return new ByteString(padding + incompletePadding);
             default:
-                return ByteString("<Unknown type>");
+                return new ByteString("<Unknown type>");
         }
     }
 };

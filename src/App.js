@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
-import HexBuilderListView from './app/HexBuilderListView'
+import HexBuilderListView from './app/views/list/ReorderableListView'
 import HexStringView from './app/HexStringView'
-//import ByteString from './app/HexString';
+import HexElementView from './app/HexElementView'
+import Padding from './app/hextypes/Padding'
 
 
 class App extends React.Component {
@@ -10,16 +11,20 @@ class App extends React.Component {
         super();
         this.state = {blueprints: []}
         this.onChange = this.onChange.bind(this);
-
-//        var test = new ByteString("\\x12a\\x66\\x55\\a\\x89");
-//        console.log("%d | %o", test.length, test.bytes);
     }
 
   render() {
     const colors = ["red", "green", "blue"]
     return (
       <div>
-        <HexBuilderListView onChange={this.onChange} />
+        <HexBuilderListView
+            onChange={this.onChange}
+            entryClass={HexElementView}
+            newItemData={(index) => {
+                var v = Padding.defaultValues;
+                v.number = index + 1;
+                return v;
+            }} />
         <HexStringView blueprints={this.state.blueprints} colors={colors} />
       </div>
     );

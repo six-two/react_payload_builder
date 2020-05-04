@@ -8,8 +8,9 @@ class HexStringView extends React.Component {
             return (
                 <div style={{backgroundColor: "gray", textAlign: "center", margin: "25px"}}>
                     {BytesStringBuilder.getBytesStrings(this.props.blueprints).map((value, i) => {
-                        const color = this.props.colors[i % this.props.colors.length]
-                        return <span style={{color: color}}>{value.str}</span>;
+                        const color = this.props.colors[i % this.props.colors.length];
+                        //TODO use a real key?
+                        return <span style={{color: color}} key={i}>{value.str}</span>;
                     })}
                 </div>
             );
