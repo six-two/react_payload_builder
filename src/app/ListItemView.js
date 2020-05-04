@@ -10,7 +10,6 @@ class ListItemView extends React.Component {
     }
 
     render() {
-        // TODO disable up button on first item and down on last
         return (
             <div>
                 {this.props.children}
@@ -18,10 +17,11 @@ class ListItemView extends React.Component {
                     <input type="button"
                         value="Up"
                         onClick={this.onMoveUp}
-                         />
+                        disabled={this.props.index === 0} />
                     <input type="button"
                         value="Down"
-                        onClick={this.onMoveDown} />
+                        onClick={this.onMoveDown}
+                        disabled={this.props.isLast} />
                     <input type="button"
                         value="Delete"
                         onClick={this.onDelete} />
