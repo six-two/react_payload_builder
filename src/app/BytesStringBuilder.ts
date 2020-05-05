@@ -3,8 +3,8 @@ import Padding from './views/hex/PaddingEditView';
 import ByteString from './ByteString';
 
 class Instance {
-    static getBytesStrings(blueprintList){
-        var processed = [];
+    static getBytesStrings(blueprintList: any[]): ByteString[]{
+        let processed: ByteString[] = [];
         for (var i = 0; i < blueprintList.length; i++) {
             var tmp = Instance.toBytes(blueprintList[i], processed);
             processed.push(tmp);
@@ -12,7 +12,7 @@ class Instance {
         return processed;
     }
 
-    static toBytes(blueprint, previousByteStrings) {
+    static toBytes(blueprint: any, previousByteStrings: ByteString[]): ByteString {
         switch (blueprint.type) {
             case Padding.type:
                 return Instance.paddingToBytes(blueprint, previousByteStrings);
@@ -21,7 +21,7 @@ class Instance {
         }
     }
 
-    static paddingToBytes(blueprint, previousByteStrings) {
+    static paddingToBytes(blueprint: any, previousByteStrings: ByteString[]): ByteString {
         switch (blueprint.repeatType) {
             case REPEAT_N:
                 const count = blueprint.number;
@@ -39,13 +39,13 @@ class Instance {
                 const patternBytes = new ByteString(blueprint.pattern ? blueprint.pattern : "?");
                 const repeatCount = Math.floor(missing / patternBytes.bytes.length);
                 const incompleteSize = missing - (repeatCount * patternBytes.bytes.length)
-                var padding = patternBytes.str.repeat(repeatCount);
-                var incompletePadding = patternBytes.bytes.slice(0, incompleteSize);
-                incompletePadding = incompletePadding.join("");
+                var padding: string = patternBytes.str.repeat(repeatCount);
+                var incompletePadding: string[] = patternBytes.bytes.slice(0, incompleteSize);
+                let incompletePaddingStr: string = incompletePadding.join("");
                 console.log(missing, blueprint.pattern, padding, incompletePadding);
-                return new ByteString(padding + incompletePadding);
+                return new ByteString(padding + incompletePaddingStr);
             default:
-                return new ByteString("<Unknown type>");
+                throw new Error(`Bug: Unknown padding repeat type ${blueprint.repeatType}`);
         }
     }
 };

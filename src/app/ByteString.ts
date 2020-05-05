@@ -1,11 +1,15 @@
 class ByteString {
-    constructor(str) {
+    str: string;
+    bytes: string[];
+
+    constructor(str: string) {
         this.str = str;
+        this.bytes = []
         this.updateByteCount();
     }
 
     updateByteCount() {
-        var i = 0;
+        let i = 0;
         this.bytes = []
         while (i < this.str.length){
             if (this.str[i] === "\\" && i + 1 < this.str.length && this.str[i+1] === "x"){
