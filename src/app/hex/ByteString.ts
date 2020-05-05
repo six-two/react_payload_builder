@@ -24,4 +24,23 @@ export default class ByteString {
             }
         }
     }
+
+    getInverted(): ByteString {//TODO later: is pretty inefficient
+      let invStr = "";
+      for (let i = this.bytes.length - 1; i >= 0; i--) {
+        invStr += this.bytes[i];
+      }
+      return new ByteString(invStr);
+    }
+
+    static fromHex(hex: string): ByteString {
+      if (hex.length % 2 === 1) {
+        throw new Error("Hex has odd length");
+      }
+      let result = "";
+      for (var i = 0; i < hex.length; i += 2) {
+        result += "\\x" + hex.slice(i, i+2);
+      }
+      return new ByteString(result);
+    }
 }

@@ -5,6 +5,11 @@ import HexStringView from './app/views/hex/HexStringView'
 import HexElementView from './app/views/hex/HexElementView'
 import PaddingEditView from './app/views/hex/PaddingEditView'
 
+// TODO: next steps
+//  - new type: reversed padding?
+//  - show little endian checkbox if at least one integer is selected
+//  - Add copy button to output
+//  - Add output format (eg python, printf, custom, raw)
 
 export default class App extends React.Component<any, State> {
     constructor(props: any) {
