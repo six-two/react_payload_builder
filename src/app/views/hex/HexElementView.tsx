@@ -25,7 +25,7 @@ export default class HexElementView extends React.Component<HexElementViewProps,
     render() {
         return (
             <div>
-                <label>Type:</label>
+                {"Type: "}
                 <ChooseOptionView value={this.props.data.type} options={TYPES} onChange={this.onTypeChange}/>
 
                 {this.renderChild(this.props.data.type)}

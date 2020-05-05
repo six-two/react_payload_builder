@@ -1,5 +1,4 @@
 import React from 'react';
-import ChooseOptionView from '../ChooseOptionView';
 import * as Str from '../../hex/String';
 
 const LABELS_NORMAL = ["Repeat ", " exactly ", " time(s)"];

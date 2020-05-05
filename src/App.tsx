@@ -3,7 +3,7 @@ import './App.css';
 import HexBuilderListView from './app/views/list/ReorderableListView'
 import HexStringView from './app/views/hex/HexStringView'
 import HexElementView from './app/views/hex/HexElementView'
-import PaddingEditView from './app/views/hex/PaddingEditView'
+import * as Str from './app/hex/String'
 
 // TODO: next steps
 //  - run a beautifier / formatter on this code
@@ -27,8 +27,8 @@ export default class App extends React.Component<any, State> {
               onChange={this.onChange}
               entryClass={HexElementView}
               newItemData={(index: number) => {
-                  var v: any = PaddingEditView.defaultValues;
-                  v.number = index + 1;
+                  var v: any = Str.Utils.defaultValues();
+                  v.repeatCount = index + 1;
                   return v;
               }} />
           <HexStringView blueprints={this.state.blueprints} colors={colors} />

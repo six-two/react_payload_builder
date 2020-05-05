@@ -3,7 +3,7 @@ import ChooseOptionView from '../ChooseOptionView';
 import * as Int from "../../hex/Integer";
 
 const INT_SIZES = [Int.INT_8, Int.INT_16, Int.INT_32, Int.INT_64];
-
+const LABLES = [" as ", " integer"]
 
 export default class HexIntegerView extends React.Component<Props, {}> {
     constructor(props: Props) {
@@ -12,39 +12,33 @@ export default class HexIntegerView extends React.Component<Props, {}> {
         this.onValueChange = this.onValueChange.bind(this);
     }
 
-    static get defaultValues(): Int.Values {
-        return Int.Utils.defaultValues();
-    }
-
-    static get type(): string {
-        return Int.TYPE;
-    }
-
     render() {
         return (
             <div>
+                <input type="text"
+                    value={this.props.values.numberString}
+                    onChange={this.onValueChange} />
+                {LABLES[0]}
                 <ChooseOptionView
                     value={this.props.values.numberType}
                     onChange={this.onTypeChange}
                     options={INT_SIZES} />
-                <input type="text"
-                    value={this.props.values.numberString}
-                    onChange={this.onValueChange} />
+                {LABLES[1]}
                 {this.renderErrorMessages()}
             </div>
         );
     }
 
     onTypeChange(newValue: string) {
-        this.onChange(newValue, this.props.values.numberString)
+        this.onChange({numberType: newValue});
     }
 
     onValueChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.onChange(this.props.values.numberType, event.target.value);
+        this.onChange({numberString: event.target.value});
     }
 
-    onChange(numberType: string, numberString: string) {
-        this.props.onChange({numberType: numberType, numberString: numberString, type: HexIntegerView.type});
+    onChange(changedValues: any) {
+        this.props.onChange(Object.assign({}, this.props.values, changedValues));
     }
 
     renderErrorMessages(): any {
