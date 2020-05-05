@@ -1,28 +1,23 @@
 import React from 'react';
-import ChooseOptionView from '../ChooseOptionView'
+import ChooseOptionView from '../ChooseOptionView';
+import * as Padding from '../../hex/Padding';
 
-const REPEAT_N = "Repeat N times"
-const REPEAT_TO = "Repeat up to index"
+const REPEAT_OPTIONS = [Padding.REPEAT_N, Padding.REPEAT_TO];
 
-class PaddingEditView extends React.Component<PaddingProps> {
-    constructor(props: PaddingProps) {
+export default class PaddingEditView extends React.Component<Props> {
+    constructor(props: Props) {
         super(props);
         this.onPatternChange = this.onPatternChange.bind(this);
         this.onTypeChange = this.onTypeChange.bind(this);
         this.onNumberChange = this.onNumberChange.bind(this);
     }
 
-    static get defaultValues(): PaddingValues {
-        return {
-           pattern: "A",
-           repeatType: REPEAT_N,
-           number: 1,
-           type: PaddingEditView.type,
-       };
+    static get defaultValues(): Padding.Values {
+        return Padding.Utils.defaultValues();
     }
 
     static get type(): string {
-        return "Padding"
+        return Padding.TYPE;
     }
 
     render() {
@@ -34,7 +29,7 @@ class PaddingEditView extends React.Component<PaddingProps> {
                 <ChooseOptionView
                     value={this.props.values.repeatType}
                     onChange={this.onTypeChange}
-                    options={[REPEAT_N, REPEAT_TO]} />
+                    options={REPEAT_OPTIONS} />
                 <input type="number" min="1"
                     value={this.props.values.number}
                     onChange={this.onNumberChange} />
@@ -58,17 +53,7 @@ class PaddingEditView extends React.Component<PaddingProps> {
     }
 }
 
-interface PaddingValues {
-  number: number,
-  pattern: string,
-  repeatType: string,
-  type: string,
+export interface Props {
+  values: Padding.Values,
+  onChange: (newValues: Padding.Values) => void,
 }
-
-interface PaddingProps {
-  values: PaddingValues,
-  onChange: (newValues: PaddingValues) => void,
-}
-
-export {REPEAT_N, REPEAT_TO};
-export default PaddingEditView;

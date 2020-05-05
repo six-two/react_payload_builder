@@ -1,13 +1,14 @@
 import React from 'react';
-import BytesStringBuilder from '../../BytesStringBuilder';
-import ByteString from '../../ByteString';
+import BytesStringBuilder from '../../hex/BytesStringBuilder';
+import ByteString from '../../hex/ByteString';
 
 export default class HexStringView extends React.Component<Props, {}> {
     render() {
         try {
             return (
                 <div style={{backgroundColor: "gray", textAlign: "center", margin: "25px"}}>
-                    {BytesStringBuilder.getBytesStrings(this.props.blueprints).map((value: TaggedByteString, i: number) => {
+                    {BytesStringBuilder.getBytesStrings(this.props.blueprints).map(
+                      (value: TaggedByteString, i: number) => {
                         const color: string = this.props.colors[i % this.props.colors.length];
                         //TODO use a real key
                         return <span style={{color: color}} key={value.key}>{value.data.str}</span>;
