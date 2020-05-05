@@ -1,47 +1,40 @@
 import React from 'react';
 import ChooseOptionView from '../ChooseOptionView';
-import * as Padding from '../../hex/Padding';
+import * as Str from '../../hex/String';
 
-export default class PaddingEditView extends React.Component<Props> {
+const LABELS_NORMAL = ["Repeat ", " exactly ", " time(s)"];
+const LABELS_REVERSED = ["Reverse ", " and repeat it ", " time(s)"];
+
+export default class StringEditView extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
         this.onPatternChange = this.onPatternChange.bind(this);
-        this.onTypeChange = this.onTypeChange.bind(this);
         this.onNumberChange = this.onNumberChange.bind(this);
     }
 
-    static get defaultValues(): Padding.Values {
-        return Padding.Utils.defaultValues();
-    }
-
-    static get type(): string {
-        return Padding.TYPE;
-    }
-
     render() {
+      const labels = this.props.values.type === Str.TYPE_REVERSED?
+            LABELS_REVERSED : LABELS_NORMAL;
         return (
             <div>
-                Repeat
+                {labels[0]}
                 <input type="text"
                     value={this.props.values.pattern}
                     onChange={this.onPatternChange} />
-                  up to index
+                    {labels[1]}
                 <input type="number" min="1"
-                    value={this.props.values.paddToLength}
+                    value={this.props.values.repeatCount}
                     onChange={this.onNumberChange} />
+                    {labels[2]}
             </div>);
     }
 
     onNumberChange(event: React.ChangeEvent<HTMLInputElement>) {
-        this.onChange({paddToLength: event.target.value});
+        this.onChange({repeatCount: event.target.value});
     }
 
     onPatternChange(event: React.ChangeEvent<HTMLInputElement>) {
         this.onChange({pattern: event.target.value});
-    }
-
-    onTypeChange(newValue: string) {
-        this.onChange({repeatType: newValue});
     }
 
     onChange(changedValues: any) {
@@ -50,6 +43,6 @@ export default class PaddingEditView extends React.Component<Props> {
 }
 
 export interface Props {
-  values: Padding.Values,
-  onChange: (newValues: Padding.Values) => void,
+  values: Str.Values,
+  onChange: (newValues: Str.Values) => void,
 }

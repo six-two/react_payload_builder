@@ -25,7 +25,7 @@ export default class ByteString {
         }
     }
 
-    getInverted(): ByteString {//TODO later: is pretty inefficient
+    getReversed(): ByteString {//TODO later: is pretty inefficient
       let invStr = "";
       for (let i = this.bytes.length - 1; i >= 0; i--) {
         invStr += this.bytes[i];

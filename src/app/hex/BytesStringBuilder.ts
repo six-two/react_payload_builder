@@ -1,5 +1,6 @@
 import * as Padding from './Padding';
 import * as Int from './Integer';
+import * as Str from './String';
 import ByteString from './ByteString';
 
 export default class Instance {
@@ -22,6 +23,10 @@ export default class Instance {
             case Int.TYPE:
                 let littleEndian = true;
                 return Int.Utils.integerToBytes(blueprint, littleEndian);
+            case Str.TYPE:
+                return Str.Utils.stringToBytes(blueprint);
+            case Str.TYPE_REVERSED:
+                return Str.ReversedUtils.stringToBytes(blueprint);
             default:
                 return new ByteString("<Unknown type>");
         }

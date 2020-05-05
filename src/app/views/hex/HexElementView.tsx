@@ -1,11 +1,21 @@
 import React from 'react';
-import ChooseOptionView from '../ChooseOptionView'
-import Padding from './PaddingEditView'
-import Integer from './IntegerEditView'
+import ChooseOptionView from '../ChooseOptionView';
+import Padding from './PaddingEditView';
+import Integer from './IntegerEditView';
+import String from './StringEditView';
+import * as Int from '../../hex/Integer';
+import * as Pad from '../../hex/Padding';
+import * as Str from '../../hex/String';
 
-var TYPES = [Padding.type, Integer.type]
+var TYPES = [Int.TYPE, Str.TYPE, Str.TYPE_REVERSED, Pad.TYPE];
+const TYPE_MAP = new Map<string, TypeInfos>();
+TYPE_MAP.set(Pad.TYPE, {defaultValues: Pad.Utils.defaultValues, viewClass: Padding});
+TYPE_MAP.set(Int.TYPE, {defaultValues: Int.Utils.defaultValues, viewClass: Integer});
+TYPE_MAP.set(Str.TYPE, {defaultValues: Str.Utils.defaultValues, viewClass: String});
+TYPE_MAP.set(Str.TYPE_REVERSED, {defaultValues: Str.ReversedUtils.defaultValues, viewClass: String});
 
-class HexElementView extends React.Component<HexElementViewProps, HexElementViewProps> {
+
+export default class HexElementView extends React.Component<HexElementViewProps, HexElementViewProps> {
     constructor(props: HexElementViewProps) {
         super(props);
         this.onTypeChange = this.onTypeChange.bind(this);
@@ -44,18 +54,19 @@ class HexElementView extends React.Component<HexElementViewProps, HexElementView
     }
 
     defaultValues(type: string): any {
-        return this.typeToClass(type).defaultValues;
+      let ret = TYPE_MAP.get(type)?.defaultValues;
+      if (!ret) {
+        throw Error(`Unknown type: ${type}`);
+      }
+      return ret();
     }
 
     typeToClass(type: string): any {
-        switch (type) {
-            case Padding.type:
-                return Padding;
-            case Integer.type:
-                return Integer;
-            default:
-                throw Error(`Unknown type: ${type}`);
-        }
+      let ret = TYPE_MAP.get(type)?.viewClass;
+      if (!ret) {
+        throw Error(`Unknown type: ${type}`);
+      }
+      return ret;
     }
 };
 
@@ -65,10 +76,7 @@ interface HexElementViewProps {
   data: any,
 }
 
-// HexElementView.propTypes = {
-//    onChange: PropTypes.func.isRequired,//f(index)
-//    index: PropTypes.number.isRequired,//wil be used to identify this object
-//    data: PropTypes.object.isRequired,//{type: "Padding", pattern: string, repeatType: string, number: int}
-// };
-
-export default HexElementView;
+interface TypeInfos {
+  defaultValues: any,
+  viewClass: any,
+}

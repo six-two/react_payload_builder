@@ -6,7 +6,7 @@ export default class HexStringView extends React.Component<Props, {}> {
     render() {
         try {
             return (
-                <div style={{backgroundColor: "gray", textAlign: "center", margin: "25px"}}>
+                <div style={{backgroundColor: "lightgray", textAlign: "center", margin: "25px"}}>
                     {BytesStringBuilder.getBytesStrings(this.props.blueprints).map(
                       (value: TaggedByteString, i: number) => {
                         const color: string = this.props.colors[i % this.props.colors.length];
