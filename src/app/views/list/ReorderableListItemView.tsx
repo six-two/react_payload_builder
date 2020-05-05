@@ -1,8 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-class ListItemView extends React.Component {
-    constructor(props) {
+export default class ListItemView extends React.Component<Props, {}> {
+    constructor(props: Props) {
         super(props);
         this.onMoveUp = this.onMoveUp.bind(this);
         this.onMoveDown = this.onMoveDown.bind(this);
@@ -46,11 +45,10 @@ class ListItemView extends React.Component {
     }
 }
 
-ListItemView.propTypes = {
-    index: PropTypes.number.isRequired,
-    isLast: PropTypes.bool.isRequired,
-    onItemsSwap: PropTypes.func.isRequired,//f(srcIndex, dstIndex)
-    onItemDelete: PropTypes.func.isRequired,//f(index)
-};
-
-export default ListItemView;
+interface Props {
+  children: any,
+  index: number,
+  isLast: boolean,
+  onItemsSwap: (srcIndex: number, dstIndex: number) => void,
+  onItemDelete: (index: number) => void,
+}

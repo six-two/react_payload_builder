@@ -1,4 +1,4 @@
-class ByteString {
+export default class ByteString {
     str: string;
     bytes: string[];
 
@@ -25,5 +25,3 @@ class ByteString {
         }
     }
 }
-
-export default ByteString;

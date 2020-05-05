@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ChooseOptionView from '../ChooseOptionView'
 import Padding from './PaddingEditView'
 import Integer from './IntegerEditView'
@@ -38,26 +37,14 @@ class HexElementView extends React.Component<HexElementViewProps, HexElementView
     }
 
     renderChild(type: string): any {
-        switch (type) {
-            case Padding.type:
-                return (<Padding onChange={this.onChildChange} values={this.props.data} />);
-            case Integer.type:
-                return (<Integer onChange={this.onChildChange} values={this.props.data} />);
-            default:
-                return (<span><br/>{"[Error] Unknown type: '" + type + "'"}</span>);
-        }
+      return React.createElement(this.typeToClass(type), {
+        onChange: this.onChildChange,
+        values: this.props.data,
+      });
     }
 
     defaultValues(type: string): any {
         return this.typeToClass(type).defaultValues;
-        // switch (type) {
-        //     case Padding.type:
-        //         return Padding.defaultValues;
-        //     case Integer.type:
-        //         return Integer.defaultValues;
-        //     default:
-        //         return {};
-        // }
     }
 
     typeToClass(type: string): any {

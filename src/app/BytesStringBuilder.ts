@@ -2,12 +2,15 @@ import {REPEAT_N, REPEAT_TO} from './views/hex/PaddingEditView';
 import Padding from './views/hex/PaddingEditView';
 import ByteString from './ByteString';
 
-class Instance {
-    static getBytesStrings(blueprintList: any[]): ByteString[]{
-        let processed: ByteString[] = [];
-        for (var i = 0; i < blueprintList.length; i++) {
-            var tmp = Instance.toBytes(blueprintList[i], processed);
-            processed.push(tmp);
+export default class Instance {
+    static getBytesStrings(blueprintList: Blueprint[]): TaggedByteString[]{
+        let processed: TaggedByteString[] = [];
+        let previous: ByteString[] = [];
+        for (let i = 0; i < blueprintList.length; i++) {
+            let bytes: ByteString = Instance.toBytes(blueprintList[i].data, previous);
+            let entry = {key: blueprintList[i].key, data: bytes};
+            previous.push(bytes);
+            processed.push(entry);
         }
         return processed;
     }
@@ -50,4 +53,12 @@ class Instance {
     }
 };
 
-export default Instance;
+interface Blueprint {
+  key: number,
+  data: any,
+}
+
+interface TaggedByteString {
+  key: number,
+  data: ByteString,
+}

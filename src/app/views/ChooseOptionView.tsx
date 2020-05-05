@@ -1,8 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-class ChooseOptionView extends React.Component {
-    static defaultValue() {
+export class ChooseOptionView extends React.Component<ChooseOptionViewProps, {}> {
+    static defaultValue(): string {
         return "";
     }
 
@@ -11,19 +10,19 @@ class ChooseOptionView extends React.Component {
              <option value="" key={-1} disabled hidden>
                 {this.props.prompt ? this.props.prompt : "Choose a option"}
              </option>
-             {this.props.options.map((value, i) => {
+             {this.props.options.map((value: any, i: number) => {
+                // Here using key=index should be ok, since the order should not change
                 return <option value={value} key={i}>{value}</option>;
              })}
          </select>);
     }
 }
 
-ChooseOptionView.propTypes = {
-    prompt: PropTypes.string,
-    value: PropTypes.string.isRequired,
-    options: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired,
+export interface ChooseOptionViewProps {
+    prompt?: string,
+    value: string,
+    options: string[],
+    onChange: (newValue: string) => void,
 }
-
 
 export default ChooseOptionView;
