@@ -26,48 +26,48 @@ export interface Values {
 
 export class Utils {
   static defaultValues(): Values {
-      return {
-        numberString: "0x41414141",
-        numberType: INT_32,
-         type: TYPE,
-     };
+    return {
+      numberString: "0x41414141",
+      numberType: INT_32,
+      type: TYPE,
+    };
   }
 
-  static getErrorMessage(integer: Values){
+  static getErrorMessage(integer: Values) {
     try {
-        var num: bigint = Utils.parseNumber(integer.numberString);
-        const type: string = integer.numberType;
-        let maxOrNull = MAX_INT_MAP.get(type);
-        if (!maxOrNull) {
-          throw new Error(`Unknown number type: ${type}`);
-        }else{
-          let max: bigint = maxOrNull;
-          if (num > max){
-              return `Number to big for '${type}'`;
-          }
-          if (num < 0n) {
-              const min: bigint = (max + 1n) / BigInt(-2);
-              if (num < min) {
-                  return `Number to big for '${type}'`;
-              }
+      var num: bigint = Utils.parseNumber(integer.numberString);
+      const type: string = integer.numberType;
+      let maxOrNull = MAX_INT_MAP.get(type);
+      if (!maxOrNull) {
+        throw new Error(`Unknown number type: ${type}`);
+      } else {
+        let max: bigint = maxOrNull;
+        if (num > max) {
+          return `Number to big for '${type}'`;
+        }
+        if (num < 0n) {
+          const min: bigint = (max + 1n) / BigInt(-2);
+          if (num < min) {
+            return `Number to big for '${type}'`;
           }
         }
+      }
     } catch (e) {
-        return "Parsing integer failed";
+      return "Parsing integer failed";
     }
   }
 
   static parseNumber(string: string): bigint {
-      // Remove characters that can be used to make strings more human readable
-      string = string.replace(/[\s_]+/g, "");
-      return BigInt(string);
+    // Remove characters that can be used to make strings more human readable
+    string = string.replace(/[\s_]+/g, "");
+    return BigInt(string);
   }
 
 
   static integerToBytes(integer: Values,
-                        littleEndian: boolean = true): ByteString {
+    littleEndian: boolean = true): ByteString {
     var error = Utils.getErrorMessage(integer);
-    if (error){
+    if (error) {
       return new ByteString(`<Error: ${error}>`)
     }
     var num: bigint = Utils.parseNumber(integer.numberString);
@@ -76,7 +76,7 @@ export class Utils {
     if (!max || !byteCount) {
       throw new Error(`Unknown number type: ${integer.numberType}`);
     }
-    if (num < 0n){
+    if (num < 0n) {
       num += max + 1n;
     }
     let hex: string = num.toString(16);
