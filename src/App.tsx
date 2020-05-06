@@ -13,7 +13,6 @@ export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props);
     this.state = { blueprints: [] }
-    this.onChange = this.onChange.bind(this);
   }
 
   render() {
@@ -24,20 +23,19 @@ export default class App extends React.Component<any, State> {
           View the Gitlab Pages version
         </a>
         <HexBuilderListView
-          onChange={this.onChange}
+          onChange={this.onListChange}
           entryClass={HexElementView}
           newItemData={(index: number) => {
             var v: any = Str.Utils.defaultValues();
             v.repeatCount = index + 1;
             return v;
           }} />
-        <OutputView blueprints={this.state.blueprints} colors={colors}
-        />
+        <OutputView blueprints={this.state.blueprints} />
       </div>
     );
   }
 
-  onChange(newBlueprints: Blueprint[]) {
+  onListChange = (newBlueprints: Blueprint[]) => {
     this.setState({ blueprints: newBlueprints });
   }
 }

@@ -2,17 +2,16 @@ import React from 'react';
 import ChooseOptionView from '../ChooseOptionView';
 import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/BytesStringBuilder';
 import CopyButton from '../CopyButton';
+import * as FormatChooser from "../PresetOrCustomString";
 
 
-const PYTHON_FORMAT = "python";
-const PRINTF_FORMAT = "printf";
-const RAW_FORMAT = "raw";
 const CUSTOM_FORMAT = "custom";
-const FORMATS = [RAW_FORMAT, PYTHON_FORMAT, PRINTF_FORMAT, CUSTOM_FORMAT];
+const DEFAULT_FORMAT = "raw";
 const FORMAT_MAP = new Map<string, string>();
-FORMAT_MAP.set(PYTHON_FORMAT, "python -c 'print(\"%s\")'");
-FORMAT_MAP.set(PRINTF_FORMAT, "printf '%s'");
-FORMAT_MAP.set(RAW_FORMAT, "%s");
+FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
+FORMAT_MAP.set("printf", "printf '%s'");
+FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
+FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
 
 function escapeOutputString(unescaped: string): string {
   // escape quote signs since they could mess up passing the payload to a program (eg printf)
@@ -24,19 +23,15 @@ function escapeOutputString(unescaped: string): string {
 export default class OutputView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { outputFormat: RAW_FORMAT, customFormat: "your_command --flags '%s'" };
-    this.onTypeChange = this.onTypeChange.bind(this);
-    this.onValueChange = this.onValueChange.bind(this);
+    const default_format_value = FORMAT_MAP.get(DEFAULT_FORMAT) ?? "%s";
+    this.state = {
+      format: { option: DEFAULT_FORMAT, value: default_format_value }
+    };
   }
 
   render() {
     var error;
-    var format: string | undefined = this.state.outputFormat === CUSTOM_FORMAT ? this.state.customFormat :
-      FORMAT_MAP.get(this.state.outputFormat);
-    if (!format) {
-      throw Error(`Unknown format type: '${this.state.outputFormat}'`);
-    }
-    const parts = format.split("%s");
+    const parts = this.state.format.value.split("%s");
     if (parts.length !== 2) {
       error = 'Format has to contain exactly one "%s" (without the quotes)';
     }
@@ -52,44 +47,29 @@ export default class OutputView extends React.Component<Props, State> {
         return taggedStr;
       })
     } catch (e) {
-      return (
-        <div className="error-message" style={{ backgroundColor: "red" }}>
-          <p>An error occured while creating the output</p>
-          {e.name + ": " + e.message}
-        </div>
-      );
+      error = "An error occured while creating the output";
     }
     let textToCopy = escapedTaggedStrings.map((tbs) => { return tbs.str }).join("");
     textToCopy = parts[0] + textToCopy + parts[1];
 
-    const coloredByteString = escapedTaggedStrings.map(
-      (value: TaggedString, i: number) => {
-        const color: string = this.props.colors[i % this.props.colors.length];
-        return <span className="multi-colored" key={value.key}>{value.str}</span>;
-      });
-
-    const customFormatTextField = this.state.outputFormat === CUSTOM_FORMAT ?
-      <input type="text"
-        value={this.state.customFormat}
-        onChange={this.onValueChange} /> : null;
-
     return (
       <div>
         {"Output format: "}
-        <ChooseOptionView
-          value={this.state.outputFormat}
-          onChange={this.onTypeChange}
-          options={FORMATS} />
-        {customFormatTextField}
+        <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
+          values={this.state.format}
+          customOption={CUSTOM_FORMAT}
+          onChange={this.onFormatChange} />
         <br />
         {error ?
           <span className="err-msg">{error}</span> :
-          <div  className="byteOutput">
+          <div className="byteOutput">
             <CopyButton text={textToCopy} />
             <br />
             {parts[0]}
             <span>
-              {coloredByteString}
+              {escapedTaggedStrings.map((value: TaggedString) => {
+                return <span className="multi-colored" key={value.key}>{value.str}</span>;
+              })}
             </span>
             {parts[1]}
           </div>
@@ -98,23 +78,17 @@ export default class OutputView extends React.Component<Props, State> {
     );
   }
 
-  onTypeChange(newValue: string) {
-    this.setState({ outputFormat: newValue });
-  }
-
-  onValueChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ customFormat: event.target.value });
+  onFormatChange = (newFormat: FormatChooser.Values) => {
+    this.setState({ format: newFormat });
   }
 }
 
 interface Props {
-  colors: string[],
   blueprints: Blueprint[],
 }
 
 interface State {
-  outputFormat: string,
-  customFormat: string,
+  format: FormatChooser.Values,
 }
 
 interface TaggedString {
