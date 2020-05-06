@@ -2,37 +2,69 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.app-root {
+  align: center;
+  text-align: center;
 }
+
+.list-item {
+  border-radius: 25px;
+  border: 2px solid #73AD21;
+  padding: 5px;
+  margin-bottom: 5px;
+  width: 800px;
+}
+
+
+
+.list .multi-colored:nth-child(3n+0) {
+    border-color: red;
+  }
+
+.list.multi-colored:nth-child(3n+1) {
+    border-color: green;
+  }
+
+.list .multi-colored:nth-child(3n+2) {
+    border-color: blue;
+  }
+
+/* .byteOutput  .multi-colored {
+    border-bottom: 1px solid;
+  } */
+
+.err-msg {
+  background-color: #ffaaaa;
+  border: 2px solid #f00;
+  padding: 3px;
+}
+
+  .byteOutput .multi-colored:nth-child(3n+0) {
+    color: #ff0000;
+      background-color: #ffaaaa;
+    }
+
+    .byteOutput .multi-colored:nth-child(3n+1) {
+      color: darkgreen;
+        background-color: #aaffaa;
+      }
+
+      .byteOutput .multi-colored:nth-child(3n+2) {
+        color: #0000ff;
+          background-color: #aaaaff;
+        }
+
+.byteOutput {
+  border-radius: 10px;
+  background-color: #eee;
+  text-align: center;
+  padding: 5px;
+ }
+
+ .byteOutput span {
+   overflow-wrap: break-word;
+ }

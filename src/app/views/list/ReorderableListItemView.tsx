@@ -10,9 +10,9 @@ export default class ListItemView extends React.Component<Props, {}> {
 
   render() {
     return (
-      <div>
+      <li className="list-item multi-colored">
         {this.props.children}
-        <div>
+        <div className="list-item-controls">
           <input type="button"
             value="Up"
             onClick={this.onMoveUp}
@@ -25,7 +25,7 @@ export default class ListItemView extends React.Component<Props, {}> {
             value="Delete"
             onClick={this.onDelete} />
         </div>
-      </div>);
+      </li>);
   }
 
   onMoveUp() {

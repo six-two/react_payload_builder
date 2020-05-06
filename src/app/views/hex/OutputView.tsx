@@ -17,7 +17,7 @@ FORMAT_MAP.set(RAW_FORMAT, "%s");
 function escapeOutputString(unescaped: string): string {
   // escape quote signs since they could mess up passing the payload to a program (eg printf)
   return unescaped.replace(/'/g, "\\x27").replace(/"/g, "\\x22")
-  // escape spaces, since the html does not handle consecutive whitespaces well
+    // escape spaces, since the html does not handle consecutive whitespaces well
     .replace(/ /g, "\\x20");
 }
 
@@ -65,8 +65,7 @@ export default class OutputView extends React.Component<Props, State> {
     const coloredByteString = escapedTaggedStrings.map(
       (value: TaggedString, i: number) => {
         const color: string = this.props.colors[i % this.props.colors.length];
-        return <span style={{ color: color, overflowWrap: "break-word" }}
-          key={value.key}>{value.str}</span>;
+        return <span className="multi-colored" key={value.key}>{value.str}</span>;
       });
 
     const customFormatTextField = this.state.outputFormat === CUSTOM_FORMAT ?
@@ -83,15 +82,18 @@ export default class OutputView extends React.Component<Props, State> {
           options={FORMATS} />
         {customFormatTextField}
         <br />
-        <CopyButton text={textToCopy} />
-        <br />
         {error ?
-          <span style={{ color: "red" }}>{error}</span> :
-          <div style={{ backgroundColor: "lightgray", textAlign: "center", margin: "25px" }}>
+          <span className="err-msg">{error}</span> :
+          <div  className="byteOutput">
+            <CopyButton text={textToCopy} />
+            <br />
             {parts[0]}
-            {coloredByteString}
+            <span>
+              {coloredByteString}
+            </span>
             {parts[1]}
-          </div>}
+          </div>
+        }
       </div>
     );
   }

@@ -16,19 +16,18 @@ export default class ReorderableListView extends React.Component<Props, State>{
     return (
       <div>
         <h2>Hex builder</h2>
-        <ol>
+        <ol className="list">
           {this.state.entries.map((elem, index) =>
-            <li key={elem.key}>
-              <ListItemView
-                index={index}
-                isLast={index + 1 === this.state.entries.length}
-                onItemDelete={this.onItemDeleted}
-                onItemsSwap={this.onItemSwapped} >
-                {React.createElement(this.props.entryClass,
-                  { index: index, data: elem.data, onChange: this.onItemChange })}
+            <ListItemView
+              index={index}
+              key={elem.key}
+              isLast={index + 1 === this.state.entries.length}
+              onItemDelete={this.onItemDeleted}
+              onItemsSwap={this.onItemSwapped} >
+              {React.createElement(this.props.entryClass,
+                { index: index, data: elem.data, onChange: this.onItemChange })}
 
-              </ListItemView>
-            </li>
+            </ListItemView>
           )}
           <li key={-1}>
             <input type="button"
