@@ -5,7 +5,7 @@ import * as Int from "../../hex/Integer";
 const INT_SIZES = [Int.INT_8, Int.INT_16, Int.INT_32, Int.INT_64];
 const LABLES = [" as ", " integer"]
 
-export default class HexIntegerView extends React.Component<Props, {}> {
+export default class IntegerEditView extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
     this.onTypeChange = this.onTypeChange.bind(this);

@@ -1,13 +1,12 @@
 import React from 'react';
 import './App.css';
-import HexBuilderListView from './app/views/list/ReorderableListView'
-import HexStringView from './app/views/hex/HexStringView'
-import HexElementView from './app/views/hex/HexElementView'
-import * as Str from './app/hex/String'
+import HexBuilderListView from './app/views/list/ReorderableListView';
+import OutputView from './app/views/hex/OutputView';
+import HexElementView from './app/views/hex/HexElementView';
+import * as Str from './app/hex/String';
 
 // TODO: next steps
 //  - show little endian checkbox if at least one integer is selected
-//  - Add output format (eg python, printf, custom, raw)
 //  - CSS
 
 export default class App extends React.Component<any, State> {
@@ -29,8 +28,8 @@ export default class App extends React.Component<any, State> {
             v.repeatCount = index + 1;
             return v;
           }} />
-        <HexStringView blueprints={this.state.blueprints} colors={colors}
-          enableCopy={true} />
+        <OutputView blueprints={this.state.blueprints} colors={colors}
+           />
       </div>
     );
   }
