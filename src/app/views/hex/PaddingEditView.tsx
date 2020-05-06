@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Padding from '../../hex/Padding';
+import * as Common from '../../Common';
 
 const LABELS = ["Repeat ", " up to index "];
 
@@ -18,14 +19,16 @@ export default class PaddingEditView extends React.Component<Props> {
           value={this.props.values.pattern}
           onChange={this.onPatternChange} />
         {LABELS[1]}
-        <input type="number" min="1"
+        <input type="text"
           value={this.props.values.paddToLength}
           onChange={this.onNumberChange} />
       </div>);
   }
 
   onNumberChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.onChange({ paddToLength: event.target.value });
+    if (Common.isValidRepeatCountWhileEditing(event.target.value)) {
+      this.onChange({ paddToLength: event.target.value });
+    }
   }
 
   onPatternChange(event: React.ChangeEvent<HTMLInputElement>) {

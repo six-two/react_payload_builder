@@ -34,7 +34,10 @@ export default class HexIntegerView extends React.Component<Props, {}> {
   }
 
   onValueChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.onChange({ numberString: event.target.value });
+    // only allow certain input characters: hex and 'o' and 'x' for 0x/0b
+    if (/^([0-9a-fA-Fxo]*)$/.test(event.target.value)) {
+      this.onChange({ numberString: event.target.value });
+    }
   }
 
   onChange(changedValues: any) {

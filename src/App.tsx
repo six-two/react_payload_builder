@@ -7,7 +7,6 @@ import * as Str from './app/hex/String'
 
 // TODO: next steps
 //  - show little endian checkbox if at least one integer is selected
-//  - Add copy button to output
 //  - Add output format (eg python, printf, custom, raw)
 //  - CSS
 
@@ -30,14 +29,14 @@ export default class App extends React.Component<any, State> {
             v.repeatCount = index + 1;
             return v;
           }} />
-        <HexStringView blueprints={this.state.blueprints} colors={colors} />
+        <HexStringView blueprints={this.state.blueprints} colors={colors}
+          enableCopy={true} />
       </div>
     );
   }
 
   onChange(newBlueprints: Blueprint[]) {
-    const newState: State = Object.assign({}, this.state, { blueprints: newBlueprints });
-    this.setState(newState);
+    this.setState({ blueprints: newBlueprints });
   }
 }
 
