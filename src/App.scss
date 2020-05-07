@@ -26,32 +26,17 @@ $row3d: #0000ff;
   width: 100%
  }
 
-.list li {
-  align: center;
-  list-style: none;
+.list .multi-colored:nth-child(3n+0) {
+  background-color: $row3l;
 }
 
-// .list td {
-//   border: 2px solid #73AD21;
-//   border-radius: 5px;
-// }
-
-//child indices are different here: since the header row is the first one
-.list .multi-colored:nth-child(3n+0) {
-    background-color: $row2l;
-  }
-
 .list .multi-colored:nth-child(3n+1) {
-    background-color: $row3l;
-  }
+  background-color: $row1l;
+}
 
 .list .multi-colored:nth-child(3n+2) {
-    background-color: $row1l;
-  }
-
-/* .byteOutput  .multi-colored {
-    border-bottom: 1px solid;
-  } */
+  background-color: $row2l;
+}
 
 .err-msg {
   border-radius: 5px;
@@ -62,18 +47,18 @@ $row3d: #0000ff;
 
 .byteOutput {
   .multi-colored:nth-child(3n+0) {
-  color: $row3d;
-  background-color: $row3l;
+    color: $row3d;
+    background-color: $row3l;
   }
 
   .multi-colored:nth-child(3n+1) {
-  color: $row1d;
-  background-color: $row1l;
+    color: $row1d;
+    background-color: $row1l;
   }
 
   .multi-colored:nth-child(3n+2) {
-  color: $row2d;
-  background-color: $row2l;
+    color: $row2d;
+    background-color: $row2l;
   }
 }
 

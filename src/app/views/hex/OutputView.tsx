@@ -1,4 +1,5 @@
 import React from 'react';
+import Checkbox from 'rc-checkbox';
 import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import CopyButton from '../CopyButton';
 import * as FormatChooser from "../PresetOrCustomString";
@@ -24,7 +25,8 @@ export default class OutputView extends React.Component<Props, State> {
     super(props);
     const default_format_value = FORMAT_MAP.get(DEFAULT_FORMAT) ?? "%s";
     this.state = {
-      format: { option: DEFAULT_FORMAT, value: default_format_value }
+      format: { option: DEFAULT_FORMAT, value: default_format_value },
+      isLittleEndian: true,
     };
   }
 
@@ -36,7 +38,8 @@ export default class OutputView extends React.Component<Props, State> {
     }
 
     let escapedTaggedStrings: TaggedString[] = [];//to make the type check happy
-    let result = ByteStringBuilder.getBytesStrings(this.props.blueprints);
+    let result = new ByteStringBuilder(this.state.isLittleEndian)
+      .getBytesStrings(this.props.blueprints);
     if (result.errorMessage) {
       error = result.errorMessage
     } else {
@@ -53,6 +56,13 @@ export default class OutputView extends React.Component<Props, State> {
 
     return (
       <div>
+        <label>
+          <Checkbox
+            checked={this.state.isLittleEndian}
+            onChange={this.onEndianChange}
+          />
+              use little endian
+            </label>
         <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
           values={this.state.format}
           customOption={CUSTOM_FORMAT}
@@ -80,6 +90,10 @@ export default class OutputView extends React.Component<Props, State> {
   onFormatChange = (newFormat: FormatChooser.Values) => {
     this.setState({ format: newFormat });
   }
+
+  onEndianChange = (event: any) => {
+    this.setState({ isLittleEndian: event.target.checked });
+  }
 }
 
 interface Props {
@@ -88,6 +102,7 @@ interface Props {
 
 interface State {
   format: FormatChooser.Values,
+  isLittleEndian: boolean,
 }
 
 interface TaggedString {

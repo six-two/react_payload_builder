@@ -6,7 +6,6 @@ import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
 
 // TODO: next steps
-//  - show little endian checkbox if at least one integer is selected
 //  - CSS
 
 export default class App extends React.Component<any, State> {

@@ -14,31 +14,34 @@ export default class ReorderableListView extends React.Component<Props, State>{
       <div>
         <h2>Hex builder</h2>
         <table className="list">
-          <tr>
-            <th>Type</th>
-            <th>Configuration</th>
-            <th>Actions</th>
-          </tr>
-          {this.state.entries.map((elem, index) => {
-            return (
-              <HexElementView
-                index={index}
-                key={elem.key}
-                isLast={index + 1 === this.state.entries.length}
-                onItemDelete={this.onItemDeleted}
-                onItemsSwap={this.onItemSwapped}
-                onChange={this.onItemChange}
-                data={elem.data} />
-            );
-          }
-          )}
-          <tr key={-1}>
-          <td/><td>
-            <input type="button" style={{width: "100%"}}
-              value="Add new element"
-              onClick={this.onItemAdd} />
-              </td><td/>
-          </tr>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Configuration</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.entries.map((elem, index) => {
+              return (
+                <HexElementView
+                  index={index}
+                  key={elem.key}
+                  isLast={index + 1 === this.state.entries.length}
+                  onItemDelete={this.onItemDeleted}
+                  onItemsSwap={this.onItemSwapped}
+                  onChange={this.onItemChange}
+                  data={elem.data} />
+              );
+            })}
+            <tr key={-1}>
+              <td /><td>
+                <input type="button" style={{ width: "100%" }}
+                  value="Add new element"
+                  onClick={this.onItemAdd} />
+              </td><td />
+            </tr>
+          </tbody>
         </table>
       </div>
     );

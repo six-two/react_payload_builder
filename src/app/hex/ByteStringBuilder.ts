@@ -17,13 +17,19 @@ export function throwBadInputError(message: string) {
 }
 
 export class ByteStringBuilder {
-  static getBytesStrings(blueprintList: Blueprint[]): BuilderResult {
+  littleEndian: boolean;
+
+  constructor(littleEndian: boolean = true) {
+    this.littleEndian = littleEndian;
+  }
+
+  getBytesStrings(blueprintList: Blueprint[]): BuilderResult {
     let i: number = 0;
     try {
       let processed: TaggedByteString[] = [];
       let previous: ByteString[] = [];
       for (i = 0; i < blueprintList.length; i++) {
-        let bytes: ByteString = ByteStringBuilder.toBytes(blueprintList[i].data, previous);
+        let bytes: ByteString = this.toBytes(blueprintList[i].data, previous);
         let entry = { key: blueprintList[i].key, data: bytes };
         previous.push(bytes);
         processed.push(entry);
@@ -38,13 +44,12 @@ export class ByteStringBuilder {
     }
   }
 
-  static toBytes(blueprint: any, previousByteStrings: ByteString[]): ByteString {
+  toBytes(blueprint: any, previousByteStrings: ByteString[]): ByteString {
     switch (blueprint.type) {
       case Padding.TYPE:
         return Padding.Utils.paddingToBytes(blueprint, previousByteStrings);
       case Int.TYPE:
-        let littleEndian = true;
-        return Int.Utils.integerToBytes(blueprint, littleEndian);
+        return Int.Utils.integerToBytes(blueprint, this.littleEndian);
       case Str.TYPE:
         return Str.Utils.stringToBytes(blueprint);
       case Str.TYPE_REVERSED:
