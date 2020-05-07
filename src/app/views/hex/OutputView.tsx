@@ -53,11 +53,11 @@ export default class OutputView extends React.Component<Props, State> {
 
     return (
       <div>
-        {"Output format: "}
         <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
           values={this.state.format}
           customOption={CUSTOM_FORMAT}
-          onChange={this.onFormatChange} />
+          onChange={this.onFormatChange}
+          label="Output format: " />
         <br />
         {error ?
           <span className="err-msg">{error}</span> :

@@ -1,3 +1,10 @@
+$row1l: #ffaaaa;
+$row2l: #aaffaa;
+$row3l: #aaaaff;
+$row1d: #ff0000;
+$row2d: darkgreen;
+$row3d: #0000ff;
+
 .app-root {
   align: center;
   text-align: center;
@@ -8,29 +15,38 @@
   text-align: right;
 }
 
-.list-item {
-  border-radius: 25px;
-  border: 2px solid #73AD21;
-  padding: 5px;
-  margin-bottom: 5px;
-  width: 800px;
-}
+.list {//TODO call it table or something
+  border-radius: 10px;
+  border: 2px solid #777;
+  background-color: #eee;
+  text-align: center;
+  align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%
+ }
 
 .list li {
   align: center;
   list-style: none;
 }
 
+// .list td {
+//   border: 2px solid #73AD21;
+//   border-radius: 5px;
+// }
+
+//child indices are different here: since the header row is the first one
 .list .multi-colored:nth-child(3n+0) {
-    border-color: red;
+    background-color: $row2l;
   }
 
-.list.multi-colored:nth-child(3n+1) {
-    border-color: green;
+.list .multi-colored:nth-child(3n+1) {
+    background-color: $row3l;
   }
 
 .list .multi-colored:nth-child(3n+2) {
-    border-color: blue;
+    background-color: $row1l;
   }
 
 /* .byteOutput  .multi-colored {
@@ -45,20 +61,20 @@
 }
 
 .byteOutput {
-.multi-colored:nth-child(3n+0) {
-color: #ff0000;
-background-color: #ffaaaa;
-}
+  .multi-colored:nth-child(3n+0) {
+  color: $row3d;
+  background-color: $row3l;
+  }
 
-.multi-colored:nth-child(3n+1) {
-color: darkgreen;
-background-color: #aaffaa;
-}
+  .multi-colored:nth-child(3n+1) {
+  color: $row1d;
+  background-color: $row1l;
+  }
 
-.multi-colored:nth-child(3n+2) {
-color: #0000ff;
-background-color: #aaaaff;
-}
+  .multi-colored:nth-child(3n+2) {
+  color: $row2d;
+  background-color: $row2l;
+  }
 }
 
 .byteOutput {
@@ -67,6 +83,10 @@ background-color: #aaaaff;
   background-color: #eee;
   text-align: center;
   padding: 5px;
+
+  button {
+    margin-bottom: 5px;
+  }
  }
 
  .byteOutput span {

@@ -16,6 +16,7 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
   render() {
     return (
       <div>
+        {this.props.label}
         <ChooseOptionView
           value={this.props.values.option}
           onChange={this.onTypeChange}
@@ -70,6 +71,7 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
 }
 
 export interface Props {
+  label?: string,
   options: Map<string, string>,
   customOption: string,
   values: Values,
