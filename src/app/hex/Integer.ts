@@ -1,4 +1,5 @@
 import ByteString from "./ByteString";
+import {throwBadInputError} from "./ByteStringBuilder";
 
 export const INT_8 = "8 bit";
 export const INT_16 = "16 bit";
@@ -68,7 +69,7 @@ export class Utils {
     littleEndian: boolean = true): ByteString {
     var error = Utils.getErrorMessage(integer);
     if (error) {
-      return new ByteString(`<Error: ${error}>`)
+      throwBadInputError(error);
     }
     var num: bigint = Utils.parseNumber(integer.numberString);
     let max = MAX_INT_MAP.get(integer.numberType);

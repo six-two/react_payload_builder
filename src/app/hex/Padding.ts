@@ -1,4 +1,5 @@
 import ByteString from "./ByteString";
+import {throwBadInputError} from "./ByteStringBuilder";
 
 export interface Values {
   paddToLength: number,
@@ -25,7 +26,7 @@ export class Utils {
     }
     var missing = padding.paddToLength - offset;
     if (missing < 0) {
-      return new ByteString("<Padding can not satisfy condition: to many previous bytes>");
+      throwBadInputError("Padding can not satisfy condition: to many previous bytes");
     }
     const patternBytes = new ByteString(padding.pattern ? padding.pattern : "?");
     const repeatCount = Math.floor(missing / patternBytes.bytes.length);

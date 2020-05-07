@@ -1,6 +1,6 @@
 import React from 'react';
 import ChooseOptionView from '../ChooseOptionView';
-import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/BytesStringBuilder';
+import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import CopyButton from '../CopyButton';
 import * as FormatChooser from "../PresetOrCustomString";
 
@@ -37,17 +37,17 @@ export default class OutputView extends React.Component<Props, State> {
     }
 
     let escapedTaggedStrings: TaggedString[] = [];//to make the type check happy
-    try {
-      let byteStrings = ByteStringBuilder.getBytesStrings(this.props.blueprints);
-      escapedTaggedStrings = byteStrings.map((bs: TaggedByteString) => {
+    let result = ByteStringBuilder.getBytesStrings(this.props.blueprints);
+    if (result.errorMessage) {
+      error = result.errorMessage
+    } else {
+      escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
         let taggedStr: TaggedString = {
           key: bs.key,
           str: escapeOutputString(bs.data.str),
         };
         return taggedStr;
-      })
-    } catch (e) {
-      error = "An error occured while creating the output";
+      });
     }
     let textToCopy = escapedTaggedStrings.map((tbs) => { return tbs.str }).join("");
     textToCopy = parts[0] + textToCopy + parts[1];
