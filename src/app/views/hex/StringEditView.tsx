@@ -12,11 +12,11 @@ export default class StringEditView extends React.Component<Props> {
     return (
       <div>
         {labels[0]}
-        <input type="text"
+        <input className="input-string" type="text"
           value={this.props.values.pattern}
           onChange={this.onPatternChange} />
         {labels[1]}
-        <input type="text"
+        <input className="input-count" type="text"
           value={this.props.values.repeatCount}
           onChange={this.onNumberChange} />
         {labels[2]}

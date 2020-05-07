@@ -28,6 +28,9 @@ export class Utils {
     if (missing < 0) {
       throwBadInputError(`Padding should be applied up to index ${padding.paddToLength}, but the string is already longer than that (length=${offset})`);
     }
+    if (!padding.pattern) {
+      throwBadInputError("Padding can not be empty");
+    }
     const patternBytes = new ByteString(padding.pattern ? padding.pattern : "?");
     const repeatCount = Math.floor(missing / patternBytes.bytes.length);
     const incompleteSize = missing - (repeatCount * patternBytes.bytes.length)

@@ -9,11 +9,11 @@ export default class PaddingEditView extends React.Component<Props> {
     return (
       <div>
         {LABELS[0]}
-        <input type="text"
+        <input className="input-string" type="text"
           value={this.props.values.pattern}
           onChange={this.onPatternChange} />
         {LABELS[1]}
-        <input type="text"
+        <input className="input-count" type="text"
           value={this.props.values.paddToLength}
           onChange={this.onNumberChange} />
       </div>);

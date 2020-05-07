@@ -1,14 +1,11 @@
-.App {
-  text-align: center;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
 .app-root {
   align: center;
   text-align: center;
+}
+
+.input-count {
+  width: 50px;
+  text-align: right;
 }
 
 .list-item {
@@ -19,7 +16,10 @@
   width: 800px;
 }
 
-
+.list li {
+  align: center;
+  list-style: none;
+}
 
 .list .multi-colored:nth-child(3n+0) {
     border-color: red;
@@ -44,20 +44,22 @@
   padding: 3px;
 }
 
-  .byteOutput .multi-colored:nth-child(3n+0) {
-    color: #ff0000;
-      background-color: #ffaaaa;
-    }
+.byteOutput {
+.multi-colored:nth-child(3n+0) {
+color: #ff0000;
+background-color: #ffaaaa;
+}
 
-    .byteOutput .multi-colored:nth-child(3n+1) {
-      color: darkgreen;
-        background-color: #aaffaa;
-      }
+.multi-colored:nth-child(3n+1) {
+color: darkgreen;
+background-color: #aaffaa;
+}
 
-      .byteOutput .multi-colored:nth-child(3n+2) {
-        color: #0000ff;
-          background-color: #aaaaff;
-        }
+.multi-colored:nth-child(3n+2) {
+color: #0000ff;
+background-color: #aaaaff;
+}
+}
 
 .byteOutput {
   border-radius: 10px;

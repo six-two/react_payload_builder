@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import HexBuilderListView from './app/views/list/ReorderableListView';
 import OutputView from './app/views/hex/OutputView';
 import HexElementView from './app/views/hex/HexElementView';
