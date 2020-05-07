@@ -3,6 +3,7 @@ import ChooseOptionView from '../ChooseOptionView';
 import Padding from './PaddingEditView';
 import Integer from './IntegerEditView';
 import String from './StringEditView';
+import ReorderableItemControls from '../list/ReorderableItemControls';
 import * as Int from '../../hex/Integer';
 import * as Pad from '../../hex/Padding';
 import * as Str from '../../hex/String';
@@ -25,13 +26,22 @@ function getTypeInfo(type: string): TypeInfos {
 export default class HexElementView extends React.Component<HexElementViewProps, HexElementViewProps> {
   render() {
     return (
-      <div className="editListView">
-        {"Type: "}
-        <ChooseOptionView value={this.props.data.type} options={TYPES}
-          onChange={this.onTypeChange} />
-
-        {this.renderChild(this.props.data.type)}
-      </div>
+      <tr className="list-item multi-colored">
+        <td>
+          <ChooseOptionView value={this.props.data.type} options={TYPES}
+            onChange={this.onTypeChange} />
+        </td>
+        <td>
+          {this.renderChild(this.props.data.type)}
+        </td>
+        <td>
+          <ReorderableItemControls
+            index={this.props.index}
+            isLast={this.props.isLast}
+            onItemsSwap={this.props.onItemsSwap}
+            onItemDelete={this.props.onItemDelete} />
+        </td>
+      </tr>
     );
   }
 
@@ -67,9 +77,12 @@ export default class HexElementView extends React.Component<HexElementViewProps,
 };
 
 interface HexElementViewProps {
-  onChange: (index: number, newValue: any) => void,
   index: number,
   data: any,
+  isLast: boolean,
+  onItemsSwap: (srcIndex: number, dstIndex: number) => void,
+  onItemDelete: (index: number) => void,
+  onChange: (index: number, newValue: any) => void,
 }
 
 interface TypeInfos {

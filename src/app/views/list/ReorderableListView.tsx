@@ -1,5 +1,6 @@
 import React from 'react';
-import ListItemView from './ReorderableListItemView';
+// import ListItemView from './ReorderableListItemView';
+import HexElementView from '../hex/HexElementView';
 
 
 export default class ReorderableListView extends React.Component<Props, State>{
@@ -12,28 +13,33 @@ export default class ReorderableListView extends React.Component<Props, State>{
     return (
       <div>
         <h2>Hex builder</h2>
-        <ol className="list">
+        <table className="list">
+          <tr>
+            <th>Type</th>
+            <th>Configuration</th>
+            <th>Actions</th>
+          </tr>
           {this.state.entries.map((elem, index) => {
-            const childProps = { index: index, data: elem.data, onChange: this.onItemChange };
             return (
-              <ListItemView
+              <HexElementView
                 index={index}
                 key={elem.key}
                 isLast={index + 1 === this.state.entries.length}
                 onItemDelete={this.onItemDeleted}
-                onItemsSwap={this.onItemSwapped} >
-
-                {React.createElement(this.props.entryClass, childProps)}
-              </ListItemView>
+                onItemsSwap={this.onItemSwapped}
+                onChange={this.onItemChange}
+                data={elem.data} />
             );
           }
           )}
-          <li key={-1}>
-            <input type="button"
+          <tr key={-1}>
+          <td/><td>
+            <input type="button" style={{width: "100%"}}
               value="Add new element"
               onClick={this.onItemAdd} />
-          </li>
-        </ol>
+              </td><td/>
+          </tr>
+        </table>
       </div>
     );
   }

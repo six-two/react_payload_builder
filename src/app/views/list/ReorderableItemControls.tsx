@@ -1,10 +1,8 @@
 import React from 'react';
 
-export default class ListItemView extends React.Component<Props, {}> {
+export class ListItemControls extends React.Component<Props, {}> {
   render() {
     return (
-      <li className="list-item multi-colored">
-        {this.props.children}
         <div className="list-item-controls">
           <input type="button"
             value="Up"
@@ -17,8 +15,7 @@ export default class ListItemView extends React.Component<Props, {}> {
           <input type="button"
             value="Delete"
             onClick={this.onDelete} />
-        </div>
-      </li>);
+        </div>);
   }
 
   onMoveUp = () => {
@@ -39,9 +36,10 @@ export default class ListItemView extends React.Component<Props, {}> {
 }
 
 interface Props {
-  children?: any,
   index: number,
   isLast: boolean,
   onItemsSwap: (srcIndex: number, dstIndex: number) => void,
   onItemDelete: (index: number) => void,
 }
+
+export default ListItemControls;
