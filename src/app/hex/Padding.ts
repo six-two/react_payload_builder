@@ -26,7 +26,7 @@ export class Utils {
     }
     var missing = padding.paddToLength - offset;
     if (missing < 0) {
-      throwBadInputError("Padding can not satisfy condition: to many previous bytes");
+      throwBadInputError(`Padding should be applied up to index ${padding.paddToLength}, but the string is already longer than that (length=${offset})`);
     }
     const patternBytes = new ByteString(padding.pattern ? padding.pattern : "?");
     const repeatCount = Math.floor(missing / patternBytes.bytes.length);

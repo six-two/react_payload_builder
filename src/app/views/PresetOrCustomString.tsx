@@ -11,8 +11,6 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
     }
 
     this.state = { lastCustomValue: customFormat };
-    // this.onTypeChange = this.onTypeChange.bind(this);
-    // this.onValueChange = this.onValueChange.bind(this);
   }
 
   render() {

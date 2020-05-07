@@ -16,7 +16,6 @@ export default class App extends React.Component<any, State> {
   }
 
   render() {
-    const colors: string[] = ["red", "green", "blue"]
     return (
       <div className="app-root">
         <a href="http://six-two.github.io/react_payload_builder">

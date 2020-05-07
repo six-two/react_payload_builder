@@ -1,5 +1,4 @@
 import React from 'react';
-import ChooseOptionView from '../ChooseOptionView';
 import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import CopyButton from '../CopyButton';
 import * as FormatChooser from "../PresetOrCustomString";

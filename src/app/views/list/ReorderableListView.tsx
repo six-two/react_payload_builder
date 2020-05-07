@@ -5,11 +5,7 @@ import ListItemView from './ReorderableListItemView';
 export default class ReorderableListView extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
-    this.state = { entries: [], nextId: 0 }; //entry: {key: int, data: object}
-    this.onItemAdd = this.onItemAdd.bind(this);
-    this.onItemChange = this.onItemChange.bind(this);
-    this.onItemDeleted = this.onItemDeleted.bind(this);
-    this.onItemSwapped = this.onItemSwapped.bind(this);
+    this.state = { entries: [], nextId: 0 };
   }
 
   render() {
@@ -17,17 +13,20 @@ export default class ReorderableListView extends React.Component<Props, State>{
       <div>
         <h2>Hex builder</h2>
         <ol className="list">
-          {this.state.entries.map((elem, index) =>
-            <ListItemView
-              index={index}
-              key={elem.key}
-              isLast={index + 1 === this.state.entries.length}
-              onItemDelete={this.onItemDeleted}
-              onItemsSwap={this.onItemSwapped} >
-              {React.createElement(this.props.entryClass,
-                { index: index, data: elem.data, onChange: this.onItemChange })}
+          {this.state.entries.map((elem, index) => {
+            const childProps = { index: index, data: elem.data, onChange: this.onItemChange };
+            return (
+              <ListItemView
+                index={index}
+                key={elem.key}
+                isLast={index + 1 === this.state.entries.length}
+                onItemDelete={this.onItemDeleted}
+                onItemsSwap={this.onItemSwapped} >
 
-            </ListItemView>
+                {React.createElement(this.props.entryClass, childProps)}
+              </ListItemView>
+            );
+          }
           )}
           <li key={-1}>
             <input type="button"
@@ -39,7 +38,7 @@ export default class ReorderableListView extends React.Component<Props, State>{
     );
   }
 
-  onItemAdd() {
+  onItemAdd = () => {
     var copy = this.state.entries.slice();
     var data = this.props.newItemData(copy.length);
     let entry: Entry = { key: this.state.nextId, data: data };
@@ -47,14 +46,14 @@ export default class ReorderableListView extends React.Component<Props, State>{
     this.onChange(copy, this.state.nextId + 1);
   }
 
-  onItemChange(index: number, newValue: Entry) {
+  onItemChange = (index: number, newValue: Entry) => {
     var copy = this.state.entries.slice();
     let entry: Entry = { key: copy[index].key, data: newValue };
     copy[index] = entry;
     this.onChange(copy, this.state.nextId);
   }
 
-  onItemSwapped(indexFrom: number, indexTo: number) {
+  onItemSwapped = (indexFrom: number, indexTo: number) => {
     var copy = this.state.entries.slice();
     const tmp = copy[indexFrom];
     copy[indexFrom] = copy[indexTo];
@@ -62,7 +61,7 @@ export default class ReorderableListView extends React.Component<Props, State>{
     this.onChange(copy, this.state.nextId);
   }
 
-  onItemDeleted(index: number) {
+  onItemDeleted = (index: number) => {
     var copy = this.state.entries.slice();
     copy.splice(index, 1);
     this.onChange(copy, this.state.nextId);

@@ -28,6 +28,6 @@ interface State {
   copiedText: string | null,
 }
 
-interface Props {
+export interface Props {
   text: string,
 }

@@ -6,12 +6,6 @@ const INT_SIZES = [Int.INT_8, Int.INT_16, Int.INT_32, Int.INT_64];
 const LABLES = [" as ", " integer"]
 
 export default class IntegerEditView extends React.Component<Props, {}> {
-  constructor(props: Props) {
-    super(props);
-    this.onTypeChange = this.onTypeChange.bind(this);
-    this.onValueChange = this.onValueChange.bind(this);
-  }
-
   render() {
     return (
       <div>
@@ -24,32 +18,24 @@ export default class IntegerEditView extends React.Component<Props, {}> {
           onChange={this.onTypeChange}
           options={INT_SIZES} />
         {LABLES[1]}
-        {this.renderErrorMessages()}
       </div>
     );
   }
 
-  onTypeChange(newValue: string) {
+  onTypeChange = (newValue: string) => {
     this.onChange({ numberType: newValue });
   }
 
-  onValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+  onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // only allow certain input characters: hex and 'o' and 'x' for 0x/0b
-    if (/^([0-9a-fA-Fxo]*)$/.test(event.target.value)) {
-      this.onChange({ numberString: event.target.value });
+    const newValue = event.target.value;
+    if (/^([0-9a-fA-Fxo]*)$/.test(newValue)) {
+      this.onChange({ numberString: newValue });
     }
   }
 
   onChange(changedValues: any) {
     this.props.onChange(Object.assign({}, this.props.values, changedValues));
-  }
-
-  renderErrorMessages(): any {
-    var error = Int.Utils.getErrorMessage(this.props.values);
-
-    if (error) {
-      return <span style={{ color: "red" }}>Error: {error}</span>
-    }
   }
 }
 

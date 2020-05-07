@@ -1,13 +1,6 @@
 import React from 'react';
 
 export default class ListItemView extends React.Component<Props, {}> {
-  constructor(props: Props) {
-    super(props);
-    this.onMoveUp = this.onMoveUp.bind(this);
-    this.onMoveDown = this.onMoveDown.bind(this);
-    this.onDelete = this.onDelete.bind(this);
-  }
-
   render() {
     return (
       <li className="list-item multi-colored">
@@ -28,25 +21,25 @@ export default class ListItemView extends React.Component<Props, {}> {
       </li>);
   }
 
-  onMoveUp() {
+  onMoveUp = () => {
     if (this.props.index > 0) {
       this.props.onItemsSwap(this.props.index, this.props.index - 1);
     }
   }
 
-  onMoveDown() {
+  onMoveDown = () => {
     if (!this.props.isLast) {
       this.props.onItemsSwap(this.props.index, this.props.index + 1);
     }
   }
 
-  onDelete() {
+  onDelete = () => {
     this.props.onItemDelete(this.props.index);
   }
 }
 
 interface Props {
-  children: any,
+  children?: any,
   index: number,
   isLast: boolean,
   onItemsSwap: (srcIndex: number, dstIndex: number) => void,

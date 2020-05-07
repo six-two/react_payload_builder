@@ -5,12 +5,6 @@ import * as Common from '../../Common';
 const LABELS = ["Repeat ", " up to index "];
 
 export default class PaddingEditView extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.onPatternChange = this.onPatternChange.bind(this);
-    this.onNumberChange = this.onNumberChange.bind(this);
-  }
-
   render() {
     return (
       <div>
@@ -25,13 +19,13 @@ export default class PaddingEditView extends React.Component<Props> {
       </div>);
   }
 
-  onNumberChange(event: React.ChangeEvent<HTMLInputElement>) {
+  onNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (Common.isValidRepeatCountWhileEditing(event.target.value)) {
       this.onChange({ paddToLength: event.target.value });
     }
   }
 
-  onPatternChange(event: React.ChangeEvent<HTMLInputElement>) {
+  onPatternChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.onChange({ pattern: event.target.value });
   }
 
