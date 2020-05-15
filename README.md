@@ -5,6 +5,10 @@ Since this is my first project using TypeScript/React it might be a bit messy an
 
 [Try it out here](https://six-two.github.io/react_payload_builder)
 
+## TODO
+
+- Create favicon?
+
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
