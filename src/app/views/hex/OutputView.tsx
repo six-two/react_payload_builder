@@ -46,7 +46,7 @@ export default class OutputView extends React.Component<Props, State> {
       escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
         let taggedStr: TaggedString = {
           key: bs.key,
-          str: escapeOutputString(bs.data.str),
+          str: escapeOutputString(bs.data.toString()),
         };
         return taggedStr;
       });

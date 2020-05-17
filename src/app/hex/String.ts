@@ -20,9 +20,8 @@ export class Utils {
   }
 
   static stringToBytes(values: Values): ByteString {
-    const count = values.repeatCount;
-    let pattern = values.pattern.repeat(count);
-    return new ByteString(pattern);
+    let bytes = ByteString.fromString(values.pattern);
+    return bytes.repeated(values.repeatCount);
   }
 }
 
@@ -36,11 +35,8 @@ export class ReversedUtils {
   }
 
   static stringToBytes(values: Values): ByteString {
-    const count = values.repeatCount;
-    let revPattern = new ByteString(values.pattern).getReversed().str;
-    let pattern = revPattern.repeat(count);
-    return new ByteString(pattern);
-
+    let bytes = ByteString.fromString(values.pattern);
+    return bytes.reversed().repeated(values.repeatCount);
   }
 }
 

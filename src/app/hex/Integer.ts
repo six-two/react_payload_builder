@@ -84,6 +84,6 @@ export class Utils {
     let missingChars = 2 * byteCount - hex.length;
     hex = "0".repeat(missingChars) + hex;//padd with leading zeros
     let bytes: ByteString = ByteString.fromHex(hex);
-    return littleEndian ? bytes.getReversed() : bytes;
+    return littleEndian ? bytes.reversed() : bytes;
   }
 }

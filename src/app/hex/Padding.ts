@@ -31,13 +31,15 @@ export class Utils {
     if (!padding.pattern) {
       throwBadInputError("Padding can not be empty");
     }
-    const patternBytes = new ByteString(padding.pattern ? padding.pattern : "?");
-    const repeatCount = Math.floor(missing / patternBytes.bytes.length);
-    const incompleteSize = missing - (repeatCount * patternBytes.bytes.length)
-    var paddingStr: string = patternBytes.str.repeat(repeatCount);
-    var incompletePadding: string[] = patternBytes.bytes.slice(0, incompleteSize);
-    let incompletePaddingStr: string = incompletePadding.join("");
-    return new ByteString(paddingStr + incompletePaddingStr);
+
+    const patternBytes = ByteString.fromString(padding.pattern);
+    const repeatCount = Math.floor(missing / patternBytes.length);
+    const incompleteSize = missing - (repeatCount * patternBytes.length)
+
+    const incompletePadding: string[] = patternBytes.bytes.slice(0, incompleteSize);
+    let repeated = patternBytes.repeated(repeatCount);
+    repeated.bytes.push(...incompletePadding);
+    return repeated;
   }
 }
 

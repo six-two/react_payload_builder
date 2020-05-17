@@ -6,7 +6,7 @@ import ByteString from './ByteString';
 const BAD_INPUT_ERROR_NAME = "BadInputError";
 const ERROR_BYTE_STRING: TaggedByteString = {
   key: -1,
-  data: new ByteString("Error: Please check your inputs. @dev: This message should not be shown"),
+  data: ByteString.fromString("Error: Please check your inputs. @dev: This message should not be shown"),
 }
 
 export function throwBadInputError(message: string) {
@@ -55,7 +55,7 @@ export class ByteStringBuilder {
       case Str.TYPE_REVERSED:
         return Str.ReversedUtils.stringToBytes(blueprint);
       default:
-        return new ByteString("<Unknown type>");
+        return ByteString.fromString("<Unknown type>");
     }
   }
 };
