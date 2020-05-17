@@ -10,7 +10,7 @@ export default class StringEditView extends React.Component<Props> {
     const labels = this.props.values.type === Str.TYPE_REVERSED ?
       LABELS_REVERSED : LABELS_NORMAL;
     return (
-      <div>
+      <div className="edit-container">
         {labels[0]}
         <input className="input-string" type="text"
           value={this.props.values.pattern}

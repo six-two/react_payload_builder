@@ -8,7 +8,7 @@ const LABLES = [" as ", " integer"]
 export default class IntegerEditView extends React.Component<Props, {}> {
   render() {
     return (
-      <div>
+      <div className="edit-container">
         <input type="text"
           value={this.props.values.numberString}
           onChange={this.onValueChange} />

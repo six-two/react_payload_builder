@@ -7,7 +7,7 @@ const LABELS = ["Repeat ", " up to index "];
 export default class PaddingEditView extends React.Component<Props> {
   render() {
     return (
-      <div>
+      <div className="edit-container">
         {LABELS[0]}
         <input className="input-string" type="text"
           value={this.props.values.pattern}

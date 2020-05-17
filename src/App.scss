@@ -10,6 +10,14 @@ $row3d: #0000ff;
   text-align: center;
 }
 
+.edit-container {
+  display: flex;
+}
+
+.input-string {
+  flex: 1;
+}
+
 .input-count {
   width: 50px;
   text-align: right;

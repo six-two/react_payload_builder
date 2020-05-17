@@ -1,12 +1,16 @@
 import React from 'react';
-// import ListItemView from './ReorderableListItemView';
 import HexElementView from '../hex/HexElementView';
 
 
 export default class ReorderableListView extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
-    this.state = { entries: [], nextId: 0 };
+    let initialValues: any[] = props.initialValues ?? [];
+    let initialEntries: Entry[] = initialValues.map((value, index) => {
+      return { key: index, data: value };
+    });
+    this.state = { entries: initialEntries, nextId: initialEntries.length };
+    props.onChange(initialEntries);
   }
 
   render() {
@@ -86,6 +90,7 @@ interface Props {
   entryClass: any,
   onChange: (entries: Entry[]) => void,
   newItemData: (index: number) => any,
+  initialValues?: any[],
 }
 
 interface State {

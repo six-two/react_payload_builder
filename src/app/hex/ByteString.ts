@@ -1,28 +1,26 @@
+const hexEscapeRegex = /\x[0-9a-fA-F]{2}/
+
 export default class ByteString {
   str: string;
   bytes: string[];
 
   constructor(str: string) {
-    this.str = str;
     this.bytes = []
-    this.updateByteCount();
-  }
 
-  updateByteCount() {
     let i = 0;
-    this.bytes = []
-    while (i < this.str.length) {
-      if (this.str[i] === "\\" && i + 1 < this.str.length && this.str[i + 1] === "x") {
-        if (isNaN(parseInt(this.str[i + 2], 16)) || isNaN(parseInt(this.str[i + 3], 16))) {
-          throw new Error("Not a valid hex escape: '" + this.str.slice(i + 2, i + 4) + "'");
-        }
-        this.bytes.push(this.str.slice(i, i + 4));
+    while (i < str.length) {
+      let slice = str.slice(i, i + 4);
+      if (slice.match(hexEscapeRegex)) {
+        this.bytes.push(slice);
         i += 4;
       } else {
-        this.bytes.push(this.str[i]);
+        // Escape backslashes if they are not used for entering escaped characters
+        let char = str[i] !== "\\"? str[i] : "\\x5c";
+        this.bytes.push(char);
         i += 1;
       }
     }
+    this.str = this.bytes.join("");
   }
 
   getReversed(): ByteString {//TODO later: is pretty inefficient
