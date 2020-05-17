@@ -13,7 +13,7 @@ FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
 FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
 FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
-FORMAT_MAP.set(EXPORT_FORMAT, "If you visit the following link, you can resume this session:\n%s");
+FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
 
 function escapeOutputString(unescaped: string): string {
   // escape quote signs since they could mess up passing the payload to a program (eg printf)
@@ -33,42 +33,7 @@ export default class OutputView extends React.Component<Props, State> {
   }
 
   render() {
-    var error;
-    const parts = this.state.format.value.split("%s");
-    if (parts.length !== 2) {
-      error = 'Format has to contain exactly one "%s" (without the quotes)';
-    }
-
-    let escapedTaggedStrings: TaggedString[] = [];//to make the type check happy
-    let copyFormatStuffToo = true;
-    if (this.state.format.option === EXPORT_FORMAT) {
-      let dataArray: any[] = this.props.blueprints.map((x) => x.data);
-      let data: string = JSON.stringify(dataArray);
-      console.log(data);
-      data = btoa(data);
-      const parsedUrl = new URL(window.location.href);
-      parsedUrl.searchParams.set("import", data);
-      escapedTaggedStrings.push({ key: -2, str: parsedUrl.href });
-      copyFormatStuffToo = false;
-    } else {
-      let result = new ByteStringBuilder(this.state.isLittleEndian)
-        .getBytesStrings(this.props.blueprints);
-      if (result.errorMessage) {
-        error = result.errorMessage
-      } else {
-        escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
-          let taggedStr: TaggedString = {
-            key: bs.key,
-            str: escapeOutputString(bs.data.toString()),
-          };
-          return taggedStr;
-        });
-      }
-    }
-    let textToCopy = escapedTaggedStrings.map((tbs) => { return tbs.str }).join("");
-    if (copyFormatStuffToo) {
-      textToCopy = parts[0] + textToCopy + parts[1];
-    }
+    let renderData: RenderData = this.getRenderData();
 
     return (
       <div>
@@ -77,30 +42,85 @@ export default class OutputView extends React.Component<Props, State> {
             checked={this.state.isLittleEndian}
             onChange={this.onEndianChange}
           />
-              use little endian
-            </label>
+          use little endian
+        </label>
         <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
           values={this.state.format}
           customOption={CUSTOM_FORMAT}
           onChange={this.onFormatChange}
           label="Output format: " />
         <br />
-        {error ?
-          <span className="err-msg">{error}</span> :
+        {renderData.error ?
+          <span className="err-msg">{renderData.error}</span> :
           <div className="byteOutput">
-            <CopyButton text={textToCopy} />
+            {renderData.textToCopy ? <CopyButton text={renderData.textToCopy} /> : null}
             <br />
-            {parts[0]}
-            <span>
-              {escapedTaggedStrings.map((value: TaggedString) => {
-                return <span className="multi-colored" key={value.key}>{value.str}</span>;
-              })}
-            </span>
-            {parts[1]}
+            {renderData.dom}
           </div>
         }
       </div>
     );
+  }
+
+  getRenderData(): RenderData {
+    const parts = this.state.format.value.split("%s");
+    if (parts.length !== 2) {
+      return {
+        error: 'Format has to contain exactly one "%s" (without the quotes)',
+        dom: null, textToCopy: null
+      };
+    } else if (this.state.format.option === EXPORT_FORMAT) {
+      return this.exportRenderData();
+    } else {
+      return this.normalRenderData(parts);
+    }
+  }
+
+  exportRenderData(): RenderData {
+    const state: any[] = this.props.blueprints.map((x) => x.data);
+    let stateString: string = JSON.stringify(state);
+    stateString = btoa(stateString);  //base64 encode the json
+
+    // take the current url and set the import param to our current state
+    const urlBuilder = new URL(window.location.href);
+    urlBuilder.searchParams.set("import", stateString);
+    const url = urlBuilder.href;
+
+    const dom = <span>
+      You can return to the current state anytime by visiting:<br /><br />
+      {url}
+    </span>;
+    return { dom: dom, textToCopy: url };
+  }
+
+  normalRenderData(labels: string[]): RenderData {
+    let result = new ByteStringBuilder(this.state.isLittleEndian)
+      .getBytesStrings(this.props.blueprints);
+    if (result.errorMessage) {
+      return { error: result.errorMessage, dom: null, textToCopy: null };
+    }
+    let escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
+      let taggedStr: TaggedString = {
+        key: bs.key,
+        str: escapeOutputString(bs.data.toString()),
+      };
+      return taggedStr;
+    });
+
+    let textToCopy = escapedTaggedStrings.map((tbs) => { return tbs.str }).join("");
+    textToCopy = labels[0] + textToCopy + labels[1];
+
+    let dom = <span>
+      {labels[0]}
+      {escapedTaggedStrings.map((value: TaggedString) => {
+        return <span className="multi-colored" key={value.key}>
+          {value.str}
+        </span>;
+      })}
+      {labels[1]}
+    </span>;
+
+    return { dom: dom, textToCopy: textToCopy };
   }
 
   onFormatChange = (newFormat: FormatChooser.Values) => {
@@ -110,6 +130,12 @@ export default class OutputView extends React.Component<Props, State> {
   onEndianChange = (event: any) => {
     this.setState({ isLittleEndian: event.target.checked });
   }
+}
+
+interface RenderData {
+  error?: string,
+  dom: any,
+  textToCopy: string | null,
 }
 
 interface Props {
