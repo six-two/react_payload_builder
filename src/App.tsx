@@ -6,8 +6,7 @@ import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
 
 // TODO: next steps
-//  - Improve bytestring (make immuteable, add performant concat and repeat methods)
-//  - Add ex-/importing state via a url parameter
+//  - Add importing state via a url parameter
 //  - Use above feature for initial state
 
 export default class App extends React.Component<any, State> {

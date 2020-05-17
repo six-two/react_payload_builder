@@ -7,11 +7,13 @@ import * as FormatChooser from "../PresetOrCustomString";
 
 const CUSTOM_FORMAT = "custom";
 const DEFAULT_FORMAT = "raw";
+const EXPORT_FORMAT = "export this session";
 const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
 FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
 FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
+FORMAT_MAP.set(EXPORT_FORMAT, "If you visit the following link, you can resume this session:\n%s");
 
 function escapeOutputString(unescaped: string): string {
   // escape quote signs since they could mess up passing the payload to a program (eg printf)
@@ -38,21 +40,35 @@ export default class OutputView extends React.Component<Props, State> {
     }
 
     let escapedTaggedStrings: TaggedString[] = [];//to make the type check happy
-    let result = new ByteStringBuilder(this.state.isLittleEndian)
-      .getBytesStrings(this.props.blueprints);
-    if (result.errorMessage) {
-      error = result.errorMessage
+    let copyFormatStuffToo = true;
+    if (this.state.format.option === EXPORT_FORMAT) {
+      let dataArray: any[] = this.props.blueprints.map((x) => x.data);
+      let data: string = JSON.stringify(dataArray);
+      console.log(data);
+      data = btoa(data);
+      const parsedUrl = new URL(window.location.href);
+      parsedUrl.searchParams.set("import", data);
+      escapedTaggedStrings.push({ key: -2, str: parsedUrl.href });
+      copyFormatStuffToo = false;
     } else {
-      escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
-        let taggedStr: TaggedString = {
-          key: bs.key,
-          str: escapeOutputString(bs.data.toString()),
-        };
-        return taggedStr;
-      });
+      let result = new ByteStringBuilder(this.state.isLittleEndian)
+        .getBytesStrings(this.props.blueprints);
+      if (result.errorMessage) {
+        error = result.errorMessage
+      } else {
+        escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
+          let taggedStr: TaggedString = {
+            key: bs.key,
+            str: escapeOutputString(bs.data.toString()),
+          };
+          return taggedStr;
+        });
+      }
     }
     let textToCopy = escapedTaggedStrings.map((tbs) => { return tbs.str }).join("");
-    textToCopy = parts[0] + textToCopy + parts[1];
+    if (copyFormatStuffToo) {
+      textToCopy = parts[0] + textToCopy + parts[1];
+    }
 
     return (
       <div>
