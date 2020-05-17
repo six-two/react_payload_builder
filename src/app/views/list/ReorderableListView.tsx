@@ -16,7 +16,6 @@ export default class ReorderableListView extends React.Component<Props, State>{
   render() {
     return (
       <div>
-        <h2>Hex builder</h2>
         <table className="list">
           <thead>
             <tr>

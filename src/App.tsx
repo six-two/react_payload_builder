@@ -38,6 +38,7 @@ export default class App extends React.Component<any, State> {
   render() {
     return (
       <div className="app-root">
+        <h1>Payload builder</h1>
         <HexBuilderListView
           initialValues={this.state.initialValues}
           onChange={this.onListChange}
@@ -47,6 +48,7 @@ export default class App extends React.Component<any, State> {
             v.repeatCount = index + 1;
             return v;
           }} />
+        <h2>Output</h2>
         <OutputView blueprints={this.state.blueprints} />
       </div>
     );
