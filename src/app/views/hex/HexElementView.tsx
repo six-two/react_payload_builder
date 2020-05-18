@@ -7,6 +7,7 @@ import ReorderableItemControls from '../list/ReorderableItemControls';
 import * as Int from '../../hex/Integer';
 import * as Pad from '../../hex/Padding';
 import * as Str from '../../hex/String';
+import {AnyValues} from '../../hex/ByteStringBuilder';
 
 const TYPE_MAP = new Map<string, TypeInfos>();
 TYPE_MAP.set(Int.TYPE, { defaultValues: Int.Utils.defaultValues, viewClass: Integer });
@@ -49,11 +50,11 @@ export default class HexElementView extends React.Component<HexElementViewProps,
     this.onChange(newType, getTypeInfo(newType).defaultValues());
   }
 
-  onChildChange = (newValues: any) => {
+  onChildChange = (newValues: AnyValues) => {
     this.onChange(this.props.data.type, newValues);
   }
 
-  onChange(newType: string, newValues: any) {
+  onChange(newType: string, newValues: AnyValues) {
     const newData = Object.assign(newValues, { type: newType });
     this.props.onChange(this.props.index, newData);
   }
@@ -78,14 +79,14 @@ export default class HexElementView extends React.Component<HexElementViewProps,
 
 interface HexElementViewProps {
   index: number,
-  data: any,
+  data: AnyValues,
   isLast: boolean,
   onItemsSwap: (srcIndex: number, dstIndex: number) => void,
   onItemDelete: (index: number) => void,
-  onChange: (index: number, newValue: any) => void,
+  onChange: (index: number, newValue: AnyValues) => void,
 }
 
 interface TypeInfos {
-  defaultValues: any,
+  defaultValues: () => AnyValues,
   viewClass: any,
 }

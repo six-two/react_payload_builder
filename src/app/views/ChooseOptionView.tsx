@@ -10,7 +10,7 @@ export class ChooseOptionView extends React.Component<ChooseOptionViewProps, {}>
       <option value="" key={-1} disabled hidden>
         {this.props.prompt ? this.props.prompt : "Choose a option"}
       </option>
-      {this.props.options.map((value: any, i: number) => {
+      {this.props.options.map((value: string, i: number) => {
         // Here using key=index should be ok, since the order should not change
         return <option value={value} key={i}>{value}</option>;
       })}

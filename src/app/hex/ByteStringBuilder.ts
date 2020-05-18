@@ -44,25 +44,28 @@ export class ByteStringBuilder {
     }
   }
 
-  toBytes(blueprint: any, previousByteStrings: ByteString[]): ByteString {
+  toBytes(blueprint: AnyValues, previousByteStrings: ByteString[]): ByteString {
     switch (blueprint.type) {
       case Padding.TYPE:
-        return Padding.Utils.paddingToBytes(blueprint, previousByteStrings);
+        return Padding.Utils.paddingToBytes(blueprint as Padding.Values, previousByteStrings);
       case Int.TYPE:
-        return Int.Utils.integerToBytes(blueprint, this.littleEndian);
+        return Int.Utils.integerToBytes(blueprint as Int.Values, this.littleEndian);
       case Str.TYPE:
-        return Str.Utils.stringToBytes(blueprint);
+        return Str.Utils.stringToBytes(blueprint as Str.Values);
       case Str.TYPE_REVERSED:
-        return Str.ReversedUtils.stringToBytes(blueprint);
+        return Str.ReversedUtils.stringToBytes(blueprint as Str.Values);
       default:
         return ByteString.fromString("<Unknown type>");
     }
   }
 };
 
+export type AnyValues = Padding.Values | Int.Values | Str.Values;
+
+
 export interface Blueprint {
   key: number,
-  data: any,
+  data: AnyValues,
 }
 
 export interface BuilderResult {

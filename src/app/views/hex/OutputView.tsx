@@ -77,7 +77,7 @@ export default class OutputView extends React.Component<Props, State> {
   }
 
   exportRenderData(): RenderData {
-    const state: any[] = this.props.blueprints.map((x) => x.data);
+    const state = this.props.blueprints.map((x) => x.data);
     let stateString: string = JSON.stringify(state);
     stateString = btoa(stateString);  //base64 encode the json
 

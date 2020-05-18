@@ -4,34 +4,31 @@ import HexBuilderListView from './app/views/list/ReorderableListView';
 import OutputView from './app/views/hex/OutputView';
 import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
+import {AnyValues, Blueprint} from './app/hex/ByteStringBuilder';
+
 
 // TODO: next steps
-//  - Add importing state via a url parameter
-//  - Use above feature for initial state
+//  - Add URL output (using %XX escape)
 
 export default class App extends React.Component<any, State> {
   constructor(props: any) {
     super(props);
-    const intro = {
-      type: "String", pattern: "Build your own attack string", repeatCount: 1,
-    };
-    const shellcode = {
-      type: "String", pattern: "Input non ascii chars like this: \\x11\\x22\\x33\\x44", repeatCount: 1,
-    };
-    const intro2 = {
-      type: "String", pattern: "Backslashes are escaped. So use '\\x0a' instead of '\\n'!", repeatCount: 1,
-    };
-    const padding = {
-      type: "Padding", pattern: "\\x90", paddToLength: 128,
+    let initialState: AnyValues[];
+    try {
+      const url = new URL(window.location.href);
+      let importParam = url.searchParams.get("import");
+      let stateText = importParam ?? "W3sicGF0dGVybiI6IkEiLCJwYWRkVG9MZW5ndGgiOiIxMCIsInR5cGUiOiJQYWRkaW5nIn0seyJwYXR0ZXJuIjoiYSIsInBhZGRUb0xlbmd0aCI6IjIwIiwidHlwZSI6IlBhZGRpbmcifSx7InR5cGUiOiJTdHJpbmciLCJwYXR0ZXJuIjoiQmFja3NsYXNoZXMgYXJlIGVzY2FwZWQuIFNvIHVzZSAnXFx4MGEnIGluc3RlYWQgb2YgJ1xcbichIiwicmVwZWF0Q291bnQiOjF9LHsidHlwZSI6IlBhZGRpbmciLCJwYXR0ZXJuIjoiXFx4OTAiLCJwYWRkVG9MZW5ndGgiOjEyOH0seyJ0eXBlIjoiU3RyaW5nIiwicGF0dGVybiI6IllvdSBjYW4gcHV0IGFuIGFkZHJlc3MgaW50byBtZW1vcnkgbGlrZSBiZWxvdzoiLCJyZXBlYXRDb3VudCI6MX0seyJ0eXBlIjoiSW50ZWdlciIsIm51bWJlclR5cGUiOiIzMiBiaXQiLCJudW1iZXJTdHJpbmciOiIweDEyMzQ1Njc4In1d"
+
+      initialState = this.parseInitialValuesJson(stateText);
+    } catch (e) {
+      initialState = [
+        "===== Error importing data =====", e.toString(), "Hint: Are you sure you copied the whole url?"
+      ].map((text: string) => {
+        return {type: "String", pattern: text, repeatCount: 1};
+      });
     }
-    const help_address = {
-      type: "String", pattern: "You can put an address into memory like below:", repeatCount: 1,
-    };
-    const address = {
-      type: "Integer", numberType: "32 bit", numberString: "0x12345678",
-    }
-    const initialValues = [intro, shellcode, intro2, padding, help_address, address];
-    this.state = { initialValues: initialValues, blueprints: [] };
+
+    this.state = { initialValues: initialState, blueprints: [] };
   }
 
   render() {
@@ -43,7 +40,7 @@ export default class App extends React.Component<any, State> {
           onChange={this.onListChange}
           entryClass={HexElementView}
           newItemData={(index: number) => {
-            var v: any = Str.Utils.defaultValues();
+            var v = Str.Utils.defaultValues();
             v.repeatCount = index + 1;
             return v;
           }} />
@@ -56,14 +53,29 @@ export default class App extends React.Component<any, State> {
   onListChange = (newBlueprints: Blueprint[]) => {
     this.setState({ blueprints: newBlueprints });
   }
+
+  parseInitialValuesJson(stateText: string): AnyValues[] {
+    try {
+      stateText = atob(stateText);
+    } catch{
+      throw "Base64 decoding failed";
+    }
+    let parsedJson: any;
+    try {
+      parsedJson = JSON.parse(stateText);
+    } catch{
+      throw "JSON decoding failed";
+    }
+    try {
+      let values: AnyValues[] = parsedJson;
+      return values;
+    } catch{
+      throw "Your data is corrupted or not compatible with this version of the software";
+    }
+  }
 }
 
 interface State {
   blueprints: Blueprint[],
-  initialValues: any[],
-}
-
-interface Blueprint {
-  key: number,
-  data: any,
+  initialValues: AnyValues[],
 }
