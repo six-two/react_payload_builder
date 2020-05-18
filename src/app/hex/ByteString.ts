@@ -43,9 +43,7 @@ export default class ByteString {
         bytes.push(slice);
         i += 4;
       } else {
-        // Escape backslashes if they are not used for entering escaped characters
-        let char = str[i] !== "\\" ? str[i] : "\\x5c";
-        bytes.push(char);
+        bytes.push(str[i]);
         i += 1;
       }
     }

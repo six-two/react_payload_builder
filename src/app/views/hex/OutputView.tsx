@@ -3,17 +3,20 @@ import Checkbox from 'rc-checkbox';
 import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import CopyButton from '../CopyButton';
 import * as FormatChooser from "../PresetOrCustomString";
+import * as Esc from '../../hex/Escaper';
 
 
 const CUSTOM_FORMAT = "custom";
 const DEFAULT_FORMAT = "raw";
 const EXPORT_FORMAT = "export this session";
+const URL_FORMAT = "URL escaped";
 const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
 FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
 FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
 FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
+FORMAT_MAP.set(URL_FORMAT, "%s");//same as raw, but using url escaping
 
 function escapeOutputString(unescaped: string): string {
   // escape quote signs since they could mess up passing the payload to a program (eg printf)
@@ -100,9 +103,12 @@ export default class OutputView extends React.Component<Props, State> {
       return { error: result.errorMessage, dom: null, textToCopy: null };
     }
     let escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
+      const escapeFunction = this.state.format.option === URL_FORMAT ?
+        Esc.urlEscapeByte : Esc.printfEscapeByte;
+
       let taggedStr: TaggedString = {
         key: bs.key,
-        str: escapeOutputString(bs.data.toString()),
+        str: Esc.escapeBytes(bs.data, escapeFunction).toString(),
       };
       return taggedStr;
     });

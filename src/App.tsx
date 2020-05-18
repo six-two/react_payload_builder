@@ -8,7 +8,6 @@ import {AnyValues, Blueprint} from './app/hex/ByteStringBuilder';
 
 
 // TODO: next steps
-//  - Add URL output (using %XX escape)
 
 export default class App extends React.Component<any, State> {
   constructor(props: any) {
