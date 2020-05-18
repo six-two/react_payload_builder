@@ -37,29 +37,44 @@ export default class OutputView extends React.Component<Props, State> {
 
   render() {
     let renderData: RenderData = this.getRenderData();
+    let usesIntegers = false;
+    for (let i = 0; i < this.props.blueprints.length; i++) {
+      if (this.props.blueprints[i].data.type === "Integer") {
+        usesIntegers = true;
+      }
+    }
 
     return (
-      <div>
-        <label>
-          <Checkbox
-            checked={this.state.isLittleEndian}
-            onChange={this.onEndianChange}
-          />
-          use little endian
-        </label>
-        <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
-          values={this.state.format}
-          customOption={CUSTOM_FORMAT}
-          onChange={this.onFormatChange}
-          label="Output format: " />
-        <br />
+      <div className="byteOutput">
+        <table className="output_settings">
+          <tbody>
+            <tr>
+              <td>
+                <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
+                  values={this.state.format}
+                  customOption={CUSTOM_FORMAT}
+                  onChange={this.onFormatChange}
+                  label="Output format: " />
+              </td>
+              {usesIntegers ?
+                <td>
+                  <label>
+                    <Checkbox
+                      checked={this.state.isLittleEndian}
+                      onChange={this.onEndianChange}
+                    />
+                    use little endian
+                  </label>
+                </td>
+                : null
+              }
+              {renderData.textToCopy ? <td><CopyButton text={renderData.textToCopy} /></td> : null}
+            </tr>
+          </tbody>
+        </table>
         {renderData.error ?
           <span className="err-msg">{renderData.error}</span> :
-          <div className="byteOutput">
-            {renderData.textToCopy ? <CopyButton text={renderData.textToCopy} /> : null}
-            <br />
-            {renderData.dom}
-          </div>
+          renderData.dom
         }
       </div>
     );

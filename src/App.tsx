@@ -8,6 +8,9 @@ import {AnyValues, Blueprint} from './app/hex/ByteStringBuilder';
 
 
 // TODO: next steps
+//  - Also store state of output (little endian, custom output command, output type)
+//  - Fix names
+//  - Add links to source code and my website
 
 export default class App extends React.Component<any, State> {
   constructor(props: any) {
