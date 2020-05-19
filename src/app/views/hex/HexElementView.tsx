@@ -3,7 +3,7 @@ import ChooseOptionView from '../ChooseOptionView';
 import Padding from './PaddingEditView';
 import Integer from './IntegerEditView';
 import String from './StringEditView';
-import ReorderableItemControls from '../list/ReorderableItemControls';
+import ReorderableItemControls from '../ItemControls';
 import * as Int from '../../hex/Integer';
 import * as Pad from '../../hex/Padding';
 import * as Str from '../../hex/String';

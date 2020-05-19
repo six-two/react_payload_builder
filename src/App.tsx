@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import HexBuilderListView from './app/views/list/ReorderableListView';
+import InputTable from './app/views/hex/InputTable';
 import OutputView from './app/views/hex/OutputView';
 import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
@@ -35,7 +35,7 @@ export default class App extends React.Component<any, State> {
   render() {
     return (
       <div className="app-root">
-        <HexBuilderListView
+        <InputTable
           initialValues={this.state.initialValues}
           onChange={this.onListChange}
           entryClass={HexElementView}

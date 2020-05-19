@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class ListItemControls extends React.Component<Props, {}> {
+export class ItemControls extends React.Component<Props, {}> {
   render() {
     return (
         <div className="list-item-controls">
@@ -42,4 +42,4 @@ interface Props {
   onItemDelete: (index: number) => void,
 }
 
-export default ListItemControls;
+export default ItemControls;

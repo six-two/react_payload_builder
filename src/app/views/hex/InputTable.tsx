@@ -1,9 +1,9 @@
 import React from 'react';
 import HexElementView from '../hex/HexElementView';
-import {AnyValues} from '../../hex/ByteStringBuilder';
+import { AnyValues } from '../../hex/ByteStringBuilder';
 
 
-export default class ReorderableListView extends React.Component<Props, State>{
+export default class InputTable extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
     let initialValues: AnyValues[] = props.initialValues ?? [];
@@ -16,38 +16,36 @@ export default class ReorderableListView extends React.Component<Props, State>{
 
   render() {
     return (
-      <div>
-        <table className="list">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Configuration</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.entries.map((elem, index) => {
-              return (
-                <HexElementView
-                  index={index}
-                  key={elem.key}
-                  isLast={index + 1 === this.state.entries.length}
-                  onItemDelete={this.onItemDeleted}
-                  onItemsSwap={this.onItemSwapped}
-                  onChange={this.onItemChange}
-                  data={elem.data} />
-              );
-            })}
-            <tr key={-1}>
-              <td /><td>
-                <input type="button" style={{ width: "100%" }}
-                  value="Add new element"
-                  onClick={this.onItemAdd} />
-              </td><td />
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <table className="list">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Configuration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.entries.map((elem, index) => {
+            return (
+              <HexElementView
+                index={index}
+                key={elem.key}
+                isLast={index + 1 === this.state.entries.length}
+                onItemDelete={this.onItemDeleted}
+                onItemsSwap={this.onItemSwapped}
+                onChange={this.onItemChange}
+                data={elem.data} />
+            );
+          })}
+          <tr key={-1}>
+            <td /><td>
+              <input type="button" style={{ width: "100%" }}
+                value="Add new element"
+                onClick={this.onItemAdd} />
+            </td><td />
+          </tr>
+        </tbody>
+      </table>
     );
   }
 
@@ -86,7 +84,7 @@ export default class ReorderableListView extends React.Component<Props, State>{
   }
 }
 
-interface Props {
+export interface Props {
   entryClass: any,
   onChange: (entries: Entry[]) => void,
   newItemData: (index: number) => AnyValues,
@@ -98,7 +96,7 @@ interface State {
   nextId: number,
 }
 
-interface Entry {
+export interface Entry {
   key: number,
   data: AnyValues,
 }
