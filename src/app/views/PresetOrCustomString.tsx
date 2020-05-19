@@ -5,12 +5,7 @@ import ChooseOptionView from './ChooseOptionView';
 export class PresetOrCustomStringView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    let customFormat = props.options.get(props.customOption);
-    if (customFormat === undefined) {
-      throw new Error("Initial value for customOption is not suppplied");
-    }
-
-    this.state = { lastCustomValue: customFormat };
+    this.state = { ...props.initialState };
   }
 
   render() {
@@ -21,7 +16,7 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
           value={this.props.values.option}
           onChange={this.onTypeChange}
           options={[...this.props.options.keys()]} />
-        {this.isCustom() ?
+        {this.state.selectedOption === this.props.customOption ?
           <input type="text"
             value={this.props.values.value}
             onChange={this.onValueChange} /> : null}
@@ -29,43 +24,31 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
     );
   }
 
-  isCustom(option: string | undefined = undefined): boolean {
-    option = option ?? this.props.values.option;
-    return option === this.props.customOption;
-  }
-
-  onTypeChange = (newType: string) => {
-    if (newType === this.props.values.option) {
-      return; //no type change
-    }
+  onTypeChange = (newOption: string) => {
     let value;
-    if (this.isCustom(newType)) {
-      // preset -> custom
-      // load last used custom value
-      value = this.state.lastCustomValue;
-    }
-    else {
-      if (this.isCustom()) {
-        // custom -> preset
-        // store current custom value for the future
-        this.setState({ lastCustomValue: this.props.values.value });
-      }
-      value = this.props.options.get(newType);
+    if (newOption === this.props.customOption) {
+      value = this.state.customValue;
+    } else {
+      value = this.props.options.get(newOption);
       if (value === undefined) {
-        throw new Error("[BUG] Type has no value mapped"); //should never happen
+        throw new Error(`Option ${newOption} has no value mapped`);
       }
     }
-    const values: Values = { option: newType, value: value };
-    this.props.onChange(values);
+    this.changeState({ selectedOption: newOption });
+    this.onValueChange(newCustomValue);
   }
 
   onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (this.isCustom()) {//should be true
-      const values: Values = {
-        option: this.props.values.option,
-        value: event.target.value,
-      };
-      this.props.onChange(values);
+    let newCustomValue = event.target.value;
+    this.changeState({ customValue: newCustomValue });
+    this.onValueChange(newCustomValue);
+  }
+
+  changeState(changes: any) {
+    let newState = { ...this.state, ...changes };
+    this.setState(newState);
+    if (this.props.onStateChange) {
+      this.props.onStateChange(newState);
     }
   }
 }
@@ -74,17 +57,14 @@ export interface Props {
   label?: string,
   options: Map<string, string>,
   customOption: string,
-  values: Values,
-  onChange: (newValues: Values) => void,
+  initialState: State,
+  onValueChange: (newValue: string) => void,
+  onStateChange?: (newState: State) => void,
 }
 
-interface State {
-  lastCustomValue: string,//changing this has no effect on the rendering of the component
-}
-
-export interface Values {
-  option: string,
-  value: string,
+export interface State {
+  customValue: string,
+  selectedOption: string,
 }
 
 export default PresetOrCustomStringView;

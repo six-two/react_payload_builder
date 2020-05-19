@@ -14,9 +14,44 @@ const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
 FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
-FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
+FORMAT_MAP.set(CUSTOM_FORMAT, "You should never see this message!")
 FORMAT_MAP.set(URL_FORMAT, "%s");//same as raw, but using url escaping
 FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
+
+
+export class OutputStateExporter {
+  state: ExportableState;
+
+  constructor(importedState: any) {
+    this.state = {
+      // set up the default values
+      selectedFormat: DEFAULT_FORMAT,
+      customFormatValue: "your_command --flags '%s'",
+      isLittleEndian: true,
+      // this overwrites any previous values
+      ...importedState,
+    }
+  }
+
+  onEndianChange(newIsLittleEndian: boolean) {
+    this.state.isLittleEndian = newIsLittleEndian;
+  }
+
+  onFormatChooserStateChange(newState: FormatChooser.State) {
+    this.selectedFormat = newState.selectedOption;
+    this.customFormatValue = newState.customValue;
+  }
+
+  initialFormatChooserState(): FormatChooser.State {
+    return { selectedOption: this.state.selectedFormat, customValue: this.state.customFormatValue };
+  }
+}
+
+export interface ExportableState {
+  selectedFormat: string,
+  customFormatValue: string,
+  isLittleEndian: boolean,
+}
 
 
 export default class OutputView extends React.Component<Props, State> {
@@ -24,8 +59,8 @@ export default class OutputView extends React.Component<Props, State> {
     super(props);
     const default_format_value = FORMAT_MAP.get(DEFAULT_FORMAT) ?? "%s";
     this.state = {
-      format: { option: DEFAULT_FORMAT, value: default_format_value },
-      isLittleEndian: true,
+      initialFormatChooserState: this.props.stateExporter.initialFormatChooserState(),
+      isLittleEndian: this.props.stateExporter.state.isLittleEndian,
     };
   }
 
@@ -153,12 +188,13 @@ interface RenderData {
   textToCopy: string | null,
 }
 
-interface Props {
+export interface Props {
   blueprints: Blueprint[],
+  stateExporter: OutputStateExporter,
 }
 
 interface State {
-  format: FormatChooser.Values,
+  format: string,
   isLittleEndian: boolean,
 }
 
