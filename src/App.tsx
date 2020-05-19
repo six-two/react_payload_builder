@@ -10,7 +10,6 @@ import {AnyValues, Blueprint, ByteStringBuilder} from './app/hex/ByteStringBuild
 // TODO: next steps
 //  - Also store state of output (little endian, custom output command, output type)
 //  - Fix names
-//  - Add links to source code and my website
 
 export default class App extends React.Component<any, State> {
   constructor(props: any) {
@@ -36,7 +35,6 @@ export default class App extends React.Component<any, State> {
   render() {
     return (
       <div className="app-root">
-        <h1>Payload builder</h1>
         <HexBuilderListView
           initialValues={this.state.initialValues}
           onChange={this.onListChange}
@@ -46,7 +44,6 @@ export default class App extends React.Component<any, State> {
             v.repeatCount = index + 1;
             return v;
           }} />
-        <h2>Output</h2>
         <OutputView blueprints={this.state.blueprints} />
       </div>
     );
