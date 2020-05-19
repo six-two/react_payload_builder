@@ -18,12 +18,6 @@ FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
 FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
 FORMAT_MAP.set(URL_FORMAT, "%s");//same as raw, but using url escaping
 
-function escapeOutputString(unescaped: string): string {
-  // escape quote signs since they could mess up passing the payload to a program (eg printf)
-  return unescaped.replace(/'/g, "\\x27").replace(/"/g, "\\x22")
-    // escape spaces, since the html does not handle consecutive whitespaces well
-    .replace(/ /g, "\\x20");
-}
 
 export default class OutputView extends React.Component<Props, State> {
   constructor(props: Props) {

@@ -14,7 +14,7 @@ export function urlEscapeByte(byte: string): string {
 }
 
 export function printfEscapeByte(byte: string): string {
-  if (byte.length == 1) {
+  if (byte.length === 1) {
     switch (byte) {
       // escape quote signs since they could mess up passing the payload to a program (eg printf)
       case "'":

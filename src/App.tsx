@@ -4,7 +4,7 @@ import HexBuilderListView from './app/views/list/ReorderableListView';
 import OutputView from './app/views/hex/OutputView';
 import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
-import {AnyValues, Blueprint} from './app/hex/ByteStringBuilder';
+import {AnyValues, Blueprint, ByteStringBuilder} from './app/hex/ByteStringBuilder';
 
 
 // TODO: next steps
@@ -59,20 +59,26 @@ export default class App extends React.Component<any, State> {
   parseInitialValuesJson(stateText: string): AnyValues[] {
     try {
       stateText = atob(stateText);
-    } catch{
-      throw "Base64 decoding failed";
+    } catch {
+      throw new Error("Base64 decoding failed");
     }
     let parsedJson: any;
     try {
       parsedJson = JSON.parse(stateText);
     } catch{
-      throw "JSON decoding failed";
+      throw new Error("JSON decoding failed");
     }
     try {
       let values: AnyValues[] = parsedJson;
+      const validator = new ByteStringBuilder();
+      for (let i = 0; i < values.length; i++) {
+        if (!validator.isValid(values[i])){
+          throw new Error(`Element with index ${i} is malformed`);
+        }
+      }
       return values;
     } catch{
-      throw "Your data is corrupted or not compatible with this version of the software";
+      throw new Error("Your data is corrupted or not compatible with this version of the software");
     }
   }
 }

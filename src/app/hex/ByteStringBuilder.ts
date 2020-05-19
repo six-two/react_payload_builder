@@ -55,7 +55,16 @@ export class ByteStringBuilder {
       case Str.TYPE_REVERSED:
         return Str.ReversedUtils.stringToBytes(blueprint as Str.Values);
       default:
-        return ByteString.fromString("<Unknown type>");
+        throw new Error("Unknown type");
+    }
+  }
+
+  isValid(blueprint: AnyValues): boolean {
+    try {
+      this.toBytes(blueprint, []);//will throw error if is not valid
+      return true;
+    } catch {
+      return false;
     }
   }
 };
