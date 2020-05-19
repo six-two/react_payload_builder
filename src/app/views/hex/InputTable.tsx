@@ -37,15 +37,20 @@ export default class InputTable extends React.Component<Props, State>{
                 data={elem.data} />
             );
           })}
-          <tr key={-1}>
-            <td /><td>
-              <input type="button" style={{ width: "100%" }}
-                value="Add new element"
-                onClick={this.onItemAdd} />
-            </td><td />
+          <tr key={-1} className="row-buttons">
+            <td colSpan={2}>
+              <button onClick={this.onItemAdd}>
+                Add new element
+                </button>
+            </td>
+            <td>
+              <button onClick={this.onDeleteAll}>
+                Delete all
+              </button>
+            </td>
           </tr>
         </tbody>
-      </table>
+      </table >
     );
   }
 
@@ -69,16 +74,21 @@ export default class InputTable extends React.Component<Props, State>{
     const tmp = copy[indexFrom];
     copy[indexFrom] = copy[indexTo];
     copy[indexTo] = tmp;
-    this.onChange(copy, this.state.nextId);
+    this.onChange(copy);
   }
 
   onItemDeleted = (index: number) => {
     var copy = this.state.entries.slice();
     copy.splice(index, 1);
-    this.onChange(copy, this.state.nextId);
+    this.onChange(copy);
   }
 
-  onChange(newArray: Entry[], nextId: number) {
+  onDeleteAll = () => {
+    this.onChange([]);
+  }
+
+  onChange(newArray: Entry[], nextId?: number) {
+    nextId = nextId ?? this.state.nextId;
     this.setState({ entries: newArray, nextId: nextId });
     this.props.onChange(newArray);
   }

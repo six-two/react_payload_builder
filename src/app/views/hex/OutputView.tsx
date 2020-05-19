@@ -15,8 +15,8 @@ FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
 FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
 FORMAT_MAP.set(CUSTOM_FORMAT, "your_command --flags '%s'")
-FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
 FORMAT_MAP.set(URL_FORMAT, "%s");//same as raw, but using url escaping
+FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
 
 
 export default class OutputView extends React.Component<Props, State> {
@@ -91,7 +91,7 @@ export default class OutputView extends React.Component<Props, State> {
   exportRenderData(): RenderData {
     const state = this.props.blueprints.map((x) => x.data);
     let stateString: string = JSON.stringify(state);
-    stateString = btoa(stateString);  //base64 encode the json
+    stateString = Esc.uriSafeEncode(stateString);
 
     // take the current url and set the import param to our current state
     const urlBuilder = new URL(window.location.href);

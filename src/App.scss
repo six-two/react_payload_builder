@@ -28,6 +28,10 @@ $row3d: #0000ff;
   text-align: right;
 }
 
+.row-buttons button {
+  width: 100%;
+}
+
 .list {//TODO call it table or something
   border-radius: 10px;
   border: 2px solid #777;

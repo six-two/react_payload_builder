@@ -1,5 +1,26 @@
 import ByteString from './ByteString';
 
+const REGEX_PLUS = /\+/g;
+const REGEX_SLASH = /\//g;
+const REGEX_TRAILING_SLASHES = /=+$/
+const REGEX_MINUS = /-/g;
+const REGEX_UNDERSCORE = /_/g;
+
+export function uriSafeEncode(data: string): string {
+  const base64 = btoa(data);
+  return base64
+    .replace(REGEX_PLUS, '-')
+    .replace(REGEX_SLASH, '_')
+    .replace(REGEX_TRAILING_SLASHES, '');
+}
+
+export function uriSafeDecode(base64: string): string {
+  base64 = base64
+    .replace(REGEX_MINUS, '+')
+    .replace(REGEX_UNDERSCORE, '/');
+  return atob(base64);
+}
+
 export function escapeBytes(unescaped: ByteString, escapeFunction: (byte: string) => string): ByteString {
   return new ByteString(unescaped.bytes.map(escapeFunction));
 }

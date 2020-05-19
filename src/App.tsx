@@ -5,6 +5,7 @@ import OutputView from './app/views/hex/OutputView';
 import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
 import {AnyValues, Blueprint, ByteStringBuilder} from './app/hex/ByteStringBuilder';
+import {uriSafeDecode} from './app/hex/Escaper';
 
 
 // TODO: next steps
@@ -18,7 +19,7 @@ export default class App extends React.Component<any, State> {
     try {
       const url = new URL(window.location.href);
       let importParam = url.searchParams.get("import");
-      let stateText = importParam ?? "W3sicGF0dGVybiI6IkEiLCJwYWRkVG9MZW5ndGgiOiIxMCIsInR5cGUiOiJQYWRkaW5nIn0seyJwYXR0ZXJuIjoiYSIsInBhZGRUb0xlbmd0aCI6IjIwIiwidHlwZSI6IlBhZGRpbmcifSx7InR5cGUiOiJTdHJpbmciLCJwYXR0ZXJuIjoiQmFja3NsYXNoZXMgYXJlIGVzY2FwZWQuIFNvIHVzZSAnXFx4MGEnIGluc3RlYWQgb2YgJ1xcbichIiwicmVwZWF0Q291bnQiOjF9LHsidHlwZSI6IlBhZGRpbmciLCJwYXR0ZXJuIjoiXFx4OTAiLCJwYWRkVG9MZW5ndGgiOjEyOH0seyJ0eXBlIjoiU3RyaW5nIiwicGF0dGVybiI6IllvdSBjYW4gcHV0IGFuIGFkZHJlc3MgaW50byBtZW1vcnkgbGlrZSBiZWxvdzoiLCJyZXBlYXRDb3VudCI6MX0seyJ0eXBlIjoiSW50ZWdlciIsIm51bWJlclR5cGUiOiIzMiBiaXQiLCJudW1iZXJTdHJpbmciOiIweDEyMzQ1Njc4In1d"
+      let stateText = importParam || "W3sicGF0dGVybiI6Ij09PSBRdWljayBzdGFydCBpbnN0cnVjdGlvbnMgPT09IiwicGFkZFRvTGVuZ3RoIjoiMTAiLCJ0eXBlIjoiUGFkZGluZyJ9LHsicGF0dGVybiI6IiAtIElucHV0IG5vbiBhc2NpaSBjaGFycyBsaWtlIHRoaXM6IFxceD8_IHdoZXJlID8_IGlzIHRoZSBoZXggY29kZSBvZiB0aGUgY2hhciIsInBhZGRUb0xlbmd0aCI6IjIwIiwidHlwZSI6IlBhZGRpbmcifSx7InR5cGUiOiJTdHJpbmciLCJwYXR0ZXJuIjoiICAgQWxsIG90aGVyIGJhY2tzbGFzaGVzIGFyZSBlc2NhcGVkLiBTbyB1c2UgJ1xceDBhJyBpbnN0ZWFkIG9mICdcXG4nISIsInJlcGVhdENvdW50IjoxfSx7InBhdHRlcm4iOiIgLSBZb3UgY2FuIGFkZCBwYWRkaW5nIGxpa2UgYmVsb3c6IiwicmVwZWF0Q291bnQiOiIxIiwidHlwZSI6IlN0cmluZyJ9LHsidHlwZSI6IlBhZGRpbmciLCJwYXR0ZXJuIjoiXFx4OTAiLCJwYWRkVG9MZW5ndGgiOjEyOH0seyJ0eXBlIjoiU3RyaW5nIiwicGF0dGVybiI6IiAtIFlvdSBjYW4gcHV0IGFuIGFkZHJlc3MgaW50byBtZW1vcnkgbGlrZSBiZWxvdzoiLCJyZXBlYXRDb3VudCI6MX0seyJ0eXBlIjoiSW50ZWdlciIsIm51bWJlclR5cGUiOiIzMiBiaXQiLCJudW1iZXJTdHJpbmciOiIweDEyMzQ1Njc4In0seyJwYXR0ZXJuIjoiIC0gWW91IGNhbiBzZWUgdGhlIG91dHB1dCBpbiB0aGUgYm94IGJlbG93IiwicmVwZWF0Q291bnQiOiIxIiwidHlwZSI6IlN0cmluZyJ9LHsicGF0dGVybiI6IiAgIFRvIHF1aWNrbHkgY29weSBpdCBoaXQgdGhlIGNvcHkgYnV0dG9uIiwicmVwZWF0Q291bnQiOiIxIiwidHlwZSI6IlN0cmluZyJ9XQ";
 
       initialState = this.parseInitialValuesJson(stateText);
     } catch (e) {
@@ -41,7 +42,7 @@ export default class App extends React.Component<any, State> {
           entryClass={HexElementView}
           newItemData={(index: number) => {
             var v = Str.Utils.defaultValues();
-            v.repeatCount = index + 1;
+            v.pattern = "A".repeat(index + 1);
             return v;
           }} />
         <OutputView blueprints={this.state.blueprints} />
@@ -55,7 +56,7 @@ export default class App extends React.Component<any, State> {
 
   parseInitialValuesJson(stateText: string): AnyValues[] {
     try {
-      stateText = atob(stateText);
+      stateText = uriSafeDecode(stateText);
     } catch {
       throw new Error("Base64 decoding failed");
     }
