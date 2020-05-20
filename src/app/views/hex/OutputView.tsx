@@ -1,9 +1,12 @@
 import React from 'react';
 import Checkbox from 'rc-checkbox';
+import { connect } from 'react-redux';
 import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import CopyButton from '../CopyButton';
 import * as FormatChooser from "../PresetOrCustomString";
 import * as Esc from '../../hex/Escaper';
+import { State as ReduxState } from '../../redux/store';
+import { toggleEndian } from '../../redux/actions';
 
 
 const CUSTOM_FORMAT = "custom";
@@ -26,7 +29,7 @@ export interface ExportableState {
 }
 
 //TODO split into more components
-export default class OutputView extends React.Component<Props, State> {
+class OutputView_ extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const default_format_value = FORMAT_MAP.get(DEFAULT_FORMAT) ?? "%s";
@@ -52,7 +55,7 @@ export default class OutputView extends React.Component<Props, State> {
             <tr>
               <td>
                 <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
-                  initialState={{selectedOption: "raw", customValue: "your command here: '%s'"}}
+                  initialState={{ selectedOption: "raw", customValue: "your command here: '%s'" }}
                   customOption={CUSTOM_FORMAT}
                   onValueChange={this.onFormatChange}
                   label="Output format: " />
@@ -61,8 +64,8 @@ export default class OutputView extends React.Component<Props, State> {
                 <td>
                   <label>
                     <Checkbox
-                      checked={this.state.isLittleEndian}
-                      onChange={this.onEndianChange}
+                      checked={this.props.isLittleEndian}
+                      onChange={this.props.toggleEndian}
                     />
                     use little endian
                   </label>
@@ -120,8 +123,8 @@ export default class OutputView extends React.Component<Props, State> {
     }
     let escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
       // const escapeFunction = this.state.format.option === URL_FORMAT ?
-        // Esc.urlEscapeByte : Esc.printfEscapeByte;
-        const escapeFunction = Esc.printfEscapeByte;
+      // Esc.urlEscapeByte : Esc.printfEscapeByte;
+      const escapeFunction = Esc.printfEscapeByte;
 
       let taggedStr: TaggedString = {
         key: bs.key,
@@ -163,6 +166,8 @@ interface RenderData {
 
 export interface Props {
   blueprints: Blueprint[],
+  toggleEndian: () => void,
+  isLittleEndian: boolean,
 }
 
 interface State {
@@ -174,3 +179,18 @@ interface TaggedString {
   str: string,
   key: number,
 }
+
+const mapStateToProps = (state: ReduxState, ownProps: any) => {
+  return {
+    ...ownProps,
+    isLittleEndian: state.isLittleEndian,
+  };
+};
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    toggleEndian: () => dispatch(toggleEndian()),
+  };
+};
+
+const OutputView = connect(mapStateToProps, mapDispatchToProps)(OutputView_);
+export default OutputView;
