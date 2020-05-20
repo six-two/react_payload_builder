@@ -48,6 +48,10 @@ export function reducer(state: State | undefined, action: Actions.Action): State
         },
       };
     }
+    case Actions.SET_STATE: {
+      let payload: State = (action as Actions.SetStateAction).payload;
+      return payload;
+    }
   }
   return state;
 }

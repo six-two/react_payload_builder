@@ -1,10 +1,11 @@
-import { ListEntry, FormatState } from './store';
+import { ListEntry, FormatState, State } from './store';
 
 // action types
 export const FORMAT_CHANGED = "FORMAT_CHANGED";
 export const ENDIAN_TOGGLE = "ENDIAN_TOGGLE";
 export const SET_LIST_ENTRIES = "SET_LIST_ENTRIES";
 export const SET_TEXT_TO_COPY = "SET_TEXT_TO_COPY";
+export const SET_STATE = "SET_STATE";
 
 // action payloads
 export interface SetListPayload {
@@ -32,7 +33,12 @@ export interface SetTextToCopyAction {
   payload: string,
 }
 
-export type Action = FormatChangeAction | EndianToggleAction | SetListAction | SetTextToCopyAction;
+export interface SetStateAction {
+  type: string,
+  payload: State,
+}
+
+export type Action = FormatChangeAction | EndianToggleAction | SetListAction | SetTextToCopyAction | SetStateAction;
 
 // action creators
 export function setFormat(format: FormatState): FormatChangeAction {
@@ -53,4 +59,8 @@ export function setListEntries(entries: ListEntry[], nextId: number): SetListAct
 
 export function setTextToCopy(text: string): SetTextToCopyAction {
   return { type: SET_TEXT_TO_COPY, payload: text };
+}
+
+export function setState(newState: State): SetStateAction {
+  return { type: SET_STATE, payload: newState };
 }
