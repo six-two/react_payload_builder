@@ -1,5 +1,4 @@
 import React from 'react';
-import copy from 'copy-to-clipboard';
 import ClipbordManager from '../ClipboardManager';
 
 export default class CopyButton extends React.Component<Props, State> {

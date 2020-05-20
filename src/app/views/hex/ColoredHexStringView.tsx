@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { TaggedByteString, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import * as Esc from '../../hex/Escaper';
-import { ListEntry, FormatState, State as ReduxState } from '../../redux/store';
+import { ListEntry, State as ReduxState } from '../../redux/store';
 import ClipboardManager from '../../ClipboardManager';
 
 const INSERT_HERE_REGEX = /%[xu]/g;

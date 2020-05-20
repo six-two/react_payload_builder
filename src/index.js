@@ -9,14 +9,14 @@ import {tryImportFromUri, tryImportFromString} from './app/redux/persistence';
 function importData(){
   if (!tryImportFromUri()) {
     console.info("Falling back on default values");
-    const defaultValues = "eyJpc0xpdHRsZUVuZGlhbiI6dHJ1ZSwiZm9ybWF0Ijp7InNlbGVjdGVkIjoiZXhwb3J0IHRoaXMgc2Vzc2lvbiIsInZhbHVlIjoiWW91IHNob3VsZCBuZXZlciBzZWUgdGhpcyBtZXNzYWdlISAlcyIsImN1c3RvbSI6InlvdXJDb21tYW5kIC0tZmxhZ3MgJyVzJyJ9LCJlbnRyaWVzIjpbeyJwYXR0ZXJuIjoiQSIsInJlcGVhdENvdW50IjoxLCJ0eXBlIjoiU3RyaW5nIn0seyJwYXR0ZXJuIjoiQUEiLCJyZXBlYXRDb3VudCI6MSwidHlwZSI6IlN0cmluZyJ9LHsicGF0dGVybiI6IkFBQSIsInJlcGVhdENvdW50IjoxLCJ0eXBlIjoiU3RyaW5nIn0seyJwYXR0ZXJuIjoiQUFBQSIsInJlcGVhdENvdW50IjoxLCJ0eXBlIjoiU3RyaW5nIn1dfQ";//TODO
+    const defaultValues = "eyJpc0xpdHRsZUVuZGlhbiI6dHJ1ZSwiZm9ybWF0Ijp7InNlbGVjdGVkIjoiW3NhdmUgdGhpcyBzZXNzaW9uXSIsInZhbHVlIjoiWW91IHNob3VsZCBuZXZlciBzZWUgdGhpcyBtZXNzYWdlISAleCIsImN1c3RvbSI6InlvdXJDb21tYW5kIC0tZmxhZ3MgJyV4JyJ9LCJlbnRyaWVzIjpbeyJwYXR0ZXJuIjoidGVzdDEyMyIsInJlcGVhdENvdW50IjoxLCJ0eXBlIjoiU3RyaW5nIn0seyJudW1iZXJTdHJpbmciOiIweDExMjIzMzQ0IiwibnVtYmVyVHlwZSI6IjMyIGJpdCIsInR5cGUiOiJJbnRlZ2VyIn1dfQ";
     if (!tryImportFromString(defaultValues)) {
       throw new Error("[Bug/Compat breaking change] Parsing hardcoded initial state failed");
     }
   }
 }
 
-// importData();
+importData();
 
 ReactDOM.render(
   <React.StrictMode>

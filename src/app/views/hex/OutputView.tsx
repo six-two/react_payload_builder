@@ -2,10 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import CopyButton from '../CopyButton';
 import FormatChooser, { EXPORT_FORMAT } from "./FormatChooser";
-import { ListEntry, FormatState, State as ReduxState } from '../../redux/store';
+import { State as ReduxState } from '../../redux/store';
 import ExportUriView from './ExportUriView';
 import ColoredHexStringView from './ColoredHexStringView';
-import ClipbordManager from '../../ClipboardManager';
 import EndianToggle from './EndianToggleView';
 
 class OutputView_ extends React.Component<Props> {
