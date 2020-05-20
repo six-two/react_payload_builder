@@ -9,9 +9,15 @@ export default class CopyButton extends React.Component<Props, State> {
   }
 
   render() {
+    if (!ClipbordManager.canCopy()) {
+      return null;
+    }
+
     const buttonText = ClipbordManager.isAlreadyCopied() ? "Copied" : "Copy";
     return (
-      <button onClick={this.onClick} disabled={!ClipbordManager.canCopy()}>
+      <button onClick={this.onClick}
+      disabled={!ClipbordManager.canCopy()}
+      className="copy-button">
         {buttonText}
       </button>
     );

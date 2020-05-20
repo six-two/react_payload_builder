@@ -10,6 +10,11 @@ $row3d: #0000ff;
   text-align: center;
 }
 
+// Table like display for output controls
+.table {display:table;}
+.row {display:table-row; }
+.format-chooser, .copy-button, .endian-toggle, .cell{display:table-cell;}
+
 .output_settings {
   width: 100%;
   table-layout: fixed;

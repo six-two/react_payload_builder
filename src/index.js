@@ -16,7 +16,7 @@ function importData(){
   }
 }
 
-importData();
+// importData();
 
 ReactDOM.render(
   <React.StrictMode>

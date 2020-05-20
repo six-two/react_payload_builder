@@ -1,6 +1,7 @@
 import { createStore } from 'redux';
 import { reducer } from './reducer';
 import { AnyValues } from '../hex/ByteStringBuilder';
+import { DEFAULT_FORMAT_STATE } from '../views/hex/FormatChooser';
 
 export var textToCopy: string = "";
 
@@ -33,11 +34,7 @@ export interface FormatState {
 export const fallbackState: State = {
   persistent: {
     isLittleEndian: true,
-    format: {
-      selected: "raw",
-      value: "%s",
-      custom: "yourCommand --flags '%s'",
-    },
+    format: DEFAULT_FORMAT_STATE,
     entries: {
       list: [],
       nextId: 0,
@@ -51,7 +48,7 @@ export const fallbackState: State = {
 
 
 const devTools: any = (window as any).__REDUX_DEVTOOLS_EXTENSION__ ? (window as any).__REDUX_DEVTOOLS_EXTENSION__(
-  {trace: true, traceLimit: 25}
+  { trace: true, traceLimit: 25 }
 ) : {};
 
 export const store = createStore(reducer, fallbackState, devTools);
