@@ -17,7 +17,8 @@ export interface State {
   copy: {
     text: string,
     inClipboard: string | null,
-  }
+  },
+  clipboardManagerUpdateCounter: number,
 }
 
 export interface ListEntry {
@@ -43,7 +44,8 @@ export const fallbackState: State = {
   copy: {
     text: "",
     inClipboard: null,
-  }
+  },
+  clipboardManagerUpdateCounter: 0,
 }
 
 

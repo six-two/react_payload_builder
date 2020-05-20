@@ -11,7 +11,6 @@ import { State } from './app/redux/store';
 // TODO: next steps
 //  - improve redux
 //  - explain that export is a snapshot, reword "session"
-//  - make the copy button update on any change (add a anyChange field?)
 //  - use shorter names for export -> also forces me to do validation
 //  - (opt) compress the json before base64
 //  - store the format before switching to export and export that

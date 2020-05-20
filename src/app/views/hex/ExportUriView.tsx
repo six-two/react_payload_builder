@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../redux/store';
-import { setTextToCopy } from '../../redux/actions';
+// import { updatedClipbordManager } from '../../redux/actions';
 import { exportToUri } from '../../redux/persistence';
 import ClipboardManager from '../../ClipboardManager';
 
@@ -20,7 +20,7 @@ class ExportUriView_ extends React.Component<Props> {
 
 export interface Props {
   state: any,
-  setTextToCopy: (text: string) => void,
+  // updatedClipbordManager: () => void,
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
@@ -31,7 +31,7 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
 };
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setTextToCopy: (text: string) => dispatch(setTextToCopy(text)),
+    // updatedClipbordManager: () => dispatch(updatedClipbordManager()),
   };
 };
 

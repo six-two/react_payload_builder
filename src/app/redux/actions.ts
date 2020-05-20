@@ -4,7 +4,7 @@ import { ListEntry, FormatState, State } from './store';
 export const FORMAT_CHANGED = "FORMAT_CHANGED";
 export const ENDIAN_TOGGLE = "ENDIAN_TOGGLE";
 export const SET_LIST_ENTRIES = "SET_LIST_ENTRIES";
-export const SET_TEXT_TO_COPY = "SET_TEXT_TO_COPY";
+export const UPDATED_CLIPBORD_MANAGER = "UPDATED_CLIPBORD_MANAGER";
 export const SET_STATE = "SET_STATE";
 
 // action payloads
@@ -14,13 +14,13 @@ export interface SetListPayload {
 }
 
 // actions
+export interface ActionWithoutPayload {
+  type: string,
+}
+
 export interface FormatChangeAction {
   type: string,
   payload: FormatState,
-}
-
-export interface EndianToggleAction {
-  type: string,
 }
 
 export interface SetListAction {
@@ -28,17 +28,12 @@ export interface SetListAction {
   payload: SetListPayload,
 }
 
-export interface SetTextToCopyAction {
-  type: string,
-  payload: string,
-}
-
 export interface SetStateAction {
   type: string,
   payload: State,
 }
 
-export type Action = FormatChangeAction | EndianToggleAction | SetListAction | SetTextToCopyAction | SetStateAction;
+export type Action = ActionWithoutPayload | FormatChangeAction | SetListAction | SetStateAction;
 
 // action creators
 export function setFormat(format: FormatState): FormatChangeAction {
@@ -48,7 +43,7 @@ export function setFormat(format: FormatState): FormatChangeAction {
   };
 }
 
-export function toggleEndian(): EndianToggleAction {
+export function toggleEndian(): ActionWithoutPayload {
   return { type: ENDIAN_TOGGLE };
 }
 
@@ -57,8 +52,8 @@ export function setListEntries(entries: ListEntry[], nextId: number): SetListAct
   return { type: SET_LIST_ENTRIES, payload: { list: entries, nextId: nextId } };
 }
 
-export function setTextToCopy(text: string): SetTextToCopyAction {
-  return { type: SET_TEXT_TO_COPY, payload: text };
+export function updatedClipbordManager(): ActionWithoutPayload {
+  return { type: UPDATED_CLIPBORD_MANAGER };
 }
 
 export function setState(newState: State): SetStateAction {

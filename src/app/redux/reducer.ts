@@ -37,14 +37,10 @@ export function reducer(state: State | undefined, action: Actions.Action): State
         },
       };
     }
-    case Actions.SET_TEXT_TO_COPY: {
-      let payload: string = (action as Actions.SetTextToCopyAction).payload;
+    case Actions.UPDATED_CLIPBORD_MANAGER: {
       return {
         ...state,
-        copy: {
-          ...state.copy,
-          text: payload,
-        },
+        clipboardManagerUpdateCounter: state.clipboardManagerUpdateCounter + 1,
       };
     }
     case Actions.SET_STATE: {

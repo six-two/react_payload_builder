@@ -55,6 +55,7 @@ export function deserialize(data: string): State {
     );
     //TODO check if it matches the type
     return {
+      ...fallbackState,
       persistent: {
         ...simplified,
         entries: {
@@ -62,7 +63,6 @@ export function deserialize(data: string): State {
           nextId: list.length,
         },
       },
-      copy: fallbackState.copy,
     }
   } catch (error) {
     throw new Error(`deserialize failed: ${error}`)

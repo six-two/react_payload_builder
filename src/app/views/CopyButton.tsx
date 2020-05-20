@@ -1,12 +1,10 @@
 import React from 'react';
 import ClipbordManager from '../ClipboardManager';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../redux/store';
 
-export default class CopyButton extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {count: 0}//TODO update on selected text change
-  }
 
+class CopyButton_ extends React.Component<Props> {
   render() {
     if (!ClipbordManager.canCopy()) {
       return null;
@@ -24,13 +22,24 @@ export default class CopyButton extends React.Component<Props, State> {
 
   onClick = (event: any) => {
     ClipbordManager.copyCurrent();
-    this.setState({ count: this.state.count + 1 });// redraw the button -> change the text
   }
 }
 
-interface State {
-  count: number,
+export interface Props {
+  listenForClipboardUpdates: any,
 }
 
-export interface Props {
-}
+
+const mapStateToProps = (state: ReduxState, ownProps: any) => {
+  return {
+    ...ownProps,
+    listenForClipboardUpdates: state.clipboardManagerUpdateCounter,
+  };
+};
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+  };
+};
+
+const CopyButton = connect(mapStateToProps, mapDispatchToProps)(CopyButton_);
+export default CopyButton;

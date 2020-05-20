@@ -1,4 +1,6 @@
 import copy from 'copy-to-clipboard';
+import { store } from './redux/store';
+import { updatedClipbordManager } from './redux/actions';
 
 export class ClipboardManager {
   copiedText: string | null;
@@ -10,13 +12,17 @@ export class ClipboardManager {
   }
 
   setTextToCopy(text: string | null): void {
-    this.text = text;
+    if (text !== this.text) {
+      this.text = text;
+      store.dispatch(updatedClipbordManager());
+    }
   }
 
   copyCurrent(): void {
     if (this.text !== null) {
       this.copiedText = this.text;
       copy(this.text);
+      store.dispatch(updatedClipbordManager());
     }
   }
 
