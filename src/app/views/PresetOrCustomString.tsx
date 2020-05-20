@@ -13,12 +13,12 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
       <div>
         {this.props.label}
         <ChooseOptionView
-          value={this.props.values.option}
+          value={this.state.selectedOption}
           onChange={this.onTypeChange}
           options={[...this.props.options.keys()]} />
         {this.state.selectedOption === this.props.customOption ?
           <input type="text"
-            value={this.props.values.value}
+            value={this.state.customValue}
             onChange={this.onValueChange} /> : null}
       </div>
     );
@@ -35,13 +35,13 @@ export class PresetOrCustomStringView extends React.Component<Props, State> {
       }
     }
     this.changeState({ selectedOption: newOption });
-    this.onValueChange(newCustomValue);
+    this.props.onValueChange(value);
   }
 
   onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newCustomValue = event.target.value;
     this.changeState({ customValue: newCustomValue });
-    this.onValueChange(newCustomValue);
+    this.props.onValueChange(newCustomValue);
   }
 
   changeState(changes: any) {

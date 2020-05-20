@@ -16,36 +16,8 @@ FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
 FORMAT_MAP.set(CUSTOM_FORMAT, "You should never see this message!")
 FORMAT_MAP.set(URL_FORMAT, "%s");//same as raw, but using url escaping
-FORMAT_MAP.set(EXPORT_FORMAT, "This text should not be visible! %s");
+FORMAT_MAP.set(EXPORT_FORMAT, "EXPORT");
 
-
-export class OutputStateExporter {
-  state: ExportableState;
-
-  constructor(importedState: any) {
-    this.state = {
-      // set up the default values
-      selectedFormat: DEFAULT_FORMAT,
-      customFormatValue: "your_command --flags '%s'",
-      isLittleEndian: true,
-      // this overwrites any previous values
-      ...importedState,
-    }
-  }
-
-  onEndianChange(newIsLittleEndian: boolean) {
-    this.state.isLittleEndian = newIsLittleEndian;
-  }
-
-  onFormatChooserStateChange(newState: FormatChooser.State) {
-    this.selectedFormat = newState.selectedOption;
-    this.customFormatValue = newState.customValue;
-  }
-
-  initialFormatChooserState(): FormatChooser.State {
-    return { selectedOption: this.state.selectedFormat, customValue: this.state.customFormatValue };
-  }
-}
 
 export interface ExportableState {
   selectedFormat: string,
@@ -53,14 +25,14 @@ export interface ExportableState {
   isLittleEndian: boolean,
 }
 
-
+//TODO split into more components
 export default class OutputView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const default_format_value = FORMAT_MAP.get(DEFAULT_FORMAT) ?? "%s";
     this.state = {
-      initialFormatChooserState: this.props.stateExporter.initialFormatChooserState(),
-      isLittleEndian: this.props.stateExporter.state.isLittleEndian,
+      isLittleEndian: true,
+      format: "%s",
     };
   }
 
@@ -80,9 +52,9 @@ export default class OutputView extends React.Component<Props, State> {
             <tr>
               <td>
                 <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
-                  values={this.state.format}
+                  initialState={{selectedOption: "raw", customValue: "your command here: '%s'"}}
                   customOption={CUSTOM_FORMAT}
-                  onChange={this.onFormatChange}
+                  onValueChange={this.onFormatChange}
                   label="Output format: " />
               </td>
               {usesIntegers ?
@@ -110,13 +82,13 @@ export default class OutputView extends React.Component<Props, State> {
   }
 
   getRenderData(): RenderData {
-    const parts = this.state.format.value.split("%s");
+    const parts = this.state.format.split("%s");
     if (parts.length !== 2) {
       return {
         error: 'Format has to contain exactly one "%s" (without the quotes)',
         dom: null, textToCopy: null
       };
-    } else if (this.state.format.option === EXPORT_FORMAT) {
+    } else if (this.state.format === "EXPORT") {//TODO fix
       return this.exportRenderData();
     } else {
       return this.normalRenderData(parts);
@@ -147,8 +119,9 @@ export default class OutputView extends React.Component<Props, State> {
       return { error: result.errorMessage, dom: null, textToCopy: null };
     }
     let escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
-      const escapeFunction = this.state.format.option === URL_FORMAT ?
-        Esc.urlEscapeByte : Esc.printfEscapeByte;
+      // const escapeFunction = this.state.format.option === URL_FORMAT ?
+        // Esc.urlEscapeByte : Esc.printfEscapeByte;
+        const escapeFunction = Esc.printfEscapeByte;
 
       let taggedStr: TaggedString = {
         key: bs.key,
@@ -173,7 +146,7 @@ export default class OutputView extends React.Component<Props, State> {
     return { dom: dom, textToCopy: textToCopy };
   }
 
-  onFormatChange = (newFormat: FormatChooser.Values) => {
+  onFormatChange = (newFormat: string) => {
     this.setState({ format: newFormat });
   }
 
@@ -190,7 +163,6 @@ interface RenderData {
 
 export interface Props {
   blueprints: Blueprint[],
-  stateExporter: OutputStateExporter,
 }
 
 interface State {
