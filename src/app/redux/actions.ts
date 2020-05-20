@@ -1,42 +1,46 @@
+import { ListEntry, FormatState } from './store';
+
 // action types
 export const FORMAT_CHANGED = "FORMAT_CHANGED";
 export const ENDIAN_TOGGLE = "ENDIAN_TOGGLE";
+export const SET_LIST_ENTRIES = "SET_LIST_ENTRIES";
 
 // action payloads
-export interface FormatChangePayload {
-  formatName?: string,
-  formatValue: string,
-  customFormatValue?: string,
+export interface SetListPayload {
+  list: ListEntry[],
+  nextId: number,
 }
 
 // actions
 export interface FormatChangeAction {
   type: string,
-  payload: FormatChangePayload,
+  payload: FormatState,
 }
 
 export interface EndianToggleAction {
   type: string,
 }
 
-export type Action = FormatChangeAction | EndianToggleAction;
-
-// action creators
-export function formatTypeChanged(newFormatName: string, newFormatValue: string): FormatChangeAction {
-  return {
-    type: FORMAT_CHANGED,
-    payload: { formatName: newFormatName, formatValue: newFormatValue },
-  };
+export interface SetListAction {
+  type: string,
+  payload: SetListPayload,
 }
 
-export function customFormatChanged(newCustomFormat: string): FormatChangeAction {
-  // ASSERTION: this function is only called if the current formatName is the custom format name
+export type Action = FormatChangeAction | EndianToggleAction | SetListAction;
+
+// action creators
+export function setFormat(format: FormatState): FormatChangeAction {
   return {
     type: FORMAT_CHANGED,
-    payload: { formatValue: newCustomFormat, customFormatValue: newCustomFormat },
+    payload: format,
   };
 }
 
 export function toggleEndian(): EndianToggleAction {
   return { type: ENDIAN_TOGGLE };
+}
+
+//TODO make multiple functions: onDelete(index), onSwap, onDeleteAll, etc
+export function setListEntries(entries: ListEntry[], nextId: number): SetListAction {
+  return { type: SET_LIST_ENTRIES, payload: { list: entries, nextId: nextId } };
 }

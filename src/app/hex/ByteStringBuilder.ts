@@ -1,3 +1,4 @@
+import { ListEntry } from '../redux/store';
 import * as Padding from './Padding';
 import * as Int from './Integer';
 import * as Str from './String';
@@ -23,7 +24,7 @@ export class ByteStringBuilder {
     this.littleEndian = littleEndian;
   }
 
-  getBytesStrings(blueprintList: Blueprint[]): BuilderResult {
+  getBytesStrings(blueprintList: ListEntry[]): BuilderResult {
     let i: number = 0;
     try {
       let processed: TaggedByteString[] = [];
@@ -69,13 +70,9 @@ export class ByteStringBuilder {
   }
 };
 
+//TODO move
 export type AnyValues = Padding.Values | Int.Values | Str.Values;
 
-
-export interface Blueprint {
-  key: number,
-  data: AnyValues,
-}
 
 export interface BuilderResult {
   byteStrings: TaggedByteString[],

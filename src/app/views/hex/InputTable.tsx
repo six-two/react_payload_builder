@@ -1,19 +1,12 @@
 import React from 'react';
 import HexElementView from '../hex/HexElementView';
 import { AnyValues } from '../../hex/ByteStringBuilder';
+import { connect } from 'react-redux';
+import { ListEntry, State as ReduxState } from '../../redux/store';
+import { setListEntries } from '../../redux/actions';
 
 
-export default class InputTable extends React.Component<Props, State>{
-  constructor(props: Props) {
-    super(props);
-    let initialValues: AnyValues[] = props.initialValues ?? [];
-    let initialEntries: Entry[] = initialValues.map((value, index) => {
-      return { key: index, data: value };
-    });
-    this.state = { entries: initialEntries, nextId: initialEntries.length };
-    props.onChange(initialEntries);
-  }
-
+class InputTable_ extends React.Component<Props>{
   render() {
     return (
       <table className="list">
@@ -25,12 +18,12 @@ export default class InputTable extends React.Component<Props, State>{
           </tr>
         </thead>
         <tbody>
-          {this.state.entries.map((elem, index) => {
+          {this.props.entries.map((elem, index) => {
             return (
               <HexElementView
                 index={index}
                 key={elem.key}
-                isLast={index + 1 === this.state.entries.length}
+                isLast={index + 1 === this.props.entries.length}
                 onItemDelete={this.onItemDeleted}
                 onItemsSwap={this.onItemSwapped}
                 onChange={this.onItemChange}
@@ -55,22 +48,22 @@ export default class InputTable extends React.Component<Props, State>{
   }
 
   onItemAdd = () => {
-    var copy = this.state.entries.slice();
+    var copy = this.props.entries.slice();
     var data = this.props.newItemData(copy.length);
-    let entry: Entry = { key: this.state.nextId, data: data };
+    let entry: ListEntry = { key: this.props.nextId, data: data };
     copy.push(entry);
-    this.onChange(copy, this.state.nextId + 1);
+    this.onChange(copy, this.props.nextId + 1);
   }
 
   onItemChange = (index: number, newValue: AnyValues) => {
-    var copy = this.state.entries.slice();
-    let entry: Entry = { key: copy[index].key, data: newValue };
+    var copy = this.props.entries.slice();
+    let entry: ListEntry = { key: copy[index].key, data: newValue };
     copy[index] = entry;
-    this.onChange(copy, this.state.nextId);
+    this.onChange(copy);
   }
 
   onItemSwapped = (indexFrom: number, indexTo: number) => {
-    var copy = this.state.entries.slice();
+    var copy = this.props.entries.slice();
     const tmp = copy[indexFrom];
     copy[indexFrom] = copy[indexTo];
     copy[indexTo] = tmp;
@@ -78,7 +71,7 @@ export default class InputTable extends React.Component<Props, State>{
   }
 
   onItemDeleted = (index: number) => {
-    var copy = this.state.entries.slice();
+    var copy = this.props.entries.slice();
     copy.splice(index, 1);
     this.onChange(copy);
   }
@@ -87,26 +80,31 @@ export default class InputTable extends React.Component<Props, State>{
     this.onChange([]);
   }
 
-  onChange(newArray: Entry[], nextId?: number) {
-    nextId = nextId ?? this.state.nextId;
-    this.setState({ entries: newArray, nextId: nextId });
-    this.props.onChange(newArray);
+  onChange(newArray: ListEntry[], nextId?: number) {
+    nextId = nextId ?? this.props.nextId;
+    this.props.setListEntries(newArray, nextId);
   }
 }
 
 export interface Props {
-  entryClass: any,
-  onChange: (entries: Entry[]) => void,
   newItemData: (index: number) => AnyValues,
-  initialValues?: AnyValues[],
-}
-
-interface State {
-  entries: Entry[],
+  entries: ListEntry[],
   nextId: number,
+  setListEntries: (entries: ListEntry[], nextId: number) => void,
 }
 
-export interface Entry {
-  key: number,
-  data: AnyValues,
-}
+const mapStateToProps = (state: ReduxState, ownProps: any) => {
+  return {
+    ...ownProps,
+    entries: state.entries.list,
+    nextId: state.entries.nextId,
+  };
+};
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    setListEntries: (entries: ListEntry[], nextId: number) => dispatch(setListEntries(entries, nextId)),
+  };
+};
+
+const InputTable = connect(mapStateToProps, mapDispatchToProps)(InputTable_);
+export default InputTable;

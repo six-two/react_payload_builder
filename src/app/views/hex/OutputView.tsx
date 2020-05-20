@@ -1,12 +1,12 @@
 import React from 'react';
 import Checkbox from 'rc-checkbox';
 import { connect } from 'react-redux';
-import { TaggedByteString, Blueprint, ByteStringBuilder } from '../../hex/ByteStringBuilder';
+import { TaggedByteString, ByteStringBuilder } from '../../hex/ByteStringBuilder';
 import CopyButton from '../CopyButton';
 import * as FormatChooser from "../PresetOrCustomString";
 import * as Esc from '../../hex/Escaper';
-import { State as ReduxState } from '../../redux/store';
-import { toggleEndian } from '../../redux/actions';
+import { ListEntry, FormatState, State as ReduxState } from '../../redux/store';
+import { toggleEndian, setFormat } from '../../redux/actions';
 
 
 const CUSTOM_FORMAT = "custom";
@@ -17,28 +17,13 @@ const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set("python", "python -c 'print(\"%s\")'");
 FORMAT_MAP.set("printf", "printf '%s'");
 FORMAT_MAP.set(DEFAULT_FORMAT, "%s");
-FORMAT_MAP.set(CUSTOM_FORMAT, "You should never see this message!")
+FORMAT_MAP.set(CUSTOM_FORMAT, "You should never see this message! %s")
 FORMAT_MAP.set(URL_FORMAT, "%s");//same as raw, but using url escaping
-FORMAT_MAP.set(EXPORT_FORMAT, "EXPORT");
+FORMAT_MAP.set(EXPORT_FORMAT, "You should never see this message! %s");
 
-
-export interface ExportableState {
-  selectedFormat: string,
-  customFormatValue: string,
-  isLittleEndian: boolean,
-}
 
 //TODO split into more components
-class OutputView_ extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    const default_format_value = FORMAT_MAP.get(DEFAULT_FORMAT) ?? "%s";
-    this.state = {
-      isLittleEndian: true,
-      format: "%s",
-    };
-  }
-
+class OutputView_ extends React.Component<Props> {
   render() {
     let renderData: RenderData = this.getRenderData();
     let usesIntegers = false;
@@ -55,9 +40,9 @@ class OutputView_ extends React.Component<Props, State> {
             <tr>
               <td>
                 <FormatChooser.PresetOrCustomStringView options={FORMAT_MAP}
-                  initialState={{ selectedOption: "raw", customValue: "your command here: '%s'" }}
+                  state={this.props.format}
                   customOption={CUSTOM_FORMAT}
-                  onValueChange={this.onFormatChange}
+                  onStateChange={this.props.setFormat}
                   label="Output format: " />
               </td>
               {usesIntegers ?
@@ -85,13 +70,13 @@ class OutputView_ extends React.Component<Props, State> {
   }
 
   getRenderData(): RenderData {
-    const parts = this.state.format.split("%s");
+    const parts = this.props.format.value.split("%s");
     if (parts.length !== 2) {
       return {
         error: 'Format has to contain exactly one "%s" (without the quotes)',
         dom: null, textToCopy: null
       };
-    } else if (this.state.format === "EXPORT") {//TODO fix
+    } else if (this.props.format.selected === EXPORT_FORMAT) {
       return this.exportRenderData();
     } else {
       return this.normalRenderData(parts);
@@ -116,15 +101,15 @@ class OutputView_ extends React.Component<Props, State> {
   }
 
   normalRenderData(labels: string[]): RenderData {
-    let result = new ByteStringBuilder(this.state.isLittleEndian)
+    let result = new ByteStringBuilder(this.props.isLittleEndian)
       .getBytesStrings(this.props.blueprints);
     if (result.errorMessage) {
       return { error: result.errorMessage, dom: null, textToCopy: null };
     }
     let escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
-      // const escapeFunction = this.state.format.option === URL_FORMAT ?
-      // Esc.urlEscapeByte : Esc.printfEscapeByte;
-      const escapeFunction = Esc.printfEscapeByte;
+      const escapeFunction = this.props.format.selected === URL_FORMAT ?
+      Esc.urlEscapeByte : Esc.printfEscapeByte;
+      // const escapeFunction = Esc.printfEscapeByte;
 
       let taggedStr: TaggedString = {
         key: bs.key,
@@ -149,10 +134,6 @@ class OutputView_ extends React.Component<Props, State> {
     return { dom: dom, textToCopy: textToCopy };
   }
 
-  onFormatChange = (newFormat: string) => {
-    this.setState({ format: newFormat });
-  }
-
   onEndianChange = (event: any) => {
     this.setState({ isLittleEndian: event.target.checked });
   }
@@ -165,14 +146,11 @@ interface RenderData {
 }
 
 export interface Props {
-  blueprints: Blueprint[],
+  blueprints: ListEntry[],
+  isLittleEndian: boolean,
+  format: FormatState,
   toggleEndian: () => void,
-  isLittleEndian: boolean,
-}
-
-interface State {
-  format: string,
-  isLittleEndian: boolean,
+  setFormat: (format: FormatState) => void,
 }
 
 interface TaggedString {
@@ -184,11 +162,14 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
     isLittleEndian: state.isLittleEndian,
+    blueprints: state.entries.list,
+    format: state.format,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {
   return {
     toggleEndian: () => dispatch(toggleEndian()),
+    setFormat: (format: FormatState) => dispatch(setFormat(format)),
   };
 };
 

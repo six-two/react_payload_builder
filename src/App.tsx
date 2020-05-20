@@ -4,7 +4,7 @@ import InputTable from './app/views/hex/InputTable';
 import OutputView from './app/views/hex/OutputView';
 import HexElementView from './app/views/hex/HexElementView';
 import * as Str from './app/hex/String';
-import {AnyValues, Blueprint, ByteStringBuilder} from './app/hex/ByteStringBuilder';
+import {AnyValues, ByteStringBuilder} from './app/hex/ByteStringBuilder';
 import {uriSafeDecode} from './app/hex/Escaper';
 
 
@@ -12,7 +12,7 @@ import {uriSafeDecode} from './app/hex/Escaper';
 //  - Also store state of output (little endian, custom output command, output type)
 //  - Fix names
 
-export default class App extends React.Component<any, State> {
+export default class App extends React.Component<any> {
   constructor(props: any) {
     super(props);
     let initialState: AnyValues[];
@@ -37,21 +37,14 @@ export default class App extends React.Component<any, State> {
     return (
       <div className="app-root">
         <InputTable
-          initialValues={this.state.initialValues}
-          onChange={this.onListChange}
-          entryClass={HexElementView}
           newItemData={(index: number) => {
             var v = Str.Utils.defaultValues();
             v.pattern = "A".repeat(index + 1);
             return v;
           }} />
-        <OutputView blueprints={this.state.blueprints} />
+        <OutputView />
       </div>
     );
-  }
-
-  onListChange = (newBlueprints: Blueprint[]) => {
-    this.setState({ blueprints: newBlueprints });
   }
 
   parseInitialValuesJson(stateText: string): AnyValues[] {
@@ -79,9 +72,4 @@ export default class App extends React.Component<any, State> {
       throw new Error("Your data is corrupted or not compatible with this version of the software");
     }
   }
-}
-
-interface State {
-  blueprints: Blueprint[],
-  initialValues: AnyValues[],
 }
