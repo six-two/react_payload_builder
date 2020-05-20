@@ -13,20 +13,39 @@ export function reducer(state: State | undefined, action: Actions.Action): State
       let payload = (action as Actions.FormatChangeAction).payload;
       return {
         ...state,
-        format: payload,
+        persistent: {
+          ...state.persistent,
+          format: payload,
+        },
       };
     }
     case Actions.ENDIAN_TOGGLE: {
       return {
         ...state,
-        isLittleEndian: !state.isLittleEndian,
+        persistent: {
+          ...state.persistent,
+          isLittleEndian: !state.persistent.isLittleEndian,
+        },
       };
     }
     case Actions.SET_LIST_ENTRIES: {
       let payload: Actions.SetListPayload = (action as Actions.SetListAction).payload;
       return {
         ...state,
-        entries: payload,
+        persistent: {
+          ...state.persistent,
+          entries: payload,
+        },
+      };
+    }
+    case Actions.SET_TEXT_TO_COPY: {
+      let payload: string = (action as Actions.SetTextToCopyAction).payload;
+      return {
+        ...state,
+        copy: {
+          ...state.copy,
+          text: payload,
+        },
       };
     }
   }

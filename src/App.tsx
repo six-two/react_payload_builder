@@ -15,22 +15,7 @@ import {uriSafeDecode} from './app/hex/Escaper';
 export default class App extends React.Component<any> {
   constructor(props: any) {
     super(props);
-    let initialState: AnyValues[];
-    try {
-      const url = new URL(window.location.href);
-      let importParam = url.searchParams.get("import");
-      let stateText = importParam || "W3sicGF0dGVybiI6Ij09PSBRdWljayBzdGFydCBpbnN0cnVjdGlvbnMgPT09IiwicGFkZFRvTGVuZ3RoIjoiMTAiLCJ0eXBlIjoiUGFkZGluZyJ9LHsicGF0dGVybiI6IiAtIElucHV0IG5vbiBhc2NpaSBjaGFycyBsaWtlIHRoaXM6IFxceD8_IHdoZXJlID8_IGlzIHRoZSBoZXggY29kZSBvZiB0aGUgY2hhciIsInBhZGRUb0xlbmd0aCI6IjIwIiwidHlwZSI6IlBhZGRpbmcifSx7InR5cGUiOiJTdHJpbmciLCJwYXR0ZXJuIjoiICAgQWxsIG90aGVyIGJhY2tzbGFzaGVzIGFyZSBlc2NhcGVkLiBTbyB1c2UgJ1xceDBhJyBpbnN0ZWFkIG9mICdcXG4nISIsInJlcGVhdENvdW50IjoxfSx7InBhdHRlcm4iOiIgLSBZb3UgY2FuIGFkZCBwYWRkaW5nIGxpa2UgYmVsb3c6IiwicmVwZWF0Q291bnQiOiIxIiwidHlwZSI6IlN0cmluZyJ9LHsidHlwZSI6IlBhZGRpbmciLCJwYXR0ZXJuIjoiXFx4OTAiLCJwYWRkVG9MZW5ndGgiOjEyOH0seyJ0eXBlIjoiU3RyaW5nIiwicGF0dGVybiI6IiAtIFlvdSBjYW4gcHV0IGFuIGFkZHJlc3MgaW50byBtZW1vcnkgbGlrZSBiZWxvdzoiLCJyZXBlYXRDb3VudCI6MX0seyJ0eXBlIjoiSW50ZWdlciIsIm51bWJlclR5cGUiOiIzMiBiaXQiLCJudW1iZXJTdHJpbmciOiIweDEyMzQ1Njc4In0seyJwYXR0ZXJuIjoiIC0gWW91IGNhbiBzZWUgdGhlIG91dHB1dCBpbiB0aGUgYm94IGJlbG93IiwicmVwZWF0Q291bnQiOiIxIiwidHlwZSI6IlN0cmluZyJ9LHsicGF0dGVybiI6IiAgIFRvIHF1aWNrbHkgY29weSBpdCBoaXQgdGhlIGNvcHkgYnV0dG9uIiwicmVwZWF0Q291bnQiOiIxIiwidHlwZSI6IlN0cmluZyJ9XQ";
 
-      initialState = this.parseInitialValuesJson(stateText);
-    } catch (e) {
-      initialState = [
-        "===== Error importing data =====", e.toString(), "Hint: Are you sure you copied the whole url?"
-      ].map((text: string) => {
-        return {type: "String", pattern: text, repeatCount: 1};
-      });
-    }
-
-    this.state = { initialValues: initialState, blueprints: [] };
   }
 
   render() {

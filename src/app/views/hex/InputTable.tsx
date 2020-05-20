@@ -96,8 +96,8 @@ export interface Props {
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
-    entries: state.entries.list,
-    nextId: state.entries.nextId,
+    entries: state.persistent.entries.list,
+    nextId: state.persistent.entries.nextId,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {

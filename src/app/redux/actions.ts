@@ -4,6 +4,7 @@ import { ListEntry, FormatState } from './store';
 export const FORMAT_CHANGED = "FORMAT_CHANGED";
 export const ENDIAN_TOGGLE = "ENDIAN_TOGGLE";
 export const SET_LIST_ENTRIES = "SET_LIST_ENTRIES";
+export const SET_TEXT_TO_COPY = "SET_TEXT_TO_COPY";
 
 // action payloads
 export interface SetListPayload {
@@ -26,7 +27,12 @@ export interface SetListAction {
   payload: SetListPayload,
 }
 
-export type Action = FormatChangeAction | EndianToggleAction | SetListAction;
+export interface SetTextToCopyAction {
+  type: string,
+  payload: string,
+}
+
+export type Action = FormatChangeAction | EndianToggleAction | SetListAction | SetTextToCopyAction;
 
 // action creators
 export function setFormat(format: FormatState): FormatChangeAction {
@@ -43,4 +49,8 @@ export function toggleEndian(): EndianToggleAction {
 //TODO make multiple functions: onDelete(index), onSwap, onDeleteAll, etc
 export function setListEntries(entries: ListEntry[], nextId: number): SetListAction {
   return { type: SET_LIST_ENTRIES, payload: { list: entries, nextId: nextId } };
+}
+
+export function setTextToCopy(text: string): SetTextToCopyAction {
+  return { type: SET_TEXT_TO_COPY, payload: text };
 }

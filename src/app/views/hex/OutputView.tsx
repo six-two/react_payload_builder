@@ -7,6 +7,10 @@ import * as FormatChooser from "../PresetOrCustomString";
 import * as Esc from '../../hex/Escaper';
 import { ListEntry, FormatState, State as ReduxState } from '../../redux/store';
 import { toggleEndian, setFormat } from '../../redux/actions';
+import ExportUriView from './ExportUriView';
+import ColoredHexStringView from './ColoredHexStringView';
+import ClipbordManager from '../../ClipboardManager';
+
 
 
 const CUSTOM_FORMAT = "custom";
@@ -25,7 +29,6 @@ FORMAT_MAP.set(EXPORT_FORMAT, "You should never see this message! %s");
 //TODO split into more components
 class OutputView_ extends React.Component<Props> {
   render() {
-    let renderData: RenderData = this.getRenderData();
     let usesIntegers = false;
     for (let i = 0; i < this.props.blueprints.length; i++) {
       if (this.props.blueprints[i].data.type === "Integer") {
@@ -57,81 +60,16 @@ class OutputView_ extends React.Component<Props> {
                 </td>
                 : null
               }
-              {renderData.textToCopy ? <td><CopyButton text={renderData.textToCopy} /></td> : null}
+              {ClipbordManager.canCopy() ? <td><CopyButton /></td> : null}
             </tr>
           </tbody>
         </table>
-        {renderData.error ?
-          <span className="err-msg">{renderData.error}</span> :
-          renderData.dom
+        {this.props.format.selected === EXPORT_FORMAT ?
+          <ExportUriView /> :
+          <ColoredHexStringView />
         }
       </div>
     );
-  }
-
-  getRenderData(): RenderData {
-    const parts = this.props.format.value.split("%s");
-    if (parts.length !== 2) {
-      return {
-        error: 'Format has to contain exactly one "%s" (without the quotes)',
-        dom: null, textToCopy: null
-      };
-    } else if (this.props.format.selected === EXPORT_FORMAT) {
-      return this.exportRenderData();
-    } else {
-      return this.normalRenderData(parts);
-    }
-  }
-
-  exportRenderData(): RenderData {
-    const state = this.props.blueprints.map((x) => x.data);
-    let stateString: string = JSON.stringify(state);
-    stateString = Esc.uriSafeEncode(stateString);
-
-    // take the current url and set the import param to our current state
-    const urlBuilder = new URL(window.location.href);
-    urlBuilder.searchParams.set("import", stateString);
-    const url = urlBuilder.href;
-
-    const dom = <span>
-      You can return to the current state anytime by visiting:<br /><br />
-      {url}
-    </span>;
-    return { dom: dom, textToCopy: url };
-  }
-
-  normalRenderData(labels: string[]): RenderData {
-    let result = new ByteStringBuilder(this.props.isLittleEndian)
-      .getBytesStrings(this.props.blueprints);
-    if (result.errorMessage) {
-      return { error: result.errorMessage, dom: null, textToCopy: null };
-    }
-    let escapedTaggedStrings = result.byteStrings.map((bs: TaggedByteString) => {
-      const escapeFunction = this.props.format.selected === URL_FORMAT ?
-      Esc.urlEscapeByte : Esc.printfEscapeByte;
-      // const escapeFunction = Esc.printfEscapeByte;
-
-      let taggedStr: TaggedString = {
-        key: bs.key,
-        str: Esc.escapeBytes(bs.data, escapeFunction).toString(),
-      };
-      return taggedStr;
-    });
-
-    let textToCopy = escapedTaggedStrings.map((tbs) => { return tbs.str }).join("");
-    textToCopy = labels[0] + textToCopy + labels[1];
-
-    let dom = <span>
-      {labels[0]}
-      {escapedTaggedStrings.map((value: TaggedString) => {
-        return <span className="multi-colored" key={value.key}>
-          {value.str}
-        </span>;
-      })}
-      {labels[1]}
-    </span>;
-
-    return { dom: dom, textToCopy: textToCopy };
   }
 
   onEndianChange = (event: any) => {
@@ -161,9 +99,9 @@ interface TaggedString {
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
-    isLittleEndian: state.isLittleEndian,
-    blueprints: state.entries.list,
-    format: state.format,
+    isLittleEndian: state.persistent.isLittleEndian,
+    blueprints: state.persistent.entries.list,
+    format: state.persistent.format,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {

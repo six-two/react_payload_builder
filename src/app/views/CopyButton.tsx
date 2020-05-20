@@ -1,33 +1,31 @@
 import React from 'react';
 import copy from 'copy-to-clipboard';
+import ClipbordManager from '../ClipboardManager';
 
 export default class CopyButton extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { copiedText: null };
+    this.state = {count: 0}//TODO update on selected text change
   }
 
   render() {
-    const alreadyCopied = this.props.text === this.state.copiedText;
-    const buttonText = alreadyCopied ? "Copied" : "Copy";
+    const buttonText = ClipbordManager.isAlreadyCopied() ? "Copied" : "Copy";
     return (
-      <button onClick={this.onClick}>
+      <button onClick={this.onClick} disabled={!ClipbordManager.canCopy()}>
         {buttonText}
       </button>
     );
   }
 
   onClick = (event: any) => {
-    const text = this.props.text;
-    copy(text);
-    this.setState({ copiedText: text });
+    ClipbordManager.copyCurrent();
+    this.setState({ count: this.state.count + 1 });// redraw the button -> change the text
   }
 }
 
 interface State {
-  copiedText: string | null,
+  count: number,
 }
 
 export interface Props {
-  text: string,
 }
