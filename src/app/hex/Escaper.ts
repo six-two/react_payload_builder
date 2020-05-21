@@ -23,7 +23,7 @@ export function uriSafeDecode(base64: string): string {
 
   // add padding again
   let lastBlockSize = base64.length % 4;
-  if (lastBlockSize != 0) {
+  if (lastBlockSize !== 0) {
     base64 += ('===').slice(0, 4 - lastBlockSize);
   }
   return atob(base64);

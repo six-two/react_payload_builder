@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import CopyButton from '../CopyButton';
 import FormatChooser from "./FormatChooser";
 import { State as ReduxState } from '../../redux/store';
-import ExportUriView from './ExportUriView';
 import ColoredHexStringView from './ColoredHexStringView';
 import EndianToggle from './EndianToggleView';
 
