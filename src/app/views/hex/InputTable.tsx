@@ -3,7 +3,9 @@ import HexElementView from '../hex/HexElementView';
 import { AnyValues } from '../../hex/ByteStringBuilder';
 import { connect } from 'react-redux';
 import { ListEntry, State as ReduxState } from '../../redux/store';
-import { setListEntries } from '../../redux/actions';
+import {
+  listItemAdd, listItemDelete, listItemSwap,  listItemDeleteAll, listItemChanged
+} from '../../redux/actions';
 
 
 class InputTable_ extends React.Component<Props>{
@@ -24,20 +26,20 @@ class InputTable_ extends React.Component<Props>{
                 index={index}
                 key={elem.key}
                 isLast={index + 1 === this.props.entries.length}
-                onItemDelete={this.onItemDeleted}
-                onItemsSwap={this.onItemSwapped}
-                onChange={this.onItemChange}
+                onItemDelete={this.props.deleteListItem}
+                onItemsSwap={this.props.swapListItems}
+                onChange={this.props.updateItem}
                 data={elem.data} />
             );
           })}
           <tr key={-1} className="row-buttons">
             <td colSpan={2}>
-              <button onClick={this.onItemAdd}>
+              <button onClick={this.props.addListItem}>
                 Add new element
                 </button>
             </td>
             <td>
-              <button onClick={this.onDeleteAll}>
+              <button onClick={this.props.deleteAllListItems}>
                 Delete all
               </button>
             </td>
@@ -46,63 +48,30 @@ class InputTable_ extends React.Component<Props>{
       </table >
     );
   }
-
-  onItemAdd = () => {
-    var copy = this.props.entries.slice();
-    var data = this.props.newItemData(copy.length);
-    let entry: ListEntry = { key: this.props.nextId, data: data };
-    copy.push(entry);
-    this.onChange(copy, this.props.nextId + 1);
-  }
-
-  onItemChange = (index: number, newValue: AnyValues) => {
-    var copy = this.props.entries.slice();
-    let entry: ListEntry = { key: copy[index].key, data: newValue };
-    copy[index] = entry;
-    this.onChange(copy);
-  }
-
-  onItemSwapped = (indexFrom: number, indexTo: number) => {
-    var copy = this.props.entries.slice();
-    const tmp = copy[indexFrom];
-    copy[indexFrom] = copy[indexTo];
-    copy[indexTo] = tmp;
-    this.onChange(copy);
-  }
-
-  onItemDeleted = (index: number) => {
-    var copy = this.props.entries.slice();
-    copy.splice(index, 1);
-    this.onChange(copy);
-  }
-
-  onDeleteAll = () => {
-    this.onChange([]);
-  }
-
-  onChange(newArray: ListEntry[], nextId?: number) {
-    nextId = nextId ?? this.props.nextId;
-    this.props.setListEntries(newArray, nextId);
-  }
 }
 
 export interface Props {
-  newItemData: (index: number) => AnyValues,
   entries: ListEntry[],
-  nextId: number,
-  setListEntries: (entries: ListEntry[], nextId: number) => void,
+  addListItem: () => void,
+  swapListItems: (indexA: number, indexB: number) => void,
+  deleteListItem: (index: number) => void,
+  deleteAllListItems: () => void,
+  updateItem: (index: number, newValue: AnyValues) => void,
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
     entries: state.persistent.entries.list,
-    nextId: state.persistent.entries.nextId,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    setListEntries: (entries: ListEntry[], nextId: number) => dispatch(setListEntries(entries, nextId)),
+    addListItem: () => dispatch(listItemAdd()),
+    swapListItems: (indexA: number, indexB: number) => dispatch(listItemSwap(indexA, indexB)),
+    deleteListItem: (index: number) => dispatch(listItemDelete(index)),
+    deleteAllListItems: () => dispatch(listItemDeleteAll()),
+    updateItem: (index: number, newValue: AnyValues) => dispatch(listItemChanged(index, newValue)),
   };
 };
 
