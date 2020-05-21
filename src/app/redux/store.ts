@@ -6,20 +6,18 @@ import { DEFAULT_FORMAT_STATE } from '../views/hex/FormatChooser';
 export var textToCopy: string = "";
 
 export interface State {
-  persistent: {
-    isLittleEndian: boolean,
-    format: FormatState,
-    entries: {
-      list: ListEntry[],
-      nextId: number,
-    },
-  }
-  copy: {
-    text: string,
-    inClipboard: string | null,
-  },
+  persistent: PersistentState,
   updateCounter: number,
   isExportSelected: boolean,
+}
+
+export interface PersistentState {
+  isLittleEndian: boolean,
+  format: FormatState,
+  entries: {
+    list: ListEntry[],
+    nextId: number,
+  },
 }
 
 export interface ListEntry {
@@ -41,10 +39,6 @@ export const fallbackState: State = {
       list: [],
       nextId: 0,
     },
-  },
-  copy: {
-    text: "",
-    inClipboard: null,
   },
   updateCounter: 0,
   isExportSelected: false,

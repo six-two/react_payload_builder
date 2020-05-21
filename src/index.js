@@ -9,9 +9,9 @@ import {tryImportFromUri, tryImportFromString} from './app/redux/persistence';
 function importData(){
   if (!tryImportFromUri()) {
     console.info("Falling back on default values");
-    const defaultValues = "eyJpc0xpdHRsZUVuZGlhbiI6dHJ1ZSwiZm9ybWF0Ijp7InNlbGVjdGVkIjoicmF3IiwidmFsdWUiOiIleCIsImN1c3RvbSI6InlvdXJDb21tYW5kIC0tZmxhZ3MgJyV4JyJ9LCJlbnRyaWVzIjpbeyJwYXR0ZXJuIjoiQSIsInJlcGVhdENvdW50IjoxLCJ0eXBlIjoiU3RyaW5nIn0seyJwYXR0ZXJuIjoiQUEiLCJyZXBlYXRDb3VudCI6MSwidHlwZSI6IlN0cmluZyJ9XX0.";
+    const defaultValues = "eyJsZSI6dHJ1ZSwiZiI6eyJzIjoicmF3IiwidiI6IiV4IiwiYyI6InlvdXJDb21tYW5kIC0tZmxhZ3MgJyV4JyJ9LCJsIjpbeyJwYXR0ZXJuIjoidGVzdDEyMyIsInJlcGVhdENvdW50IjoxLCJ0eXBlIjoiU3RyaW5nIn0seyJudW1iZXJTdHJpbmciOiIweDExMjIzMzQ0IiwibnVtYmVyVHlwZSI6IjMyIGJpdCIsInR5cGUiOiJJbnRlZ2VyIn1dfQ..";
     if (!tryImportFromString(defaultValues)) {
-      throw new Error("[Bug/Compat breaking change] Parsing hardcoded initial state failed");
+      alert("[Bug/Compat breaking change] Parsing hardcoded initial state failed");
     }
   }
 }

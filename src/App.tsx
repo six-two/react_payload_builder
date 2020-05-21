@@ -18,12 +18,7 @@ class App_ extends React.Component<any> {
   render() {
     return (
       <div className="app-root">
-        <InputTable
-          newItemData={(index: number) => {
-            var v = Str.Utils.defaultValues();
-            v.pattern = "A".repeat(index + 1);
-            return v;
-          }} />
+        <InputTable />
         <OutputView />
       </div>
     );
