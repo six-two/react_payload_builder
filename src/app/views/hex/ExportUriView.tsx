@@ -8,11 +8,13 @@ import ClipboardManager from '../../ClipboardManager';
 class ExportUriView_ extends React.Component<Props> {
   render() {
     const url = exportToUri();
-    ClipboardManager.setTextToCopy(url);//TODO can this cause a loop?
 
     return <span>
-      You can return to the current state anytime by visiting:<br /><br />
+      You can return to the current state anytime by visiting:
+      <br /><br />
       {url}
+      <br /><br />
+      <b>{"[Warning] This software is still under development, so I might change/break the format sometimes."}</b>
     </span>;
   }
 }

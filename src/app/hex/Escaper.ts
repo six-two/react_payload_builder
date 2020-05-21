@@ -7,21 +7,25 @@ const REGEX_EQUAL = /=/g;
 //url safe
 const REGEX_MINUS = /-/g;
 const REGEX_UNDERSCORE = /_/g;
-const REGEX_DOT = /\./g;
 
 export function uriSafeEncode(data: string): string {
   const base64 = btoa(data);
   return base64
     .replace(REGEX_PLUS, '-')
     .replace(REGEX_SLASH, '_')
-    .replace(REGEX_EQUAL, '.');
+    .replace(REGEX_EQUAL, '');
 }
 
 export function uriSafeDecode(base64: string): string {
   base64 = base64
     .replace(REGEX_MINUS, '+')
-    .replace(REGEX_UNDERSCORE, '/')
-    .replace(REGEX_DOT, '=');
+    .replace(REGEX_UNDERSCORE, '/');
+
+  // add padding again
+  let lastBlockSize = base64.length % 4;
+  if (lastBlockSize != 0) {
+    base64 += ('===').slice(0, 4 - lastBlockSize);
+  }
   return atob(base64);
 }
 
