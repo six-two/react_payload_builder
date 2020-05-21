@@ -1,4 +1,4 @@
-import { ListEntry, FormatState, State } from './store';
+import { FormatState, State } from './store';
 import { AnyValues } from '../hex/ByteStringBuilder';
 
 

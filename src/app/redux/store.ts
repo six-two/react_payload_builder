@@ -19,6 +19,7 @@ export interface State {
     inClipboard: string | null,
   },
   clipboardManagerUpdateCounter: number,
+  isExportSelected: boolean,
 }
 
 export interface ListEntry {
@@ -46,6 +47,7 @@ export const fallbackState: State = {
     inClipboard: null,
   },
   clipboardManagerUpdateCounter: 0,
+  isExportSelected: false,
 }
 
 

@@ -1,6 +1,7 @@
 import * as Actions from './actions';
 import { State, fallbackState } from './store';
 import { Utils as StringUtils } from '../hex/String';
+import { EXPORT_FORMAT } from '../views/hex/FormatChooser';
 
 
 export function reducer(state: State | undefined, action: Actions.Action): State {
@@ -11,13 +12,21 @@ export function reducer(state: State | undefined, action: Actions.Action): State
   switch (action.type) {
     case Actions.FORMAT_CHANGED: {
       let payload = (action as Actions.FormatChangeAction).payload;
-      return {
-        ...state,
-        persistent: {
-          ...state.persistent,
-          format: payload,
-        },
-      };
+      if (payload.selected === EXPORT_FORMAT) {
+        return {
+          ...state,
+          isExportSelected: true,
+        };
+      } else {
+        return {
+          ...state,
+          persistent: {
+            ...state.persistent,
+            format: payload,
+          },
+          isExportSelected: false,
+        };
+      }
     }
     case Actions.ENDIAN_TOGGLE: {
       return {

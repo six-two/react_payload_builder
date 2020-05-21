@@ -1,23 +1,27 @@
 import ByteString from './ByteString';
 
+// non url safe
 const REGEX_PLUS = /\+/g;
 const REGEX_SLASH = /\//g;
-const REGEX_TRAILING_SLASHES = /=+$/
+const REGEX_EQUAL = /=/g;
+//url safe
 const REGEX_MINUS = /-/g;
 const REGEX_UNDERSCORE = /_/g;
+const REGEX_DOT = /\./g;
 
 export function uriSafeEncode(data: string): string {
   const base64 = btoa(data);
   return base64
     .replace(REGEX_PLUS, '-')
     .replace(REGEX_SLASH, '_')
-    .replace(REGEX_TRAILING_SLASHES, '');
+    .replace(REGEX_EQUAL, '.');
 }
 
 export function uriSafeDecode(base64: string): string {
   base64 = base64
     .replace(REGEX_MINUS, '+')
-    .replace(REGEX_UNDERSCORE, '/');
+    .replace(REGEX_UNDERSCORE, '/')
+    .replace(REGEX_DOT, '=');
   return atob(base64);
 }
 

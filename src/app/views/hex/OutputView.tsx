@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import CopyButton from '../CopyButton';
-import FormatChooser, { EXPORT_FORMAT } from "./FormatChooser";
+import FormatChooser from "./FormatChooser";
 import { State as ReduxState } from '../../redux/store';
 import ExportUriView from './ExportUriView';
 import ColoredHexStringView from './ColoredHexStringView';
@@ -18,7 +18,7 @@ class OutputView_ extends React.Component<Props> {
             <CopyButton />
           </div>
         </div>
-        {this.props.selectedFormat === EXPORT_FORMAT ?
+        {this.props.showExportUri ?
           <ExportUriView /> :
           <ColoredHexStringView />
         }
@@ -28,13 +28,13 @@ class OutputView_ extends React.Component<Props> {
 }
 
 export interface Props {
-  selectedFormat: string,
+  showExportUri: boolean,
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
-    selectedFormat: state.persistent.format.selected,
+    showExportUri: state.isExportSelected,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {

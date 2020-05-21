@@ -17,15 +17,16 @@ export function exportToUri(): string {
 
 export function tryImportFromUri(): boolean {
   const url = new URL(window.location.href);
-  const data = url.searchParams.get("import") || "";
+  const data = url.searchParams.get("import");
+  if (!data){
+    console.log("URI does not contain data to import");
+    return false;
+  }
   return tryImportFromString(data);
 }
 
 export function tryImportFromString(data: string): boolean {
   try {
-    if (!data) {
-      throw new Error("URI does not contain data to import");
-    }
     const state = deserialize(data);
     store.dispatch(setState(state));
     return true;
@@ -49,15 +50,16 @@ export function serialize(state: any/*State::persistent*/): string {
 
 export function deserialize(data: string): State {
   try {
-    let simplified = JSON.parse(uriSafeDecode(data));
-    let list = simplified.entries.map(
+    let jsonText = tryOrMessage(() => uriSafeDecode(data), `Decoding base64 failed\nBase64 text: '${data}'`);
+    let deserialized = tryOrMessage(() => JSON.parse(jsonText), `Decoding JSON failed!\nJSON: ${jsonText}`);
+    let list = deserialized.entries.map(
       (data: AnyValues, index: number) => { return { key: index, data: data } }
     );
     //TODO check if it matches the type
     return {
       ...fallbackState,
       persistent: {
-        ...simplified,
+        ...deserialized,
         entries: {
           list: list,
           nextId: list.length,
@@ -66,5 +68,13 @@ export function deserialize(data: string): State {
     }
   } catch (error) {
     throw new Error(`deserialize failed: ${error}`)
+  }
+}
+
+function tryOrMessage(fn: () => any, message: string): any {
+  try {
+    return fn();
+  } catch (error) {
+    throw new Error(`${message}\n\nCaused by '${error}'`);
   }
 }
