@@ -3,6 +3,7 @@ import { AnyValues } from '../hex/ByteStringBuilder';
 
 
 // action types
+export const NOOP = "NOOP";
 export const FORMAT_CHANGED = "FORMAT_CHANGED";
 export const ENDIAN_TOGGLE = "ENDIAN_TOGGLE";
 export const LIST_ADD = "LIST_ADD";
@@ -88,10 +89,6 @@ export function listItemDeleteAll(): ActionWithoutPayload {
 
 export function listItemChanged(index: number, newValue: AnyValues): ListItemChangeAction {
   return { type: LIST_ITEM_UPDATE, payload: { index: index, newValue: newValue } };
-}
-
-export function updatedClipbordManager(): ActionWithoutPayload {
-  return { type: UPDATED_CLIPBORD_MANAGER };
 }
 
 export function setState(newState: State): SetStateAction {

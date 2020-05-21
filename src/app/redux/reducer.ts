@@ -9,6 +9,16 @@ export function reducer(state: State | undefined, action: Actions.Action): State
     console.warn("No state was supplied to reducer. Falling back to default values");
     state = fallbackState;
   }
+
+  if (action.type === Actions.NOOP) {
+    return state;
+  }
+
+  state = {
+    ...state,
+    updateCounter: state.updateCounter + 1,
+  };
+
   switch (action.type) {
     case Actions.FORMAT_CHANGED: {
       let payload = (action as Actions.FormatChangeAction).payload;
@@ -122,15 +132,12 @@ export function reducer(state: State | undefined, action: Actions.Action): State
         },
       };
     }
-    case Actions.UPDATED_CLIPBORD_MANAGER: {
-      return {
-        ...state,
-        clipboardManagerUpdateCounter: state.clipboardManagerUpdateCounter + 1,
-      };
-    }
     case Actions.SET_STATE: {
       let payload: State = (action as Actions.SetStateAction).payload;
-      return payload;
+      return {
+        ...payload,
+        updateCounter: state.updateCounter,
+      }
     }
   }
   return state;

@@ -18,7 +18,7 @@ export interface State {
     text: string,
     inClipboard: string | null,
   },
-  clipboardManagerUpdateCounter: number,
+  updateCounter: number,
   isExportSelected: boolean,
 }
 
@@ -46,7 +46,7 @@ export const fallbackState: State = {
     text: "",
     inClipboard: null,
   },
-  clipboardManagerUpdateCounter: 0,
+  updateCounter: 0,
   isExportSelected: false,
 }
 

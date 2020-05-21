@@ -4,36 +4,48 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../redux/store';
 
 
-class CopyButton_ extends React.Component<Props> {
+class CopyButton_ extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { updateCounterWhenCopied: -1 };
+  }
+
   render() {
     if (!ClipbordManager.canCopy()) {
       return null;
     }
 
-    const buttonText = ClipbordManager.isAlreadyCopied() ? "Copied" : "Copy";
+    const isCopied = this.props.updateCounter === this.state.updateCounterWhenCopied;
+    const buttonText = isCopied ? "Copied" : "Copy";
     return (
-      <button onClick={this.onClick}
-      disabled={!ClipbordManager.canCopy()}
-      className="copy-button">
+      <button
+        className="copy-button"
+        onClick={this.onClick}>
         {buttonText}
       </button>
     );
   }
 
   onClick = (event: any) => {
-    ClipbordManager.copyCurrent();
+    if (ClipbordManager.canCopy()) {
+      ClipbordManager.copyCurrent();
+      this.setState({ updateCounterWhenCopied: this.props.updateCounter });
+    }
   }
 }
 
 export interface Props {
-  listenForClipboardUpdates: any,
+  updateCounter: number,
 }
 
+export interface State {
+  updateCounterWhenCopied: number,
+}
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
-    listenForClipboardUpdates: state.clipboardManagerUpdateCounter,
+    updateCounter: state.updateCounter,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {
