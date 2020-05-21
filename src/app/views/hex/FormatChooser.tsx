@@ -5,17 +5,14 @@ import { FormatState, State as ReduxState } from '../../redux/store';
 import { setFormat } from '../../redux/actions';
 
 
-
 const CUSTOM_FORMAT = "custom";
 const DEFAULT_FORMAT = "raw";
-export const EXPORT_FORMAT = "[save this session]";
 const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set(DEFAULT_FORMAT, "%x");
 FORMAT_MAP.set("URL escaped", "%u");
 FORMAT_MAP.set("python", "python -c 'print(\"%x\")'");
 FORMAT_MAP.set("printf", "printf '%x'");
 FORMAT_MAP.set(CUSTOM_FORMAT, "You should never see this message! %x")
-FORMAT_MAP.set(EXPORT_FORMAT, "You should never see this message! %x");
 
 export const DEFAULT_FORMAT_STATE: FormatState = {
   selected: DEFAULT_FORMAT,

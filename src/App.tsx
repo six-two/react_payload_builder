@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import './App.scss';
 import InputTable from './app/views/hex/InputTable';
 import OutputView from './app/views/hex/OutputView';
+import ExportUriView from './app/views/hex/ExportUriView';
 import * as Str from './app/hex/String';
 import { State } from './app/redux/store';
 
@@ -16,10 +17,18 @@ import { State } from './app/redux/store';
 
 class App_ extends React.Component<any> {
   render() {
+    // <a href="#export-link">Export link</a>
     return (
       <div className="app-root">
-        <InputTable />
-        <OutputView />
+        <div id="input">
+          <InputTable />
+        </div>
+        <div id="output">
+          <OutputView />
+        </div>
+        <div id="export-link" className="export-link">
+          <ExportUriView />
+        </div>
       </div>
     );
   }

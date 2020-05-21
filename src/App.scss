@@ -10,14 +10,18 @@ $row3d: #0000ff;
   text-align: center;
 }
 
-// Table like display for output controls
-.table {display:table;}
-.row {display:table-row; }
-.format-chooser, .copy-button, .endian-toggle, .cell{display:table-cell;}
-
-.output_settings {
+.output-settings {
   width: 100%;
+  display: table;
   table-layout: fixed;
+
+  .wrapper {
+    display:table-row;
+  }
+
+  .format-chooser, .copy-button, .endian-toggle {
+    display:table-cell;
+  }
 }
 
 .edit-container {
@@ -37,7 +41,7 @@ $row3d: #0000ff;
   width: 100%;
 }
 
-.list {//TODO call it table or something
+.input-table {
   border-radius: 10px;
   border: 2px solid #777;
   background-color: #eee;
@@ -45,20 +49,21 @@ $row3d: #0000ff;
   align: center;
   padding: 10px;
   margin-bottom: 20px;
-  width: 100%
+  width: 100%;
+
+  .multi-colored:nth-child(3n+0) {
+    background-color: $row3l;
+  }
+
+  .multi-colored:nth-child(3n+1) {
+    background-color: $row1l;
+  }
+
+  .multi-colored:nth-child(3n+2) {
+    background-color: $row2l;
+  }
  }
 
-.list .multi-colored:nth-child(3n+0) {
-  background-color: $row3l;
-}
-
-.list .multi-colored:nth-child(3n+1) {
-  background-color: $row1l;
-}
-
-.list .multi-colored:nth-child(3n+2) {
-  background-color: $row2l;
-}
 
 .err-msg {
   border-radius: 5px;
@@ -67,7 +72,7 @@ $row3d: #0000ff;
   padding: 3px;
 }
 
-.byteOutput {
+.byte-output {
   .multi-colored:nth-child(3n+0) {
     color: $row3d;
     background-color: $row3l;
@@ -84,18 +89,20 @@ $row3d: #0000ff;
   }
 }
 
-.byteOutput {
+.export-link,
+.byte-output {
   border-radius: 10px;
   border: 2px solid #777;
   background-color: #eee;
   text-align: center;
   padding: 10px;
+  margin-top: 25px;
 
   button {
     margin-bottom: 5px;
   }
- }
 
- .byteOutput span {
+  span {
    overflow-wrap: break-word;
- }
+  }
+}

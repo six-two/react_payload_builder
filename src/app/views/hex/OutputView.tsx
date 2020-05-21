@@ -10,31 +10,26 @@ import EndianToggle from './EndianToggleView';
 class OutputView_ extends React.Component<Props> {
   render() {
     return (
-      <div className="byteOutput">
-        <div className="output_settings table">
-          <div className="row">
+      <div className="byte-output">
+        <div className="output-settings">
+          <div className="wrapper">
             <FormatChooser />
             <EndianToggle />
             <CopyButton />
           </div>
         </div>
-        {this.props.showExportUri ?
-          <ExportUriView /> :
-          <ColoredHexStringView />
-        }
+        <ColoredHexStringView />
       </div>
     );
   }
 }
 
 export interface Props {
-  showExportUri: boolean,
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
-    showExportUri: state.isExportSelected,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {

@@ -3,12 +3,9 @@ import { reducer } from './reducer';
 import { AnyValues } from '../hex/ByteStringBuilder';
 import { DEFAULT_FORMAT_STATE } from '../views/hex/FormatChooser';
 
-export var textToCopy: string = "";
-
 export interface State {
   persistent: PersistentState,
   updateCounter: number,
-  isExportSelected: boolean,
 }
 
 export interface PersistentState {
@@ -41,7 +38,6 @@ export const fallbackState: State = {
     },
   },
   updateCounter: 0,
-  isExportSelected: false,
 }
 
 

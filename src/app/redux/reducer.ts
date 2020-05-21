@@ -1,17 +1,12 @@
 import * as Actions from './actions';
 import { State, fallbackState } from './store';
 import { Utils as StringUtils } from '../hex/String';
-import { EXPORT_FORMAT } from '../views/hex/FormatChooser';
 
 
 export function reducer(state: State | undefined, action: Actions.Action): State {
   if (!state) {
     console.warn("No state was supplied to reducer. Falling back to default values");
     state = fallbackState;
-  }
-
-  if (action.type === Actions.NOOP) {
-    return state;
   }
 
   state = {
@@ -22,21 +17,13 @@ export function reducer(state: State | undefined, action: Actions.Action): State
   switch (action.type) {
     case Actions.FORMAT_CHANGED: {
       let payload = (action as Actions.FormatChangeAction).payload;
-      if (payload.selected === EXPORT_FORMAT) {
-        return {
-          ...state,
-          isExportSelected: true,
-        };
-      } else {
-        return {
-          ...state,
-          persistent: {
-            ...state.persistent,
-            format: payload,
-          },
-          isExportSelected: false,
-        };
-      }
+      return {
+        ...state,
+        persistent: {
+          ...state.persistent,
+          format: payload,
+        },
+      };
     }
     case Actions.ENDIAN_TOGGLE: {
       return {

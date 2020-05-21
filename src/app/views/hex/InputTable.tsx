@@ -11,7 +11,7 @@ import {
 class InputTable_ extends React.Component<Props>{
   render() {
     return (
-      <table className="list">
+      <table className="input-table">
         <thead>
           <tr>
             <th>Type</th>
