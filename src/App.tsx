@@ -11,7 +11,6 @@ import { State } from './app/redux/store';
 
 // TODO: next steps
 //  - explain that export is a snapshot, reword "session"
-//  - use shorter names for export -> also forces me to do validation
 //  - (opt) compress the json before base64
 //  - Fix names
 

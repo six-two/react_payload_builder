@@ -2,20 +2,30 @@ import React from 'react';
 
 export class ItemControls extends React.Component<Props, {}> {
   render() {
+    let upClassName = this.props.index === 0 ? "disabled-button" : undefined;
+    let downClassName = this.props.isLast ? "disabled-button" : undefined;
     return (
-        <div className="list-item-controls">
-          <input type="button"
-            value="Up"
-            onClick={this.onMoveUp}
-            disabled={this.props.index === 0} />
-          <input type="button"
-            value="Down"
-            onClick={this.onMoveDown}
-            disabled={this.props.isLast} />
-          <input type="button"
-            value="Delete"
-            onClick={this.onDelete} />
-        </div>);
+      <div className="list-item-controls">
+        <button
+          className={upClassName}
+          onClick={this.onMoveUp}
+          disabled={this.props.index === 0} >
+          <i className="fa fa-arrow-up" aria-hidden="true" />
+        </button>
+
+        <button
+          className={downClassName}
+          value="Down"
+          onClick={this.onMoveDown}
+          disabled={this.props.isLast} >
+          <i className="fa fa-arrow-down" aria-hidden="true" />
+        </button>
+        <button
+          value="Delete"
+          onClick={this.onDelete} >
+          <i className="fa fa-trash" aria-hidden="true" />
+        </button>
+      </div>);
   }
 
   onMoveUp = () => {

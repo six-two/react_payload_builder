@@ -2,7 +2,7 @@ import React from 'react';
 import * as Str from '../../hex/String';
 import * as Common from '../../Common';
 
-const LABELS_NORMAL = ["Repeat ", " exactly ", " time(s)"];
+const LABELS_NORMAL = ["", " repeated ", " time(s)"];
 const LABELS_REVERSED = ["Reverse ", " and repeat it ", " time(s)"];
 
 export default class StringEditView extends React.Component<Props> {
