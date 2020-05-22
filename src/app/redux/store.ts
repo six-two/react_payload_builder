@@ -40,9 +40,14 @@ export const fallbackState: State = {
   updateCounter: 0,
 }
 
-
-const devTools: any = (window as any).__REDUX_DEVTOOLS_EXTENSION__ ? (window as any).__REDUX_DEVTOOLS_EXTENSION__(
-  { trace: true, traceLimit: 25 }
-) : {};
+let devTools = undefined;
+if ((window as any).__REDUX_DEVTOOLS_EXTENSION__) {
+  // Redux dev tools are available
+  let devToolOptions = {
+    trace: false,
+    traceLimit: 25
+  };
+  devTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__(devToolOptions);
+}
 
 export const store = createStore(reducer, fallbackState, devTools);
