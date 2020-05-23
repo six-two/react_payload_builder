@@ -4,6 +4,7 @@ import { BuilderResult } from '../../hex/ByteStringBuilder';
 import * as Esc from '../../hex/Escaper';
 import { State as ReduxState } from '../../redux/store';
 import ClipboardManager from '../../ClipboardManager';
+import {centerString, range, toHex} from '../../Common';
 
 
 function splitOfBeginning(text: string[], length: number): [string[], string[]] {
@@ -48,8 +49,16 @@ class ColoredHexDumpView_ extends React.Component<Props> {
       }
     }
 
-    let renderRow = function(row: Row, index: number): any {
-      let offset = (index * bytesPerRow).toString(16).toUpperCase().padStart(4, "0");
+    function renderRow(offset: any, hex: any, ascii: any, extraClass: string = ""): any {
+      return <div className={`row${extraClass}`} key={`row-${offset}`}>
+        {showOffset ? <div className="cell offset"><span>{offset}</span></div> : undefined}
+        <div className="cell hex">{hex}</div>
+        {showAscii ? <div className="cell ascii">{ascii}</div> : undefined}
+      </div>
+    }
+
+    let createRow = function(row: Row, index: number): any {
+      let offset = toHex(index * bytesPerRow, 4);
       let hex = [];
       let ascii = [];
       for (let i = 0; i < row.items.length; i++) {
@@ -61,33 +70,25 @@ class ColoredHexDumpView_ extends React.Component<Props> {
         }
         let asciiString = item.bytes.map(Esc.toHexdumpChar).join("");
         asciiString = asciiString.replace(/ /g, "\u00a0");//html safe spaces
-        let key=`hd-${index}-${i}`;
+        let key = `hd-${index}-${i}`;
         hex.push(<span key={key} className={colorClass}>{hexString}</span>);
         ascii.push(<span key={key} className={colorClass}>{asciiString}</span>)
       }
-      return (<div className="row" key={`row-${index}`}>
-        {showOffset ? <span className="cell offset">{offset}</span> : undefined}
-        <span className="cell hex">{hex}</span>
-        {showAscii ? <span className="cell ascii">{ascii}</span> : undefined}
-      </div>);
+      return renderRow(offset, hex, ascii);
     }
 
     let headerRow;
     if (showOffset) {
-      let offsets = [];
-      for (let i = 0; i < bytesPerRow; i++) {
-        offsets.push(i.toString(16).toUpperCase().padStart(2, "0"));
-      }
-      headerRow = <div className="row" key="headerRow">
-        {showOffset ? <span className="cell offset">Offset</span> : undefined}
-        <span className="cell hex">{offsets.join(" ")}</span>
-        {showAscii ? <span className="cell ascii">ASCII</span> : undefined}
-      </div>;
+      let offsets = range(0, bytesPerRow).map(i => toHex(i, 2)).join(" ");
+      headerRow = renderRow("",
+        <span>{offsets}</span>,
+        <span>{centerString(" ASCII ", bytesPerRow, "=")}</span>,
+        " header-row");
     }
 
     return <div className="hexdump">
       {headerRow}
-      {rows.map(renderRow)}
+      {rows.map(createRow)}
     </div>;
   }
 
@@ -98,6 +99,8 @@ class ColoredHexDumpView_ extends React.Component<Props> {
     </span>
   }
 }
+
+
 
 interface Row {
   items: RowItem[],

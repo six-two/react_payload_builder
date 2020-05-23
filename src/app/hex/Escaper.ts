@@ -1,4 +1,5 @@
 import ByteString from './ByteString';
+import { toHex } from '../Common';
 
 // non url safe
 const REGEX_PLUS = /\+/g;
@@ -61,13 +62,7 @@ export function toHexdumpChar(byte: string): string {
 }
 
 export function byteToHex(byte: string): string {
-  if (byte.length === 4) {
-    byte = byte.slice(2);
-  } else {
-    let int = byte.charCodeAt(0);
-    byte = int.toString(16).padStart(2, "0");
-  }
-  return byte.toUpperCase();
+  return toHex(byteToValue(byte), 2);
 }
 
 export function printfEscapeByte(byte: string): string {

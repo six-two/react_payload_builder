@@ -1,0 +1,56 @@
+.hexdump {
+  display: table;
+  font-family: monospace;
+  text-align: left;
+  margin: 0px auto;
+
+  .row {
+    display: table-row;
+    padding: 3px 0px;
+    font-weight: bold;
+
+    &:nth-child(2n+0) {
+      color: #444;
+      background-color: lightgray;
+
+      @for $i from 1 through length($fgColors) {
+        .color-#{$i} {
+          background-color: nth($bgColors, $i);
+          color: nth($fgColors, $i);
+        }
+      }
+    }
+
+    &:nth-child(2n+1) {
+      color: #ddd;
+      background-color: gray;
+
+      @for $i from 1 through length($fgColors) {
+        .color-#{$i} {
+          background-color: nth($fgColors, $i);
+          color: nth($bgColors, $i);
+        }
+      }
+    }
+  }
+
+  .cell {
+    display: table-cell;
+    padding: 3px 0px;
+
+    span {
+      padding: 3px 0px;
+
+      &:first-child {
+        padding-left: 5px;
+      }
+      &:last-child {
+        padding-right: 5px;
+      }
+    }
+  }
+
+  .ascii {
+    padding-left: 5px;
+  }
+}
