@@ -70,7 +70,6 @@ export class ByteStringBuilder {
   }
 };
 
-//TODO move
 export type AnyValues = Padding.Values | Int.Values | Str.Values;
 
 

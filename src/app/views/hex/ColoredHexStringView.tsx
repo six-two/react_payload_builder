@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TaggedByteString, ByteStringBuilder } from '../../hex/ByteStringBuilder';
+import { TaggedByteString, ByteStringBuilder, BuilderResult } from '../../hex/ByteStringBuilder';
 import * as Esc from '../../hex/Escaper';
 import { ListEntry, State as ReduxState } from '../../redux/store';
 import ClipboardManager from '../../ClipboardManager';
@@ -17,13 +17,11 @@ class ColoredHexStringView_ extends React.Component<Props> {
     const isPercentXEscape = this.props.formatString.indexOf("%x") >= 0;
     const escapeFunction = isPercentXEscape ? Esc.printfEscapeByte : Esc.urlEscapeByte;
 
-    let result = new ByteStringBuilder(this.props.isLittleEndian)
-      .getBytesStrings(this.props.blueprints);
-    if (result.errorMessage) {
-      return this.renderErrorMessage(result.errorMessage);
+    if (this.props.builderResult.errorMessage) {
+      return this.renderErrorMessage(this.props.builderResult.errorMessage);
     }
 
-    let escapedTaggedStrings: TaggedString[] = result.byteStrings.map((bs: TaggedByteString) => {
+    let escapedTaggedStrings: TaggedString[] = this.props.builderResult.byteStrings.map((bs: TaggedByteString) => {
       return {
         key: bs.key,
         str: Esc.escapeBytes(bs.data, escapeFunction).toString(),
@@ -54,7 +52,7 @@ class ColoredHexStringView_ extends React.Component<Props> {
 }
 
 export interface Props {
-  blueprints: ListEntry[],
+  builderResult: BuilderResult,
   isLittleEndian: boolean,
   formatString: string,
 }
@@ -68,7 +66,7 @@ const mapStateToProps = (state: ReduxState, ownProps: any): Props => {
   return {
     ...ownProps,
     isLittleEndian: state.persistent.isLittleEndian,
-    blueprints: state.persistent.entries.list,
+    builderResult: state.outputBuilderResult,
     formatString: state.persistent.format.value,
   };
 };

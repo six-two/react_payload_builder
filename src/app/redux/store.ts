@@ -1,20 +1,23 @@
 import { createStore } from 'redux';
 import { reducer } from './reducer';
-import { AnyValues } from '../hex/ByteStringBuilder';
+import { AnyValues, BuilderResult } from '../hex/ByteStringBuilder';
 import { DEFAULT_FORMAT_STATE } from '../views/hex/FormatChooser';
 
 export interface State {
   persistent: PersistentState,
   updateCounter: number,
+  outputBuilderResult: BuilderResult,
 }
 
 export interface PersistentState {
   isLittleEndian: boolean,
   format: FormatState,
-  entries: {
-    list: ListEntry[],
-    nextId: number,
-  },
+  entries: ListState,
+}
+
+export interface ListState {
+  list: ListEntry[],
+  nextId: number,
 }
 
 export interface ListEntry {
@@ -38,6 +41,9 @@ export const fallbackState: State = {
     },
   },
   updateCounter: 0,
+  outputBuilderResult: {
+    byteStrings: [],
+  },
 }
 
 let devTools = undefined;

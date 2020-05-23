@@ -1,6 +1,7 @@
 import * as Actions from './actions';
-import { State, fallbackState } from './store';
+import { ListEntry, ListState, State, fallbackState } from './store';
 import { Utils as StringUtils } from '../hex/String';
+import { ByteStringBuilder } from '../hex/ByteStringBuilder';
 
 
 export function reducer(state: State | undefined, action: Actions.Action): State {
@@ -34,100 +35,85 @@ export function reducer(state: State | undefined, action: Actions.Action): State
         },
       };
     }
-    case Actions.LIST_ADD: {
-      let listCopy = [...state.persistent.entries.list];
-      let newEntry = StringUtils.defaultValues();
-      newEntry.pattern = "A".repeat(listCopy.length + 1);
-      listCopy.push({
-        key: state.persistent.entries.nextId,
-        data: newEntry
-      });
-
-      return {
-        ...state,
-        persistent: {
-          ...state.persistent,
-          entries: {
-            list: listCopy,
-            nextId: state.persistent.entries.nextId + 1,
-          },
-        },
-      };
-    }
-    case Actions.LIST_SWAP: {
-      let payload = (action as Actions.ListSwapAction).payload;
-      let listCopy = [...state.persistent.entries.list];
-      let tmp = listCopy[payload.indexA];
-      listCopy[payload.indexA] = listCopy[payload.indexB];
-      listCopy[payload.indexB] = tmp;
-
-      return {
-        ...state,
-        persistent: {
-          ...state.persistent,
-          entries: {
-            ...state.persistent.entries,
-            list: listCopy,
-          },
-        },
-      };
-    }
-    case Actions.LIST_ITEM_UPDATE: {
-      let payload = (action as Actions.ListItemChangeAction).payload;
-      let listCopy = [...state.persistent.entries.list];
-      listCopy[payload.index] = {
-        ...listCopy[payload.index],
-        data: payload.newValue,
-      }
-
-      return {
-        ...state,
-        persistent: {
-          ...state.persistent,
-          entries: {
-            ...state.persistent.entries,
-            list: listCopy,
-          },
-        },
-      };
-    }
-    case Actions.LIST_DELETE: {
-      let index = (action as Actions.ListDeleteAction).payload;
-      let listCopy = [...state.persistent.entries.list];
-      listCopy.splice(index, 1);
-
-      return {
-        ...state,
-        persistent: {
-          ...state.persistent,
-          entries: {
-            ...state.persistent.entries,
-            list: listCopy,
-          },
-        },
-      };
-    }
+    case Actions.LIST_ADD:
+    case Actions.LIST_SWAP:
+    case Actions.LIST_ITEM_UPDATE:
+    case Actions.LIST_DELETE:
     case Actions.LIST_DELETE_ALL: {
+      let copy: ListState = {
+        list: [...state.persistent.entries.list],
+        nextId: state.persistent.entries.nextId,
+      }
+      copy = updateList(copy, action);
+
+      let res = new ByteStringBuilder(state.persistent.isLittleEndian)
+        .getBytesStrings(copy.list);
+
       return {
         ...state,
         persistent: {
           ...state.persistent,
-          entries: {
-            list: [],
-            nextId: 0,
-          },
+          entries: copy,
         },
+        outputBuilderResult: res,
       };
     }
+
     case Actions.SET_STATE: {
       let payload: State = (action as Actions.SetStateAction).payload;
+      let res = new ByteStringBuilder(payload.persistent.isLittleEndian)
+        .getBytesStrings(payload.persistent.entries.list);
       return {
         ...payload,
         updateCounter: state.updateCounter,
+        outputBuilderResult: res,
       }
     }
   }
   return state;
+}
+
+function updateList(copy: ListState, action: Actions.Action): ListState {
+  // For nicer code this function is allowed to modify "copy"
+  switch (action.type) {
+    case Actions.LIST_ADD: {
+      let newEntry = StringUtils.defaultValues();
+      newEntry.pattern = "A".repeat(copy.list.length + 1);
+      copy.list.push({
+        key: copy.nextId,
+        data: newEntry
+      });
+      copy.nextId += 1;
+      return copy;
+    }
+    case Actions.LIST_SWAP: {
+      let payload = (action as Actions.ListSwapAction).payload;
+      let tmp = copy.list[payload.indexA];
+      copy.list[payload.indexA] = copy.list[payload.indexB];
+      copy.list[payload.indexB] = tmp;
+      return copy;
+    }
+    case Actions.LIST_ITEM_UPDATE: {
+      let payload = (action as Actions.ListItemChangeAction).payload;
+      copy.list[payload.index] = {
+        key: copy.list[payload.index].key,
+        data: payload.newValue,
+      }
+      return copy;
+    }
+    case Actions.LIST_DELETE: {
+      let index = (action as Actions.ListDeleteAction).payload;
+      copy.list.splice(index, 1);
+      return copy;
+    }
+    case Actions.LIST_DELETE_ALL: {
+      return {
+        list: [],
+        nextId: 0,
+      };
+    }
+  }
+  throw new Error("Case not handled!")
 }
 
 export default reducer
