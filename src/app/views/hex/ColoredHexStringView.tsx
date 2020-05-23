@@ -34,7 +34,7 @@ class ColoredHexStringView_ extends React.Component<Props> {
     textToCopy = labels[0] + textToCopy + labels[1];
     ClipboardManager.setTextToCopy(textToCopy);
 
-    return <span>
+    return <div className="colored-bytes">
       {labels[0]}
       {escapedTaggedStrings.map((value: TaggedString) => {
         return <span className="multi-colored" key={value.key}>
@@ -42,7 +42,7 @@ class ColoredHexStringView_ extends React.Component<Props> {
         </span>;
       })}
       {labels[1]}
-    </span>;
+    </div>;
   }
 
   renderErrorMessage(text: string) {
@@ -64,7 +64,7 @@ interface TaggedString {
   key: number,
 }
 
-const mapStateToProps = (state: ReduxState, ownProps: any) => {
+const mapStateToProps = (state: ReduxState, ownProps: any): Props => {
   return {
     ...ownProps,
     isLittleEndian: state.persistent.isLittleEndian,
@@ -73,9 +73,5 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {};
-};
-
-const ColoredHexStringView = connect(mapStateToProps, mapDispatchToProps)(ColoredHexStringView_);
+const ColoredHexStringView = connect(mapStateToProps)(ColoredHexStringView_);
 export default ColoredHexStringView;
