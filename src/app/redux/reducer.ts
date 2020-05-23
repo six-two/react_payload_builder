@@ -1,7 +1,7 @@
 import * as Actions from './actions';
-import { ListEntry, ListState, State, fallbackState } from './store';
+import { ListState, State, fallbackState } from './store';
 import { Utils as StringUtils } from '../hex/String';
-import { ByteStringBuilder } from '../hex/ByteStringBuilder';
+import { buildOutput } from '../hex/ByteStringBuilder';
 
 
 export function reducer(state: State | undefined, action: Actions.Action): State {
@@ -27,13 +27,13 @@ export function reducer(state: State | undefined, action: Actions.Action): State
       };
     }
     case Actions.ENDIAN_TOGGLE: {
-      return {
+      return buildOutput({
         ...state,
         persistent: {
           ...state.persistent,
           isLittleEndian: !state.persistent.isLittleEndian,
         },
-      };
+      });
     }
     case Actions.LIST_ADD:
     case Actions.LIST_SWAP:
@@ -46,28 +46,21 @@ export function reducer(state: State | undefined, action: Actions.Action): State
       }
       copy = updateList(copy, action);
 
-      let res = new ByteStringBuilder(state.persistent.isLittleEndian)
-        .getBytesStrings(copy.list);
-
-      return {
+      return buildOutput({
         ...state,
         persistent: {
           ...state.persistent,
           entries: copy,
         },
-        outputBuilderResult: res,
-      };
+      });
     }
 
     case Actions.SET_STATE: {
       let payload: State = (action as Actions.SetStateAction).payload;
-      let res = new ByteStringBuilder(payload.persistent.isLittleEndian)
-        .getBytesStrings(payload.persistent.entries.list);
-      return {
+      return buildOutput({
         ...payload,
         updateCounter: state.updateCounter,
-        outputBuilderResult: res,
-      }
+      });
     }
   }
   return state;

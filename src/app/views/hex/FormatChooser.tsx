@@ -9,6 +9,7 @@ const CUSTOM_FORMAT = "custom";
 const DEFAULT_FORMAT = "raw";
 const FORMAT_MAP = new Map<string, string>();
 FORMAT_MAP.set(DEFAULT_FORMAT, "%x");
+FORMAT_MAP.set("hexdump", "%h");
 FORMAT_MAP.set("URL escaped", "%u");
 FORMAT_MAP.set("python", "python -c 'print(\"%x\")'");
 FORMAT_MAP.set("printf", "printf '%x'");

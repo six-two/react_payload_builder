@@ -1,20 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TaggedByteString, ByteStringBuilder, BuilderResult } from '../../hex/ByteStringBuilder';
+import { TaggedByteString, BuilderResult } from '../../hex/ByteStringBuilder';
 import * as Esc from '../../hex/Escaper';
-import { ListEntry, State as ReduxState } from '../../redux/store';
+import { State as ReduxState } from '../../redux/store';
 import ClipboardManager from '../../ClipboardManager';
+import ColoredHexDumpView from './HexDumpView';
 
-const INSERT_HERE_REGEX = /%[xu]/g;
+const INSERT_HERE_REGEX = /%[xuh]/g;
+const ERROR_MESSAGE = 'Format has to contain exactly one "%x" (\\x?? escape), "%u" (%?? escape) or "%h" (hexdump view)'
 
 
 class ColoredHexStringView_ extends React.Component<Props> {
   render() {
     const labels = this.props.formatString.split(INSERT_HERE_REGEX);
     if (labels.length !== 2) {
-      return this.renderErrorMessage('Format has to contain exactly one "%x" (\\x?? escape) or "%u" (%?? escape)');
+      return this.renderErrorMessage(ERROR_MESSAGE);
     }
-    const isPercentXEscape = this.props.formatString.indexOf("%x") >= 0;
+    const format = this.props.formatString.slice(labels[0].length, labels[0].length + 2);
+    if (format === "%h") {
+      return <ColoredHexDumpView />
+    }
+
+    const isPercentXEscape = format === "%x";
     const escapeFunction = isPercentXEscape ? Esc.printfEscapeByte : Esc.urlEscapeByte;
 
     if (this.props.builderResult.errorMessage) {
@@ -53,7 +60,6 @@ class ColoredHexStringView_ extends React.Component<Props> {
 
 export interface Props {
   builderResult: BuilderResult,
-  isLittleEndian: boolean,
   formatString: string,
 }
 

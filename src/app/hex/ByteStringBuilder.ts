@@ -1,4 +1,4 @@
-import { ListEntry } from '../redux/store';
+import { ListEntry, State } from '../redux/store';
 import * as Padding from './Padding';
 import * as Int from './Integer';
 import * as Str from './String';
@@ -17,58 +17,58 @@ export function throwBadInputError(message: string) {
   throw e;
 }
 
-export class ByteStringBuilder {
-  littleEndian: boolean;
+export function buildOutput(state: State): State {
+  let res = getBytesStrings(state.persistent.entries.list, state.persistent.isLittleEndian);
+  return {
+    ...state,
+    outputBuilderResult: res,
+  };
+}
 
-  constructor(littleEndian: boolean = true) {
-    this.littleEndian = littleEndian;
-  }
-
-  getBytesStrings(blueprintList: ListEntry[]): BuilderResult {
-    let i: number = 0;
-    try {
-      let processed: TaggedByteString[] = [];
-      let previous: ByteString[] = [];
-      for (i = 0; i < blueprintList.length; i++) {
-        let bytes: ByteString = this.toBytes(blueprintList[i].data, previous);
-        let entry = { key: blueprintList[i].key, data: bytes };
-        previous.push(bytes);
-        processed.push(entry);
-      }
-      return { byteStrings: processed };
-    } catch (e) {
-      if (e.name === BAD_INPUT_ERROR_NAME) {
-        return { errorMessage: `Error in input ${i + 1}: ${e.message}`, byteStrings: [ERROR_BYTE_STRING] };
-      } else {
-        throw e;
-      }
+function getBytesStrings(blueprintList: ListEntry[], isLittleEndian: boolean): BuilderResult {
+  let i: number = 0;
+  try {
+    let processed: TaggedByteString[] = [];
+    let previous: ByteString[] = [];
+    for (i = 0; i < blueprintList.length; i++) {
+      let bytes: ByteString = toBytes(blueprintList[i].data, previous, isLittleEndian);
+      let entry = { key: blueprintList[i].key, data: bytes };
+      previous.push(bytes);
+      processed.push(entry);
+    }
+    return { byteStrings: processed };
+  } catch (e) {
+    if (e.name === BAD_INPUT_ERROR_NAME) {
+      return { errorMessage: `Error in input ${i + 1}: ${e.message}`, byteStrings: [ERROR_BYTE_STRING] };
+    } else {
+      throw e;
     }
   }
+}
 
-  toBytes(blueprint: AnyValues, previousByteStrings: ByteString[]): ByteString {
-    switch (blueprint.type) {
-      case Padding.TYPE:
-        return Padding.Utils.paddingToBytes(blueprint as Padding.Values, previousByteStrings);
-      case Int.TYPE:
-        return Int.Utils.integerToBytes(blueprint as Int.Values, this.littleEndian);
-      case Str.TYPE:
-        return Str.Utils.stringToBytes(blueprint as Str.Values);
-      case Str.TYPE_REVERSED:
-        return Str.ReversedUtils.stringToBytes(blueprint as Str.Values);
-      default:
-        throw new Error("Unknown type");
-    }
+function toBytes(blueprint: AnyValues, previousByteStrings: ByteString[], isLittleEndian: boolean): ByteString {
+  switch (blueprint.type) {
+    case Padding.TYPE:
+      return Padding.Utils.paddingToBytes(blueprint as Padding.Values, previousByteStrings);
+    case Int.TYPE:
+      return Int.Utils.integerToBytes(blueprint as Int.Values, isLittleEndian);
+    case Str.TYPE:
+      return Str.Utils.stringToBytes(blueprint as Str.Values);
+    case Str.TYPE_REVERSED:
+      return Str.ReversedUtils.stringToBytes(blueprint as Str.Values);
+    default:
+      throw new Error("Unknown type");
   }
+}
 
-  isValid(blueprint: AnyValues): boolean {
-    try {
-      this.toBytes(blueprint, []);//will throw error if is not valid
-      return true;
-    } catch {
-      return false;
-    }
+export function isValid(blueprint: AnyValues): boolean {
+  try {
+    toBytes(blueprint, [], true);//will throw error if is not valid
+    return true;
+  } catch {
+    return false;
   }
-};
+}
 
 export type AnyValues = Padding.Values | Int.Values | Str.Values;
 
@@ -82,5 +82,3 @@ export interface TaggedByteString {
   key: number,
   data: ByteString,
 }
-
-export default ByteStringBuilder;

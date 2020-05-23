@@ -42,6 +42,34 @@ export function urlEscapeByte(byte: string): string {
   }
 }
 
+export function byteToValue(byte: string): number {
+  if (byte.length === 4) {
+    return parseInt(byte.slice(2), 16);
+  } else {
+    return byte.charCodeAt(0);
+  }
+}
+
+export function toHexdumpChar(byte: string): string {
+  let numVal = byteToValue(byte);
+  if (32 <= numVal && numVal <= 126) {
+    // is printable ASCII char
+    return String.fromCharCode(numVal);
+  } else {
+    return ".";
+  }
+}
+
+export function byteToHex(byte: string): string {
+  if (byte.length === 4) {
+    byte = byte.slice(2);
+  } else {
+    let int = byte.charCodeAt(0);
+    byte = int.toString(16).padStart(2, "0");
+  }
+  return byte.toUpperCase();
+}
+
 export function printfEscapeByte(byte: string): string {
   if (byte.length === 1) {
     switch (byte) {

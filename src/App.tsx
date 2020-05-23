@@ -5,6 +5,7 @@ import InputTable from './app/views/hex/InputTable';
 import OutputView from './app/views/hex/OutputView';
 import ExportUriView from './app/views/hex/ExportUriView';
 import { State } from './app/redux/store';
+// import HexViewDump from './app/views/hex/HexDumpView';
 
 
 // TODO: next steps
