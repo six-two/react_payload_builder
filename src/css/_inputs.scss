@@ -1,0 +1,43 @@
+.input-table {
+  width: 100%;
+  border-collapse:collapse;
+
+  @for $i from 1 through length($fgColors) {
+    .multi-colored:nth-child(#{length($fgColors)}n+#{$i}) {
+      background-color: nth($bgColors, $i);
+
+      button {
+        background-color: nth($fgColors, $i);
+      }
+    }
+  }
+
+  .edit-container {
+    display: flex;
+
+    .input-string {
+      flex: 1;
+    }
+
+    .input-count {
+      width: 50px;
+      text-align: right;
+    }
+  }
+
+  .row-buttons button {
+    width: 100%;
+  }
+
+  .list-item-controls {
+    display: block;
+    width: 100%;
+
+
+    .no-button, button {
+      margin: 0px 5px;
+      width: 50px;
+      // flex: 1;
+    }
+  }
+}

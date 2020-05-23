@@ -1,0 +1,28 @@
+.output-settings {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+
+  .wrapper {
+    display:table-row;
+  }
+
+  .format-chooser, .copy-button, .endian-toggle {
+    display:table-cell;
+  }
+}
+
+.colored-bytes {
+  font-family: monospace;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  white-space: normal;
+  word-wrap: break-word;
+
+  @for $i from 1 through length($fgColors) {
+    .multi-colored:nth-child(#{length($fgColors)}n+#{$i}) {
+      color: nth($fgColors, $i);
+      background-color: nth($bgColors, $i);
+    }
+  }
+}

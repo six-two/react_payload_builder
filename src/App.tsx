@@ -8,8 +8,9 @@ import { State } from './app/redux/store';
 
 
 // TODO: next steps
+// hide copy button on hexdump output
+// add hexdump settings
 //  - improve output line breaks (and use monospaced font)
-//      - add hexdump output
 //  - a menu to quickly jump to any section? like <a href="#export-link">Export link</a>
 // try like https://muzzybear.github.io/react-hexviewer/
 //  - explain that export is a snapshot, reword "session"

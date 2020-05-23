@@ -1,0 +1,48 @@
+button {
+  color: white;
+  background-color: gray;
+  border: none;
+  padding: 2px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.disabled-button {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.measure-string-length { visibility: hidden; white-space: nowrap; }
+
+
+.err-msg {
+  border-radius: 5px;
+  background-color: #ffaaaa;
+  border: 2px solid #f00;
+  padding: 3px;
+}
+
+
+#input, .export-link, .byte-output {
+  border-radius: 10px;
+  border: 2px solid #777;
+  background-color: #eee;
+  text-align: center;
+  padding: 10px;
+  margin-top: 25px;
+}
+
+.export-link, .byte-output {
+  button {
+    margin-bottom: 5px;
+  }
+
+  span {
+   overflow-wrap: break-word;
+  }
+}
