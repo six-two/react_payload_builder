@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CopyButton from '../CopyButton';
+import CopyButton from './CopyButton';
 import FormatChooser from "./FormatChooser";
 import { State as ReduxState } from '../../redux/store';
 import ColoredHexStringView from './ColoredHexStringView';

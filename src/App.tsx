@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './css/App.scss';
-import InputTable from './app/views/hex/InputTable';
-import OutputView from './app/views/hex/OutputView';
-import ExportUriView from './app/views/hex/ExportUriView';
+import InputTable from './app/views/input/InputTable';
+import OutputView from './app/views/output/OutputView';
+import ExportUriView from './app/views/output/ExportUriView';
 import { State } from './app/redux/store';
 
 

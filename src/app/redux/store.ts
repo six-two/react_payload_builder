@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 import { reducer } from './reducer';
 import { AnyValues, BuilderResult } from '../hex/ByteStringBuilder';
-import { DEFAULT_FORMAT_STATE } from '../views/hex/FormatChooser';
+import { DEFAULT_FORMAT_STATE } from '../views/output/FormatChooser';
 
 export interface State {
   persistent: PersistentState,

@@ -1,5 +1,5 @@
 import React from 'react';
-import HexElementView from '../hex/HexElementView';
+import InputTableRow from './InputTableRow';
 import { AnyValues } from '../../hex/ByteStringBuilder';
 import { connect } from 'react-redux';
 import { ListEntry, State as ReduxState } from '../../redux/store';
@@ -22,7 +22,7 @@ class InputTable_ extends React.Component<Props>{
         <tbody>
           {this.props.entries.map((elem, index) => {
             return (
-              <HexElementView
+              <InputTableRow
                 index={index}
                 key={elem.key}
                 isLast={index + 1 === this.props.entries.length}

@@ -3,11 +3,11 @@ import ChooseOptionView from '../ChooseOptionView';
 import Padding from './PaddingEditView';
 import Integer from './IntegerEditView';
 import String from './StringEditView';
-import ReorderableItemControls from '../ItemControls';
+import ReorderableItemControls from './RowControls';
 import * as Int from '../../hex/Integer';
 import * as Pad from '../../hex/Padding';
 import * as Str from '../../hex/String';
-import {AnyValues} from '../../hex/ByteStringBuilder';
+import { AnyValues } from '../../hex/ByteStringBuilder';
 
 const TYPE_MAP = new Map<string, TypeInfos>();
 TYPE_MAP.set(Int.TYPE, { defaultValues: Int.Utils.defaultValues, viewClass: Integer });
@@ -24,10 +24,10 @@ function getTypeInfo(type: string): TypeInfos {
   return ret;
 }
 
-export default class HexElementView extends React.Component<HexElementViewProps, HexElementViewProps> {
+export default class InputTableRow extends React.Component<Props> {
   render() {
     return (
-      <tr className="list-item multi-colored">
+      <tr className="row multi-colored">
         <td>
           <ChooseOptionView value={this.props.data.type} options={TYPES}
             onChange={this.onTypeChange} />
@@ -55,7 +55,7 @@ export default class HexElementView extends React.Component<HexElementViewProps,
   }
 
   onChange(newType: string, newValues: AnyValues) {
-    const newData = Object.assign(newValues, { type: newType });
+    const newData = { ...newValues, type: newType };
     this.props.onChange(this.props.index, newData);
   }
 
@@ -67,17 +67,9 @@ export default class HexElementView extends React.Component<HexElementViewProps,
     };
     return React.createElement(viewClass, props);
   }
-
-  typeToClass(type: string): any {
-    let ret = TYPE_MAP.get(type)?.viewClass;
-    if (!ret) {
-      throw Error(`Unknown type: ${type}`);
-    }
-    return ret;
-  }
 };
 
-interface HexElementViewProps {
+export interface Props {
   index: number,
   data: AnyValues,
   isLast: boolean,
