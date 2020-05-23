@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { BuilderResult } from '../../hex/ByteStringBuilder';
 import * as Esc from '../../hex/Escaper';
 import { State as ReduxState } from '../../redux/store';
-import ClipboardManager from '../../ClipboardManager';
-import {centerString, range, toHex} from '../../Common';
+import { centerString, range, toHex } from '../../Common';
 
 
 function splitOfBeginning(text: string[], length: number): [string[], string[]] {
@@ -17,18 +16,14 @@ function splitOfBeginning(text: string[], length: number): [string[], string[]] 
 
 class ColoredHexDumpView_ extends React.Component<Props> {
   render() {
-    // ClipboardManager.setTextToCopy(null);//TODO bug: Delayed by one
-    // Possible Solution: fire noop event when copy button hiding state changes
+    if (this.props.hasErrors) {
+      return null;
+    }
 
     let bytesPerRow = this.props.bytesPerRow ?? 0x10;
     let showOffset = this.props.showOffset ?? true;
     let showAscii = this.props.showAscii ?? true;
     let colorCount = 3;
-
-    //TODO move upstream
-    if (this.props.builderResult.errorMessage) {
-      return this.renderErrorMessage(this.props.builderResult.errorMessage);
-    }
 
     let rows: Row[] = [];
     let missingInRow = 0;
@@ -91,13 +86,6 @@ class ColoredHexDumpView_ extends React.Component<Props> {
       {rows.map(createRow)}
     </div>;
   }
-
-  renderErrorMessage(text: string) {
-    ClipboardManager.setTextToCopy(null);
-    return <span className="err-msg">
-      {text}
-    </span>
-  }
 }
 
 
@@ -116,15 +104,15 @@ export interface Props {
   bytesPerRow?: number,
   showOffset?: boolean,
   showAscii?: boolean,
+  hasErrors: boolean,
 }
 
 
 const mapStateToProps = (state: ReduxState, ownProps: any): Props => {
   return {
     ...ownProps,
-    isLittleEndian: state.persistent.isLittleEndian,
     builderResult: state.outputBuilderResult,
-    formatString: state.persistent.format.value,
+    hasErrors: state.hasErrors,
   };
 };
 

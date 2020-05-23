@@ -1,12 +1,14 @@
 import { createStore } from 'redux';
 import { reducer } from './reducer';
 import { AnyValues, BuilderResult } from '../hex/ByteStringBuilder';
-import { DEFAULT_FORMAT_STATE } from '../views/output/FormatChooser';
+import { DEFAULT_FORMAT_STATE, parseFormatString } from '../views/output/FormatChooser';
 
 export interface State {
   persistent: PersistentState,
   updateCounter: number,
   outputBuilderResult: BuilderResult,
+  parsedFormat: ParsedFormat,
+  hasErrors: boolean,
 }
 
 export interface PersistentState {
@@ -31,6 +33,12 @@ export interface FormatState {
   custom: string,
 }
 
+export interface ParsedFormat {
+  errorMessage?: string,
+  format: string,
+  labels: string[],
+}
+
 export const fallbackState: State = {
   persistent: {
     isLittleEndian: true,
@@ -44,6 +52,8 @@ export const fallbackState: State = {
   outputBuilderResult: {
     byteStrings: [],
   },
+  parsedFormat: parseFormatString(DEFAULT_FORMAT_STATE.value),
+  hasErrors: false,
 }
 
 let devTools = undefined;

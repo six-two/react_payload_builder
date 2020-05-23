@@ -1,7 +1,9 @@
 import React from 'react';
-import ClipbordManager from '../../ClipboardManager';
 import { connect } from 'react-redux';
-import { State as ReduxState } from '../../redux/store';
+import { ParsedFormat, State as ReduxState } from '../../redux/store';
+import { BuilderResult } from '../../hex/ByteStringBuilder';
+import copy from 'copy-to-clipboard';
+import * as Esc from '../../hex/Escaper';
 
 
 class CopyButton_ extends React.Component<Props, State> {
@@ -11,9 +13,9 @@ class CopyButton_ extends React.Component<Props, State> {
   }
 
   render() {
-      if (!ClipbordManager.canCopy()) {
-        return null;
-      }
+    if (!this.getTextToCopy()) {
+      return null;
+    }
 
     const isCopied = this.props.updateCounter === this.state.updateCounterWhenCopied;
     const buttonText = isCopied ? "Copied" : "Copy";
@@ -27,19 +29,43 @@ class CopyButton_ extends React.Component<Props, State> {
   }
 
   onClick = (event: any) => {
-    if (ClipbordManager.canCopy()) {
-      ClipbordManager.copyCurrent();
+    const textToCopy = this.getTextToCopy();
+    if (textToCopy) {
+      copy(textToCopy);
       this.setState({ updateCounterWhenCopied: this.props.updateCounter });
     }
   }
 
   getTextToCopy(): string | null {
-    return null;//TODO
+    if (this.props.hasErrors) {
+      return null;
+    }
+    switch (this.props.format.format) {
+      case "%h":
+        return null;
+      case "%x":
+        return this.getEscapedTextToCopy(Esc.printfEscapeByte);
+      case "%u":
+        return this.getEscapedTextToCopy(Esc.urlEscapeByte);
+      default:
+        console.error(`Unknown format: ${this.props.format.format}`);
+        return null;
+    }
+  }
+
+  getEscapedTextToCopy(escapeFunction: (byte: string) => string) {
+    const escapedByteStrings = this.props.builderResult.byteStrings.map(
+      (bs) => Esc.escapeBytes(bs.data, escapeFunction).toString()
+    ).join("");
+    return this.props.format.labels.join(escapedByteStrings);
   }
 }
 
 export interface Props {
   updateCounter: number,
+  builderResult: BuilderResult,
+  format: ParsedFormat,
+  hasErrors: boolean,
 }
 
 export interface State {
@@ -50,12 +76,11 @@ const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
     updateCounter: state.updateCounter,
-  };
-};
-const mapDispatchToProps = (dispatch: any) => {
-  return {
+    builderResult: state.outputBuilderResult,
+    format: state.parsedFormat,
+    hasErrors: state.hasErrors,
   };
 };
 
-const CopyButton = connect(mapStateToProps, mapDispatchToProps)(CopyButton_);
+const CopyButton = connect(mapStateToProps)(CopyButton_);
 export default CopyButton;

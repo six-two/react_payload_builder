@@ -2,7 +2,14 @@ import * as Actions from './actions';
 import { ListState, State, fallbackState } from './store';
 import { Utils as StringUtils } from '../hex/String';
 import { buildOutput } from '../hex/ByteStringBuilder';
+import { parseFormatString } from '../views/output/FormatChooser';
 
+function updateErrors(modifyInPlace: State): State {
+  // This should be called aufter all other reducers, since it might depend on them
+  modifyInPlace.hasErrors = (modifyInPlace.outputBuilderResult.errorMessage ||
+    modifyInPlace.parsedFormat.errorMessage) !== undefined;
+  return modifyInPlace;
+}
 
 export function reducer(state: State | undefined, action: Actions.Action): State {
   if (!state) {
@@ -18,13 +25,14 @@ export function reducer(state: State | undefined, action: Actions.Action): State
   switch (action.type) {
     case Actions.FORMAT_CHANGED: {
       let payload = (action as Actions.FormatChangeAction).payload;
-      return {
+      return updateErrors({
         ...state,
         persistent: {
           ...state.persistent,
           format: payload,
         },
-      };
+        parsedFormat: parseFormatString(payload.value),
+      });
     }
     case Actions.ENDIAN_TOGGLE: {
       return buildOutput({
@@ -46,21 +54,22 @@ export function reducer(state: State | undefined, action: Actions.Action): State
       }
       copy = updateList(copy, action);
 
-      return buildOutput({
+      return updateErrors(buildOutput({
         ...state,
         persistent: {
           ...state.persistent,
           entries: copy,
         },
-      });
+      }));
     }
 
     case Actions.SET_STATE: {
       let payload: State = (action as Actions.SetStateAction).payload;
-      return buildOutput({
+      return updateErrors(buildOutput({
         ...payload,
         updateCounter: state.updateCounter,
-      });
+        parsedFormat: parseFormatString(payload.persistent.format.value),
+      }));
     }
   }
   return state;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PresetOrCustomStringView from "../PresetOrCustomString";
-import { FormatState, State as ReduxState } from '../../redux/store';
+import { FormatState, ParsedFormat, State as ReduxState } from '../../redux/store';
 import { setFormat } from '../../redux/actions';
 
 
@@ -21,6 +21,20 @@ export const DEFAULT_FORMAT_STATE: FormatState = {
   custom: "yourCommand --flags '%x'",
 }
 
+const INSERT_HERE_REGEX = /%[xuh]/g;
+const ERROR_MESSAGE = 'Format has to contain exactly one "%x" (\\x?? escape), "%u" (%?? escape) or "%h" (hexdump view)'
+
+
+export function parseFormatString(formatString: string): ParsedFormat {
+  const labels = formatString.split(INSERT_HERE_REGEX);
+  if (labels.length !== 2) {
+    return { errorMessage: ERROR_MESSAGE, format: "", labels: [] };
+  }
+  const formatStart = labels[0].length;
+  const formatEnd = formatString.length - (labels[1].length);
+  const format = formatString.slice(formatStart, formatEnd);
+  return { format: format, labels: labels };
+}
 
 class FormatChooser_ extends React.Component<Props> {
   render() {

@@ -17,24 +17,40 @@ class OutputView_ extends React.Component<Props> {
             <CopyButton />
           </div>
         </div>
-        <ColoredHexStringView />
+        {this.props.hasErrors ?
+          <div className="err-msg">
+            Your inputs caused the following error(s):
+            <ul>
+              {renderError(this.props.builderError)}
+              {renderError(this.props.formatError)}
+            </ul>
+          </div>
+          : <ColoredHexStringView />}
       </div>
     );
   }
 }
 
+function renderError(message?: string) {
+  if (message) {
+    return <li>          {message}        </li>
+  }
+}
+
 export interface Props {
+  builderError?: string,
+  formatError?: string,
+  hasErrors: boolean,
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: any) => {
   return {
     ...ownProps,
-  };
-};
-const mapDispatchToProps = (dispatch: any) => {
-  return {
+    builderError: state.outputBuilderResult.errorMessage,
+    formatError: state.parsedFormat.errorMessage,
+    hasErrors: state.hasErrors,
   };
 };
 
-const OutputView = connect(mapStateToProps, mapDispatchToProps)(OutputView_);
+const OutputView = connect(mapStateToProps)(OutputView_);
 export default OutputView;
