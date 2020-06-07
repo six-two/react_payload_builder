@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {store} from './app/redux/store';
-import {tryImportFromUri, tryImportFromString} from './app/redux/persistence';
+import {tryImportFromUri, tryImportFromString, hashChangeListener} from './app/redux/persistence';
 
 function importData(){
   if (!tryImportFromUri()) {
@@ -17,6 +17,7 @@ function importData(){
 }
 
 importData();
+window.addEventListener("hashchange", hashChangeListener);
 
 ReactDOM.render(
   <React.StrictMode>

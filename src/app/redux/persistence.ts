@@ -14,6 +14,18 @@ interface MinimizedState {
   l: AnyValues[],//TODO compress this
 }
 
+let currentHash = "";
+
+export function hashChangeListener() {
+  if (window.location.hash !== currentHash) {
+    currentHash = window.location.hash;
+    console.log("Hash changed externally, let's import the new state");
+    tryImportFromUri();
+  } else {
+    console.debug("Hash changed, but the app did it");
+  }
+}
+
 function minimizeState(s: PersistentState): MinimizedState {
   return {
     le: s.isLittleEndian,
@@ -48,24 +60,32 @@ function unminimizeState(min: MinimizedState): State {
 }
 
 
+// Changes the hash part of the current url as a sideeffect
 export function exportToUri(): string {
   let stateString = serialize(store.getState().persistent);
 
   // take the current url and set the import param to our current state
-  const urlBuilder = new URL(window.location.href);
-  urlBuilder.searchParams.set("import", stateString);
-  return urlBuilder.href;
+  const newHash = "#state=" + stateString;
+
+  // Update the current url
+  currentHash = newHash;// Do this before we change the hash, so we do not import the state
+  window.location.hash = newHash;
+  return window.location.href;
 }
 
 
 export function tryImportFromUri(): boolean {
-  const url = new URL(window.location.href);
-  const data = url.searchParams.get("import");
-  if (!data){
-    console.log("URI does not contain data to import");
-    return false;
+  if (window.location.hash) {
+    // To avoid undefined edge cases just parse it like a normal url
+    const mockUrl = "http://example.com/?" + window.location.hash.slice(1);
+    const url = new URL(mockUrl); // parse mock url
+    const data = url.searchParams.get("state");
+    if (data) {
+      return tryImportFromString(data);
+    }
   }
-  return tryImportFromString(data);
+  console.log("URI does not contain data to import");
+  return false;
 }
 
 export function tryImportFromString(data: string): boolean {
@@ -82,7 +102,7 @@ export function tryImportFromString(data: string): boolean {
 
 export function serialize(state: PersistentState): string {
   let min = minimizeState(state);
-  console.log("exported state", min);
+  // console.log("exported state", min);
   return uriSafeEncode(JSON.stringify(min));
 }
 
@@ -91,7 +111,7 @@ export function deserialize(data: string): State {
     let jsonText = tryOrMessage(() => uriSafeDecode(data), `Decoding base64 failed\nBase64 text: '${data}'`);
     let deserialized = tryOrMessage(() => JSON.parse(jsonText), `Decoding JSON failed!\nJSON: ${jsonText}`);
     let min = deserialized as MinimizedState;
-    if (!min){
+    if (!min) {
       throw new Error("Missing keys in decoded JSON");
     }
     //TODO check if it matches the type
