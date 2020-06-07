@@ -8,12 +8,11 @@ import { State } from './app/redux/store';
 
 
 // TODO: next steps
-// hide copy button on hexdump output
+// start using SVG icons (for better privacy + performance)
+//   find out how to be complient to the license
 // add hexdump settings
-//  - improve output line breaks (and use monospaced font)
-//  - a menu to quickly jump to any section? like <a href="#export-link">Export link</a>
-// try like https://muzzybear.github.io/react-hexviewer/
-//  - explain that export is a snapshot, reword "session"
+//  - improve output line breaks (and use monospaced font)?
+//  - better explain the state management to users
 //  - (opt) compress the json before base64
 //  - Fix names
 
