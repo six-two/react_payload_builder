@@ -4,7 +4,6 @@ import { TaggedByteString, BuilderResult } from '../../hex/ByteStringBuilder';
 import * as Esc from '../../hex/Escaper';
 import { ParsedFormat, State as ReduxState } from '../../redux/store';
 import ColoredHexDumpView from './HexDumpView';
-import { parseFormatString } from './FormatChooser';
 
 
 class ColoredHexStringView_ extends React.Component<Props> {
