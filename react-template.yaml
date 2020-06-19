@@ -1,0 +1,9 @@
+title: Payload Builder
+description: Build simple attack strings for format string and buffer overflow attacks
+menu:
+  - title: Source code
+    url: "https://github.com/six-two/react_payload_builder"
+  - title: My other projects
+    url: "https://projects.six-two.dev/"
+customHtmlHead: >-
+  <script src="https://kit.fontawesome.com/ac357ac132.js" crossorigin="anonymous"></script>
