@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/react_payload_builder/static/css/main.c90c1ac2.chunk.css",
+    "main.css": "/react_payload_builder/static/css/main.1932dbbe.chunk.css",
     "main.js": "/react_payload_builder/static/js/main.67a3245f.chunk.js",
     "main.js.map": "/react_payload_builder/static/js/main.67a3245f.chunk.js.map",
     "runtime-main.js": "/react_payload_builder/static/js/runtime-main.54f37798.js",
@@ -8,15 +8,15 @@
     "static/js/2.9ec2def2.chunk.js": "/react_payload_builder/static/js/2.9ec2def2.chunk.js",
     "static/js/2.9ec2def2.chunk.js.map": "/react_payload_builder/static/js/2.9ec2def2.chunk.js.map",
     "index.html": "/react_payload_builder/index.html",
-    "precache-manifest.eb336d50f22492f1b664c426d9b7247a.js": "/react_payload_builder/precache-manifest.eb336d50f22492f1b664c426d9b7247a.js",
+    "precache-manifest.a78d314dfbac13b98d4c40e3905f074d.js": "/react_payload_builder/precache-manifest.a78d314dfbac13b98d4c40e3905f074d.js",
     "service-worker.js": "/react_payload_builder/service-worker.js",
-    "static/css/main.c90c1ac2.chunk.css.map": "/react_payload_builder/static/css/main.c90c1ac2.chunk.css.map",
+    "static/css/main.1932dbbe.chunk.css.map": "/react_payload_builder/static/css/main.1932dbbe.chunk.css.map",
     "static/js/2.9ec2def2.chunk.js.LICENSE.txt": "/react_payload_builder/static/js/2.9ec2def2.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.54f37798.js",
     "static/js/2.9ec2def2.chunk.js",
-    "static/css/main.c90c1ac2.chunk.css",
+    "static/css/main.1932dbbe.chunk.css",
     "static/js/main.67a3245f.chunk.js"
   ]
 }
