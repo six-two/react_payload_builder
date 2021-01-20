@@ -3,7 +3,13 @@ description: Build simple attack strings for format string and buffer overflow a
 menu:
   - title: Source code
     url: "https://github.com/six-two/react_payload_builder"
+    id: page-nav-source
   - title: My other projects
     url: "https://projects.six-two.dev/"
+    id: page-nav-projects
 customHtmlHead: >-
   <script src="https://kit.fontawesome.com/ac357ac132.js" crossorigin="anonymous"></script>
+pre_build:
+  - template-tools/i18n/i18n.py <PROJECT>
+post_build:
+  - template-tools/minify.py
